@@ -1,39 +1,713 @@
 {
-  "_hinweis": "Wortschatz der App. 'emoji' ist das Ersatzbild, solange keine Symbole geladen sind. 'arasaac' ist der Suchbegriff für die ARASAAC-Datenbank; optional kann 'arasaacId' eine feste Piktogramm-Nummer angeben.",
-  "woerter": {
-    "apfel":  { "wort": "Apfel",  "emoji": "🍎", "arasaac": "Apfel" },
-    "auto":   { "wort": "Auto",   "emoji": "🚗", "arasaac": "Auto" },
-    "ball":   { "wort": "Ball",   "emoji": "⚽", "arasaac": "Ball" },
-    "banane": { "wort": "Banane", "emoji": "🍌", "arasaac": "Banane" },
-    "baum":   { "wort": "Baum",   "emoji": "🌳", "arasaac": "Baum" },
-    "blume":  { "wort": "Blume",  "emoji": "🌸", "arasaac": "Blume" },
-    "boot":   { "wort": "Boot",   "emoji": "⛵", "arasaac": "Boot" },
-    "brot":   { "wort": "Brot",   "emoji": "🍞", "arasaac": "Brot" },
-    "buch":   { "wort": "Buch",   "emoji": "📖", "arasaac": "Buch" },
-    "bus":    { "wort": "Bus",    "emoji": "🚌", "arasaac": "Bus" },
-    "ei":     { "wort": "Ei",     "emoji": "🥚", "arasaac": "Ei" },
-    "eis":    { "wort": "Eis",    "emoji": "🍦", "arasaac": "Eis" },
-    "ente":   { "wort": "Ente",   "emoji": "🦆", "arasaac": "Ente" },
-    "fisch":  { "wort": "Fisch",  "emoji": "🐟", "arasaac": "Fisch" },
-    "hase":   { "wort": "Hase",   "emoji": "🐰", "arasaac": "Hase" },
-    "haus":   { "wort": "Haus",   "emoji": "🏠", "arasaac": "Haus" },
-    "herz":   { "wort": "Herz",   "emoji": "❤️", "arasaac": "Herz" },
-    "hose":   { "wort": "Hose",   "emoji": "👖", "arasaac": "Hose" },
-    "hund":   { "wort": "Hund",   "emoji": "🐶", "arasaac": "Hund" },
-    "igel":   { "wort": "Igel",   "emoji": "🦔", "arasaac": "Igel" },
-    "katze":  { "wort": "Katze",  "emoji": "🐱", "arasaac": "Katze" },
-    "kuh":    { "wort": "Kuh",    "emoji": "🐮", "arasaac": "Kuh" },
-    "mais":   { "wort": "Mais",   "emoji": "🌽", "arasaac": "Mais" },
-    "maus":   { "wort": "Maus",   "emoji": "🐭", "arasaac": "Maus" },
-    "mond":   { "wort": "Mond",   "emoji": "🌙", "arasaac": "Mond" },
-    "nase":   { "wort": "Nase",   "emoji": "👃", "arasaac": "Nase" },
-    "rose":   { "wort": "Rose",   "emoji": "🌹", "arasaac": "Rose" },
-    "schuh":  { "wort": "Schuh",  "emoji": "👟", "arasaac": "Schuh" },
-    "sonne":  { "wort": "Sonne",  "emoji": "☀️", "arasaac": "Sonne" },
-    "stern":  { "wort": "Stern",  "emoji": "⭐", "arasaac": "Stern" },
-    "tasse":  { "wort": "Tasse",  "emoji": "☕", "arasaac": "Tasse" },
-    "tomate": { "wort": "Tomate", "emoji": "🍅", "arasaac": "Tomate" },
-    "uhr":    { "wort": "Uhr",    "emoji": "⌚", "arasaac": "Uhr" },
-    "zug":    { "wort": "Zug",    "emoji": "🚂", "arasaac": "Zug" }
+ "_hinweis": "Wortschatz der App. 'emoji' ist das Ersatzbild, solange keine Symbole geladen sind. 'silben' trennt das Wort in Sprechsilben. 'arasaac' ist der Suchbegriff für die ARASAAC-Datenbank; optional kann 'arasaacId' eine feste Piktogramm-Nummer angeben.",
+ "woerter": {
+  "apfel": {
+   "wort": "Apfel",
+   "emoji": "🍎",
+   "silben": "Ap-fel",
+   "arasaac": "Apfel"
+  },
+  "auto": {
+   "wort": "Auto",
+   "emoji": "🚗",
+   "silben": "Au-to",
+   "arasaac": "Auto"
+  },
+  "ball": {
+   "wort": "Ball",
+   "emoji": "⚽",
+   "silben": "Ball",
+   "arasaac": "Ball"
+  },
+  "banane": {
+   "wort": "Banane",
+   "emoji": "🍌",
+   "silben": "Ba-na-ne",
+   "arasaac": "Banane"
+  },
+  "baum": {
+   "wort": "Baum",
+   "emoji": "🌳",
+   "silben": "Baum",
+   "arasaac": "Baum"
+  },
+  "blume": {
+   "wort": "Blume",
+   "emoji": "🌸",
+   "silben": "Blu-me",
+   "arasaac": "Blume"
+  },
+  "boot": {
+   "wort": "Boot",
+   "emoji": "⛵",
+   "silben": "Boot",
+   "arasaac": "Boot"
+  },
+  "brot": {
+   "wort": "Brot",
+   "emoji": "🍞",
+   "silben": "Brot",
+   "arasaac": "Brot"
+  },
+  "buch": {
+   "wort": "Buch",
+   "emoji": "📖",
+   "silben": "Buch",
+   "arasaac": "Buch"
+  },
+  "bus": {
+   "wort": "Bus",
+   "emoji": "🚌",
+   "silben": "Bus",
+   "arasaac": "Bus"
+  },
+  "ei": {
+   "wort": "Ei",
+   "emoji": "🥚",
+   "silben": "Ei",
+   "arasaac": "Ei"
+  },
+  "eis": {
+   "wort": "Eis",
+   "emoji": "🍦",
+   "silben": "Eis",
+   "arasaac": "Eis"
+  },
+  "ente": {
+   "wort": "Ente",
+   "emoji": "🦆",
+   "silben": "En-te",
+   "arasaac": "Ente"
+  },
+  "fisch": {
+   "wort": "Fisch",
+   "emoji": "🐟",
+   "silben": "Fisch",
+   "arasaac": "Fisch"
+  },
+  "hase": {
+   "wort": "Hase",
+   "emoji": "🐰",
+   "silben": "Ha-se",
+   "arasaac": "Hase"
+  },
+  "haus": {
+   "wort": "Haus",
+   "emoji": "🏠",
+   "silben": "Haus",
+   "arasaac": "Haus"
+  },
+  "herz": {
+   "wort": "Herz",
+   "emoji": "❤️",
+   "silben": "Herz",
+   "arasaac": "Herz"
+  },
+  "hose": {
+   "wort": "Hose",
+   "emoji": "👖",
+   "silben": "Ho-se",
+   "arasaac": "Hose"
+  },
+  "hund": {
+   "wort": "Hund",
+   "emoji": "🐶",
+   "silben": "Hund",
+   "arasaac": "Hund"
+  },
+  "igel": {
+   "wort": "Igel",
+   "emoji": "🦔",
+   "silben": "I-gel",
+   "arasaac": "Igel"
+  },
+  "katze": {
+   "wort": "Katze",
+   "emoji": "🐱",
+   "silben": "Kat-ze",
+   "arasaac": "Katze"
+  },
+  "kuh": {
+   "wort": "Kuh",
+   "emoji": "🐮",
+   "silben": "Kuh",
+   "arasaac": "Kuh"
+  },
+  "mais": {
+   "wort": "Mais",
+   "emoji": "🌽",
+   "silben": "Mais",
+   "arasaac": "Mais"
+  },
+  "maus": {
+   "wort": "Maus",
+   "emoji": "🐭",
+   "silben": "Maus",
+   "arasaac": "Maus"
+  },
+  "mond": {
+   "wort": "Mond",
+   "emoji": "🌙",
+   "silben": "Mond",
+   "arasaac": "Mond"
+  },
+  "nase": {
+   "wort": "Nase",
+   "emoji": "👃",
+   "silben": "Na-se",
+   "arasaac": "Nase"
+  },
+  "rose": {
+   "wort": "Rose",
+   "emoji": "🌹",
+   "silben": "Ro-se",
+   "arasaac": "Rose"
+  },
+  "schuh": {
+   "wort": "Schuh",
+   "emoji": "👟",
+   "silben": "Schuh",
+   "arasaac": "Schuh"
+  },
+  "sonne": {
+   "wort": "Sonne",
+   "emoji": "☀️",
+   "silben": "Son-ne",
+   "arasaac": "Sonne"
+  },
+  "stern": {
+   "wort": "Stern",
+   "emoji": "⭐",
+   "silben": "Stern",
+   "arasaac": "Stern"
+  },
+  "tasse": {
+   "wort": "Tasse",
+   "emoji": "☕",
+   "silben": "Tas-se",
+   "arasaac": "Tasse"
+  },
+  "tomate": {
+   "wort": "Tomate",
+   "emoji": "🍅",
+   "silben": "To-ma-te",
+   "arasaac": "Tomate"
+  },
+  "uhr": {
+   "wort": "Uhr",
+   "emoji": "⌚",
+   "silben": "Uhr",
+   "arasaac": "Uhr"
+  },
+  "zug": {
+   "wort": "Zug",
+   "emoji": "🚂",
+   "silben": "Zug",
+   "arasaac": "Zug"
+  },
+  "baer": {
+   "wort": "Bär",
+   "emoji": "🐻",
+   "silben": "Bär",
+   "arasaac": "Bär"
+  },
+  "kuchen": {
+   "wort": "Kuchen",
+   "emoji": "🍰",
+   "silben": "Ku-chen",
+   "arasaac": "Kuchen"
+  },
+  "pilz": {
+   "wort": "Pilz",
+   "emoji": "🍄",
+   "silben": "Pilz",
+   "arasaac": "Pilz"
+  },
+  "kerze": {
+   "wort": "Kerze",
+   "emoji": "🕯️",
+   "silben": "Ker-ze",
+   "arasaac": "Kerze"
+  },
+  "loewe": {
+   "wort": "Löwe",
+   "emoji": "🦁",
+   "silben": "Lö-we",
+   "arasaac": "Löwe"
+  },
+  "schaf": {
+   "wort": "Schaf",
+   "emoji": "🐑",
+   "silben": "Schaf",
+   "arasaac": "Schaf"
+  },
+  "mund": {
+   "wort": "Mund",
+   "emoji": "👄",
+   "silben": "Mund",
+   "arasaac": "Mund"
+  },
+  "hand": {
+   "wort": "Hand",
+   "emoji": "✋",
+   "silben": "Hand",
+   "arasaac": "Hand"
+  },
+  "bett": {
+   "wort": "Bett",
+   "emoji": "🛏️",
+   "silben": "Bett",
+   "arasaac": "Bett"
+  },
+  "rad": {
+   "wort": "Rad",
+   "emoji": "🚲",
+   "silben": "Rad",
+   "arasaac": "Rad"
+  },
+  "wolke": {
+   "wort": "Wolke",
+   "emoji": "☁️",
+   "silben": "Wol-ke",
+   "arasaac": "Wolke"
+  },
+  "schiff": {
+   "wort": "Schiff",
+   "emoji": "🚢",
+   "silben": "Schiff",
+   "arasaac": "Schiff"
+  },
+  "brille": {
+   "wort": "Brille",
+   "emoji": "👓",
+   "silben": "Bril-le",
+   "arasaac": "Brille"
+  },
+  "kirsche": {
+   "wort": "Kirsche",
+   "emoji": "🍒",
+   "silben": "Kir-sche",
+   "arasaac": "Kirsche"
+  },
+  "birne": {
+   "wort": "Birne",
+   "emoji": "🍐",
+   "silben": "Bir-ne",
+   "arasaac": "Birne"
+  },
+  "zitrone": {
+   "wort": "Zitrone",
+   "emoji": "🍋",
+   "silben": "Zi-tro-ne",
+   "arasaac": "Zitrone"
+  },
+  "melone": {
+   "wort": "Melone",
+   "emoji": "🍉",
+   "silben": "Me-lo-ne",
+   "arasaac": "Melone"
+  },
+  "moehre": {
+   "wort": "Möhre",
+   "emoji": "🥕",
+   "silben": "Möh-re",
+   "arasaac": "Möhre"
+  },
+  "gurke": {
+   "wort": "Gurke",
+   "emoji": "🥒",
+   "silben": "Gur-ke",
+   "arasaac": "Gurke"
+  },
+  "pizza": {
+   "wort": "Pizza",
+   "emoji": "🍕",
+   "silben": "Piz-za",
+   "arasaac": "Pizza"
+  },
+  "kaese": {
+   "wort": "Käse",
+   "emoji": "🧀",
+   "silben": "Kä-se",
+   "arasaac": "Käse"
+  },
+  "milch": {
+   "wort": "Milch",
+   "emoji": "🥛",
+   "silben": "Milch",
+   "arasaac": "Milch"
+  },
+  "affe": {
+   "wort": "Affe",
+   "emoji": "🐒",
+   "silben": "Af-fe",
+   "arasaac": "Affe"
+  },
+  "pferd": {
+   "wort": "Pferd",
+   "emoji": "🐴",
+   "silben": "Pferd",
+   "arasaac": "Pferd"
+  },
+  "schwein": {
+   "wort": "Schwein",
+   "emoji": "🐷",
+   "silben": "Schwein",
+   "arasaac": "Schwein"
+  },
+  "frosch": {
+   "wort": "Frosch",
+   "emoji": "🐸",
+   "silben": "Frosch",
+   "arasaac": "Frosch"
+  },
+  "schnecke": {
+   "wort": "Schnecke",
+   "emoji": "🐌",
+   "silben": "Schne-cke",
+   "arasaac": "Schnecke"
+  },
+  "biene": {
+   "wort": "Biene",
+   "emoji": "🐝",
+   "silben": "Bie-ne",
+   "arasaac": "Biene"
+  },
+  "hahn": {
+   "wort": "Hahn",
+   "emoji": "🐓",
+   "silben": "Hahn",
+   "arasaac": "Hahn"
+  },
+  "elefant": {
+   "wort": "Elefant",
+   "emoji": "🐘",
+   "silben": "E-le-fant",
+   "arasaac": "Elefant"
+  },
+  "giraffe": {
+   "wort": "Giraffe",
+   "emoji": "🦒",
+   "silben": "Gi-raf-fe",
+   "arasaac": "Giraffe"
+  },
+  "zebra": {
+   "wort": "Zebra",
+   "emoji": "🦓",
+   "silben": "Ze-bra",
+   "arasaac": "Zebra"
+  },
+  "krone": {
+   "wort": "Krone",
+   "emoji": "👑",
+   "silben": "Kro-ne",
+   "arasaac": "Krone"
+  },
+  "rakete": {
+   "wort": "Rakete",
+   "emoji": "🚀",
+   "silben": "Ra-ke-te",
+   "arasaac": "Rakete"
+  },
+  "gitarre": {
+   "wort": "Gitarre",
+   "emoji": "🎸",
+   "silben": "Gi-tar-re",
+   "arasaac": "Gitarre"
+  },
+  "trommel": {
+   "wort": "Trommel",
+   "emoji": "🥁",
+   "silben": "Trom-mel",
+   "arasaac": "Trommel"
+  },
+  "glocke": {
+   "wort": "Glocke",
+   "emoji": "🔔",
+   "silben": "Glo-cke",
+   "arasaac": "Glocke"
+  },
+  "schluessel": {
+   "wort": "Schlüssel",
+   "emoji": "🔑",
+   "silben": "Schlüs-sel",
+   "arasaac": "Schlüssel"
+  },
+  "muschel": {
+   "wort": "Muschel",
+   "emoji": "🐚",
+   "silben": "Mu-schel",
+   "arasaac": "Muschel"
+  },
+  "ring": {
+   "wort": "Ring",
+   "emoji": "💍",
+   "silben": "Ring",
+   "arasaac": "Ring"
+  },
+  "kleid": {
+   "wort": "Kleid",
+   "emoji": "👗",
+   "silben": "Kleid",
+   "arasaac": "Kleid"
+  },
+  "muetze": {
+   "wort": "Mütze",
+   "emoji": "🧢",
+   "silben": "Müt-ze",
+   "arasaac": "Mütze"
+  },
+  "socke": {
+   "wort": "Socke",
+   "emoji": "🧦",
+   "silben": "So-cke",
+   "arasaac": "Socke"
+  },
+  "jacke": {
+   "wort": "Jacke",
+   "emoji": "🧥",
+   "silben": "Ja-cke",
+   "arasaac": "Jacke"
+  },
+  "tuer": {
+   "wort": "Tür",
+   "emoji": "🚪",
+   "silben": "Tür",
+   "arasaac": "Tür"
+  },
+  "lampe": {
+   "wort": "Lampe",
+   "emoji": "💡",
+   "silben": "Lam-pe",
+   "arasaac": "Lampe"
+  },
+  "stift": {
+   "wort": "Stift",
+   "emoji": "✏️",
+   "silben": "Stift",
+   "arasaac": "Stift"
+  },
+  "schere": {
+   "wort": "Schere",
+   "emoji": "✂️",
+   "silben": "Sche-re",
+   "arasaac": "Schere"
+  },
+  "koffer": {
+   "wort": "Koffer",
+   "emoji": "🧳",
+   "silben": "Kof-fer",
+   "arasaac": "Koffer"
+  },
+  "wal": {
+   "wort": "Wal",
+   "emoji": "🐳",
+   "silben": "Wal",
+   "arasaac": "Wal"
+  },
+  "raupe": {
+   "wort": "Raupe",
+   "emoji": "🐛",
+   "silben": "Rau-pe",
+   "arasaac": "Raupe"
+  },
+  "nuss": {
+   "wort": "Nuss",
+   "emoji": "🌰",
+   "silben": "Nuss",
+   "arasaac": "Nuss"
+  },
+  "hut": {
+   "wort": "Hut",
+   "emoji": "🎩",
+   "silben": "Hut",
+   "arasaac": "Hut"
+  },
+  "teller": {
+   "wort": "Teller",
+   "emoji": "🍽️",
+   "silben": "Tel-ler",
+   "arasaac": "Teller"
+  },
+  "loeffel": {
+   "wort": "Löffel",
+   "emoji": "🥄",
+   "silben": "Löf-fel",
+   "arasaac": "Löffel"
+  },
+  "sofa": {
+   "wort": "Sofa",
+   "emoji": "🛋️",
+   "silben": "So-fa",
+   "arasaac": "Sofa"
+  },
+  "ziege": {
+   "wort": "Ziege",
+   "emoji": "🐐",
+   "silben": "Zie-ge",
+   "arasaac": "Ziege"
+  },
+  "tiger": {
+   "wort": "Tiger",
+   "emoji": "🐯",
+   "silben": "Ti-ger",
+   "arasaac": "Tiger"
+  },
+  "lupe": {
+   "wort": "Lupe",
+   "emoji": "🔍",
+   "silben": "Lu-pe",
+   "arasaac": "Lupe"
+  },
+  "oma": {
+   "wort": "Oma",
+   "emoji": "👵",
+   "silben": "O-ma",
+   "arasaac": "Oma"
+  },
+  "opa": {
+   "wort": "Opa",
+   "emoji": "👴",
+   "silben": "O-pa",
+   "arasaac": "Opa"
+  },
+  "baby": {
+   "wort": "Baby",
+   "emoji": "👶",
+   "silben": "Ba-by",
+   "arasaac": "Baby"
+  },
+  "nest": {
+   "wort": "Nest",
+   "emoji": "🪺",
+   "silben": "Nest",
+   "arasaac": "Nest"
+  },
+  "eule": {
+   "wort": "Eule",
+   "emoji": "🦉",
+   "silben": "Eu-le",
+   "arasaac": "Eule"
+  },
+  "kamel": {
+   "wort": "Kamel",
+   "emoji": "🐫",
+   "silben": "Ka-mel",
+   "arasaac": "Kamel"
+  },
+  "palme": {
+   "wort": "Palme",
+   "emoji": "🌴",
+   "silben": "Pal-me",
+   "arasaac": "Palme"
+  },
+  "tanne": {
+   "wort": "Tanne",
+   "emoji": "🌲",
+   "silben": "Tan-ne",
+   "arasaac": "Tanne"
+  },
+  "kaktus": {
+   "wort": "Kaktus",
+   "emoji": "🌵",
+   "silben": "Kak-tus",
+   "arasaac": "Kaktus"
+  },
+  "feuer": {
+   "wort": "Feuer",
+   "emoji": "🔥",
+   "silben": "Feu-er",
+   "arasaac": "Feuer"
+  },
+  "ballon": {
+   "wort": "Ballon",
+   "emoji": "🎈",
+   "silben": "Bal-lon",
+   "arasaac": "Ballon"
+  },
+  "geschenk": {
+   "wort": "Geschenk",
+   "emoji": "🎁",
+   "silben": "Ge-schenk",
+   "arasaac": "Geschenk"
+  },
+  "telefon": {
+   "wort": "Telefon",
+   "emoji": "📞",
+   "silben": "Te-le-fon",
+   "arasaac": "Telefon"
+  },
+  "brief": {
+   "wort": "Brief",
+   "emoji": "✉️",
+   "silben": "Brief",
+   "arasaac": "Brief"
+  },
+  "kiwi": {
+   "wort": "Kiwi",
+   "emoji": "🥝",
+   "silben": "Ki-wi",
+   "arasaac": "Kiwi"
+  },
+  "roller": {
+   "wort": "Roller",
+   "emoji": "🛴",
+   "silben": "Rol-ler",
+   "arasaac": "Roller"
+  },
+  "taxi": {
+   "wort": "Taxi",
+   "emoji": "🚕",
+   "silben": "Ta-xi",
+   "arasaac": "Taxi"
+  },
+  "traktor": {
+   "wort": "Traktor",
+   "emoji": "🚜",
+   "silben": "Trak-tor",
+   "arasaac": "Traktor"
+  },
+  "flugzeug": {
+   "wort": "Flugzeug",
+   "emoji": "✈️",
+   "silben": "Flug-zeug",
+   "arasaac": "Flugzeug"
+  },
+  "salat": {
+   "wort": "Salat",
+   "emoji": "🥗",
+   "silben": "Sa-lat",
+   "arasaac": "Salat"
+  },
+  "wuerfel": {
+   "wort": "Würfel",
+   "emoji": "🎲",
+   "silben": "Wür-fel",
+   "arasaac": "Würfel"
+  },
+  "regen": {
+   "wort": "Regen",
+   "emoji": "🌧️",
+   "silben": "Re-gen",
+   "arasaac": "Regen"
+  },
+  "fliege": {
+   "wort": "Fliege",
+   "emoji": "🪰",
+   "silben": "Flie-ge",
+   "arasaac": "Fliege"
+  },
+  "kamm": {
+   "wort": "Kamm",
+   "emoji": "🪮",
+   "silben": "Kamm",
+   "arasaac": "Kamm"
+  },
+  "robbe": {
+   "wort": "Robbe",
+   "emoji": "🦭",
+   "silben": "Rob-be",
+   "arasaac": "Robbe"
   }
+ }
 }

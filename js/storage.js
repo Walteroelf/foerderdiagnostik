@@ -48,6 +48,17 @@ export const speicher = {
     liste.sort((a, b) => a.datum.localeCompare(b.datum));
     return schreibe('tests:' + normPseudonym(test.pseudonym), liste);
   },
+  // Lautes Lesen: Liste je Pseudonym
+  lautlesen(p) {
+    return lies('lautlesen:' + normPseudonym(p), []);
+  },
+  speichereLautlesen(r) {
+    this.merkePseudonym(r.pseudonym);
+    const liste = this.lautlesen(r.pseudonym).filter((x) => x.id !== r.id);
+    liste.push(r);
+    liste.sort((a, b) => a.datum.localeCompare(b.datum));
+    return schreibe('lautlesen:' + normPseudonym(r.pseudonym), liste);
+  },
   // Kompetenzbogen: aktuelle Fassung je Pseudonym
   bogen(p) {
     return lies('bogen:' + normPseudonym(p), null);

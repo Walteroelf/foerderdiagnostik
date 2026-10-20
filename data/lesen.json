@@ -1,71 +1,1129 @@
 {
-  "bereich": "lesen",
-  "titel": "Lesen",
-  "aufgabenProStufe": 6,
-  "stufen": [
+ "bereich": "lesen",
+ "titel": "Lesen",
+ "aufgabenProStufe": 6,
+ "stufen": [
+  {
+   "stufe": 1,
+   "name": "Basal: Bild und Symbol zuordnen",
+   "kompetenz": "Ordnet ein Bild eines realen Gegenstands dem passenden Symbol zu.",
+   "aufgaben": [],
+   "generatoren": [
     {
-      "stufe": 1,
-      "name": "Basal: Bild und Symbol zuordnen",
-      "kompetenz": "Ordnet ein Bild eines realen Gegenstands dem passenden Symbol zu.",
-      "aufgaben": [
-        { "typ": "zuordnen", "ziel": "apfel",  "optionen": ["apfel", "ball", "hund"] },
-        { "typ": "zuordnen", "ziel": "auto",   "optionen": ["auto", "baum", "tasse"] },
-        { "typ": "zuordnen", "ziel": "ball",   "optionen": ["ball", "schuh", "katze"] },
-        { "typ": "zuordnen", "ziel": "banane", "optionen": ["banane", "apfel", "bus"] },
-        { "typ": "zuordnen", "ziel": "hund",   "optionen": ["hund", "katze", "haus"] },
-        { "typ": "zuordnen", "ziel": "tasse",  "optionen": ["tasse", "buch", "sonne"] },
-        { "typ": "zuordnen", "ziel": "schuh",  "optionen": ["schuh", "hose", "ei"] },
-        { "typ": "zuordnen", "ziel": "baum",   "optionen": ["baum", "blume", "auto"] },
-        { "typ": "zuordnen", "ziel": "brot",   "optionen": ["brot", "uhr", "ente"] },
-        { "typ": "zuordnen", "ziel": "bus",    "optionen": ["bus", "zug", "fisch"] }
-      ]
+     "gen": "zuordnen",
+     "anzahl": 10
+    }
+   ]
+  },
+  {
+   "stufe": 2,
+   "name": "Vorläuferfähigkeiten: Buchstaben, Anlaute, Silben",
+   "kompetenz": "Erkennt Buchstaben, hört Anlaute heraus und gliedert Wörter in Silben.",
+   "aufgaben": [
+    {
+     "typ": "buchstabe",
+     "ziel": "M",
+     "optionen": [
+      "M",
+      "N",
+      "W",
+      "H"
+     ]
     },
     {
-      "stufe": 2,
-      "name": "Vorläuferfähigkeiten: Buchstaben, Anlaute, Silben",
-      "kompetenz": "Erkennt Buchstaben, hört Anlaute heraus und gliedert Wörter in Silben.",
-      "aufgaben": [
-        { "typ": "buchstabe", "ziel": "M", "optionen": ["M", "N", "W", "H"] },
-        { "typ": "buchstabe", "ziel": "B", "optionen": ["B", "D", "P", "R"] },
-        { "typ": "buchstabe", "ziel": "O", "optionen": ["O", "Q", "C", "D"] },
-        { "typ": "buchstabe", "ziel": "L", "optionen": ["L", "I", "T", "F"] },
-        { "typ": "buchstabe", "ziel": "E", "optionen": ["E", "F", "B", "A"] },
-        { "typ": "anlaut", "wort": "maus",  "ziel": "M", "optionen": ["M", "H", "S"] },
-        { "typ": "anlaut", "wort": "ball",  "ziel": "B", "optionen": ["B", "D", "P"] },
-        { "typ": "anlaut", "wort": "sonne", "ziel": "S", "optionen": ["S", "Z", "M"] },
-        { "typ": "anlaut", "wort": "fisch", "ziel": "F", "optionen": ["F", "W", "T"] },
-        { "typ": "anlaut", "wort": "ente",  "ziel": "E", "optionen": ["E", "A", "O"] },
-        { "typ": "anlaut", "wort": "igel",  "ziel": "I", "optionen": ["I", "E", "L"] },
-        { "typ": "anlaut", "wort": "hund",  "ziel": "H", "optionen": ["H", "N", "K"] },
-        { "typ": "silben", "wort": "banane", "silbenText": "Ba-na-ne", "ziel": 3, "optionen": [1, 2, 3] },
-        { "typ": "silben", "wort": "ball",   "silbenText": "Ball",     "ziel": 1, "optionen": [1, 2, 3] },
-        { "typ": "silben", "wort": "tomate", "silbenText": "To-ma-te", "ziel": 3, "optionen": [1, 2, 3] },
-        { "typ": "silben", "wort": "hase",   "silbenText": "Ha-se",    "ziel": 2, "optionen": [1, 2, 3] },
-        { "typ": "silben", "wort": "katze",  "silbenText": "Kat-ze",   "ziel": 2, "optionen": [1, 2, 3] },
-        { "typ": "silben", "wort": "eis",    "silbenText": "Eis",      "ziel": 1, "optionen": [1, 2, 3] }
-      ]
+     "typ": "buchstabe",
+     "ziel": "B",
+     "optionen": [
+      "B",
+      "D",
+      "P",
+      "R"
+     ]
     },
     {
-      "stufe": 3,
-      "name": "Wortebene: Wort zum Bild finden",
-      "kompetenz": "Liest einfache Wörter und unterscheidet sie von ähnlich aussehenden Wörtern.",
-      "aufgaben": [
-        { "typ": "wortbild", "wort": "maus",  "optionen": [{ "text": "Maus" },  { "text": "Haus",  "fehler": "Anlaut" },   { "text": "Mais",   "fehler": "Vokal" }] },
-        { "typ": "wortbild", "wort": "hose",  "optionen": [{ "text": "Hose" },  { "text": "Rose",  "fehler": "Anlaut" },   { "text": "Hase",   "fehler": "Vokal" }] },
-        { "typ": "wortbild", "wort": "hund",  "optionen": [{ "text": "Hund" },  { "text": "Mund",  "fehler": "Anlaut" },   { "text": "Hand",   "fehler": "Vokal" }] },
-        { "typ": "wortbild", "wort": "hase",  "optionen": [{ "text": "Hase" },  { "text": "Nase",  "fehler": "Anlaut" },   { "text": "Hose",   "fehler": "Vokal" }] },
-        { "typ": "wortbild", "wort": "fisch", "optionen": [{ "text": "Fisch" }, { "text": "Tisch", "fehler": "Anlaut" },   { "text": "frisch", "fehler": "Zusätzlicher Laut" }] },
-        { "typ": "wortbild", "wort": "mond",  "optionen": [{ "text": "Mond" },  { "text": "Mund",  "fehler": "Vokal" },    { "text": "Mohn",   "fehler": "Endlaut" }] },
-        { "typ": "wortbild", "wort": "schuh", "optionen": [{ "text": "Schuh" }, { "text": "Kuh",   "fehler": "Anlaut" },   { "text": "Schal",  "fehler": "Wortende" }] },
-        { "typ": "wortbild", "wort": "baum",  "optionen": [{ "text": "Baum" },  { "text": "Raum",  "fehler": "Anlaut" },   { "text": "Bau",    "fehler": "Endlaut" }] },
-        { "typ": "wortbild", "wort": "buch",  "optionen": [{ "text": "Buch" },  { "text": "Tuch",  "fehler": "Anlaut" },   { "text": "Bach",   "fehler": "Vokal" }] },
-        { "typ": "wortbild", "wort": "eis",   "optionen": [{ "text": "Eis" },   { "text": "Ei",    "fehler": "Endlaut" },  { "text": "Reis",   "fehler": "Zusätzlicher Laut" }] },
-        { "typ": "wortbild", "wort": "boot",  "optionen": [{ "text": "Boot" },  { "text": "Brot",  "fehler": "Zusätzlicher Laut" }, { "text": "Bett", "fehler": "Vokal" }] },
-        { "typ": "wortbild", "wort": "rose",  "optionen": [{ "text": "Rose" },  { "text": "Hose",  "fehler": "Anlaut" },   { "text": "Rabe",   "fehler": "Wortmitte" }] },
-        { "typ": "wortbild", "wort": "tasse", "optionen": [{ "text": "Tasse" }, { "text": "Kasse", "fehler": "Anlaut" },   { "text": "Tasche", "fehler": "Wortmitte" }] }
-      ]
+     "typ": "buchstabe",
+     "ziel": "O",
+     "optionen": [
+      "O",
+      "Q",
+      "C",
+      "D"
+     ]
     },
-    { "stufe": 4, "name": "Satzebene: stimmt oder stimmt nicht", "kompetenz": "Versteht kurze Sätze.", "aufgaben": [] },
-    { "stufe": 5, "name": "Textebene: kurzer Text mit Fragen", "kompetenz": "Versteht kurze Texte.", "aufgaben": [] }
-  ]
+    {
+     "typ": "buchstabe",
+     "ziel": "L",
+     "optionen": [
+      "L",
+      "I",
+      "T",
+      "F"
+     ]
+    },
+    {
+     "typ": "buchstabe",
+     "ziel": "E",
+     "optionen": [
+      "E",
+      "F",
+      "B",
+      "A"
+     ]
+    },
+    {
+     "typ": "anlaut",
+     "wort": "maus",
+     "ziel": "M",
+     "optionen": [
+      "M",
+      "H",
+      "S"
+     ]
+    },
+    {
+     "typ": "anlaut",
+     "wort": "ball",
+     "ziel": "B",
+     "optionen": [
+      "B",
+      "D",
+      "P"
+     ]
+    },
+    {
+     "typ": "anlaut",
+     "wort": "sonne",
+     "ziel": "S",
+     "optionen": [
+      "S",
+      "Z",
+      "M"
+     ]
+    },
+    {
+     "typ": "anlaut",
+     "wort": "fisch",
+     "ziel": "F",
+     "optionen": [
+      "F",
+      "W",
+      "T"
+     ]
+    },
+    {
+     "typ": "anlaut",
+     "wort": "ente",
+     "ziel": "E",
+     "optionen": [
+      "E",
+      "A",
+      "O"
+     ]
+    },
+    {
+     "typ": "anlaut",
+     "wort": "igel",
+     "ziel": "I",
+     "optionen": [
+      "I",
+      "E",
+      "L"
+     ]
+    },
+    {
+     "typ": "anlaut",
+     "wort": "hund",
+     "ziel": "H",
+     "optionen": [
+      "H",
+      "N",
+      "K"
+     ]
+    },
+    {
+     "typ": "silben",
+     "wort": "banane",
+     "silbenText": "Ba-na-ne",
+     "ziel": 3,
+     "optionen": [
+      1,
+      2,
+      3
+     ]
+    },
+    {
+     "typ": "silben",
+     "wort": "ball",
+     "silbenText": "Ball",
+     "ziel": 1,
+     "optionen": [
+      1,
+      2,
+      3
+     ]
+    },
+    {
+     "typ": "silben",
+     "wort": "tomate",
+     "silbenText": "To-ma-te",
+     "ziel": 3,
+     "optionen": [
+      1,
+      2,
+      3
+     ]
+    },
+    {
+     "typ": "silben",
+     "wort": "hase",
+     "silbenText": "Ha-se",
+     "ziel": 2,
+     "optionen": [
+      1,
+      2,
+      3
+     ]
+    },
+    {
+     "typ": "silben",
+     "wort": "katze",
+     "silbenText": "Kat-ze",
+     "ziel": 2,
+     "optionen": [
+      1,
+      2,
+      3
+     ]
+    },
+    {
+     "typ": "silben",
+     "wort": "eis",
+     "silbenText": "Eis",
+     "ziel": 1,
+     "optionen": [
+      1,
+      2,
+      3
+     ]
+    }
+   ],
+   "generatoren": [
+    {
+     "gen": "buchstabe",
+     "anzahl": 4
+    },
+    {
+     "gen": "anlaut",
+     "anzahl": 4
+    },
+    {
+     "gen": "silben",
+     "anzahl": 4
+    }
+   ]
+  },
+  {
+   "stufe": 3,
+   "name": "Wortebene: Wort zum Bild finden",
+   "kompetenz": "Liest einfache Wörter und unterscheidet sie von ähnlich aussehenden Wörtern.",
+   "aufgaben": [
+    {
+     "typ": "wortbild",
+     "wort": "maus",
+     "optionen": [
+      {
+       "text": "Maus"
+      },
+      {
+       "text": "Haus",
+       "fehler": "Anlaut"
+      },
+      {
+       "text": "Mais",
+       "fehler": "Vokal"
+      }
+     ]
+    },
+    {
+     "typ": "wortbild",
+     "wort": "hose",
+     "optionen": [
+      {
+       "text": "Hose"
+      },
+      {
+       "text": "Rose",
+       "fehler": "Anlaut"
+      },
+      {
+       "text": "Hase",
+       "fehler": "Vokal"
+      }
+     ]
+    },
+    {
+     "typ": "wortbild",
+     "wort": "hund",
+     "optionen": [
+      {
+       "text": "Hund"
+      },
+      {
+       "text": "Mund",
+       "fehler": "Anlaut"
+      },
+      {
+       "text": "Hand",
+       "fehler": "Vokal"
+      }
+     ]
+    },
+    {
+     "typ": "wortbild",
+     "wort": "hase",
+     "optionen": [
+      {
+       "text": "Hase"
+      },
+      {
+       "text": "Nase",
+       "fehler": "Anlaut"
+      },
+      {
+       "text": "Hose",
+       "fehler": "Vokal"
+      }
+     ]
+    },
+    {
+     "typ": "wortbild",
+     "wort": "fisch",
+     "optionen": [
+      {
+       "text": "Fisch"
+      },
+      {
+       "text": "Tisch",
+       "fehler": "Anlaut"
+      },
+      {
+       "text": "frisch",
+       "fehler": "Zusätzlicher Laut"
+      }
+     ]
+    },
+    {
+     "typ": "wortbild",
+     "wort": "mond",
+     "optionen": [
+      {
+       "text": "Mond"
+      },
+      {
+       "text": "Mund",
+       "fehler": "Vokal"
+      },
+      {
+       "text": "Mohn",
+       "fehler": "Endlaut"
+      }
+     ]
+    },
+    {
+     "typ": "wortbild",
+     "wort": "schuh",
+     "optionen": [
+      {
+       "text": "Schuh"
+      },
+      {
+       "text": "Kuh",
+       "fehler": "Anlaut"
+      },
+      {
+       "text": "Schal",
+       "fehler": "Wortende"
+      }
+     ]
+    },
+    {
+     "typ": "wortbild",
+     "wort": "baum",
+     "optionen": [
+      {
+       "text": "Baum"
+      },
+      {
+       "text": "Raum",
+       "fehler": "Anlaut"
+      },
+      {
+       "text": "Bau",
+       "fehler": "Endlaut"
+      }
+     ]
+    },
+    {
+     "typ": "wortbild",
+     "wort": "buch",
+     "optionen": [
+      {
+       "text": "Buch"
+      },
+      {
+       "text": "Tuch",
+       "fehler": "Anlaut"
+      },
+      {
+       "text": "Bach",
+       "fehler": "Vokal"
+      }
+     ]
+    },
+    {
+     "typ": "wortbild",
+     "wort": "eis",
+     "optionen": [
+      {
+       "text": "Eis"
+      },
+      {
+       "text": "Ei",
+       "fehler": "Endlaut"
+      },
+      {
+       "text": "Reis",
+       "fehler": "Zusätzlicher Laut"
+      }
+     ]
+    },
+    {
+     "typ": "wortbild",
+     "wort": "boot",
+     "optionen": [
+      {
+       "text": "Boot"
+      },
+      {
+       "text": "Brot",
+       "fehler": "Zusätzlicher Laut"
+      },
+      {
+       "text": "Bett",
+       "fehler": "Vokal"
+      }
+     ]
+    },
+    {
+     "typ": "wortbild",
+     "wort": "rose",
+     "optionen": [
+      {
+       "text": "Rose"
+      },
+      {
+       "text": "Hose",
+       "fehler": "Anlaut"
+      },
+      {
+       "text": "Rabe",
+       "fehler": "Wortmitte"
+      }
+     ]
+    },
+    {
+     "typ": "wortbild",
+     "wort": "tasse",
+     "optionen": [
+      {
+       "text": "Tasse"
+      },
+      {
+       "text": "Kasse",
+       "fehler": "Anlaut"
+      },
+      {
+       "text": "Tasche",
+       "fehler": "Wortmitte"
+      }
+     ]
+    },
+    {
+     "typ": "wortbild",
+     "wort": "hut",
+     "optionen": [
+      {
+       "text": "Hut"
+      },
+      {
+       "text": "Mut",
+       "fehler": "Anlaut"
+      },
+      {
+       "text": "Haut",
+       "fehler": "Vokal"
+      }
+     ]
+    },
+    {
+     "typ": "wortbild",
+     "wort": "ring",
+     "optionen": [
+      {
+       "text": "Ring"
+      },
+      {
+       "text": "Ding",
+       "fehler": "Anlaut"
+      },
+      {
+       "text": "Rind",
+       "fehler": "Endlaut"
+      }
+     ]
+    },
+    {
+     "typ": "wortbild",
+     "wort": "pilz",
+     "optionen": [
+      {
+       "text": "Pilz"
+      },
+      {
+       "text": "Filz",
+       "fehler": "Anlaut"
+      },
+      {
+       "text": "Pelz",
+       "fehler": "Vokal"
+      }
+     ]
+    },
+    {
+     "typ": "wortbild",
+     "wort": "mund",
+     "optionen": [
+      {
+       "text": "Mund"
+      },
+      {
+       "text": "Hund",
+       "fehler": "Anlaut"
+      },
+      {
+       "text": "Mond",
+       "fehler": "Vokal"
+      }
+     ]
+    },
+    {
+     "typ": "wortbild",
+     "wort": "hand",
+     "optionen": [
+      {
+       "text": "Hand"
+      },
+      {
+       "text": "Wand",
+       "fehler": "Anlaut"
+      },
+      {
+       "text": "Hund",
+       "fehler": "Vokal"
+      }
+     ]
+    },
+    {
+     "typ": "wortbild",
+     "wort": "nest",
+     "optionen": [
+      {
+       "text": "Nest"
+      },
+      {
+       "text": "Rest",
+       "fehler": "Anlaut"
+      },
+      {
+       "text": "Netz",
+       "fehler": "Endlaut"
+      }
+     ]
+    },
+    {
+     "typ": "wortbild",
+     "wort": "rad",
+     "optionen": [
+      {
+       "text": "Rad"
+      },
+      {
+       "text": "Bad",
+       "fehler": "Anlaut"
+      },
+      {
+       "text": "Rat",
+       "fehler": "Endlaut"
+      }
+     ]
+    },
+    {
+     "typ": "wortbild",
+     "wort": "wal",
+     "optionen": [
+      {
+       "text": "Wal"
+      },
+      {
+       "text": "Mal",
+       "fehler": "Anlaut"
+      },
+      {
+       "text": "Wald",
+       "fehler": "Zusätzlicher Laut"
+      }
+     ]
+    },
+    {
+     "typ": "wortbild",
+     "wort": "eule",
+     "optionen": [
+      {
+       "text": "Eule"
+      },
+      {
+       "text": "Beule",
+       "fehler": "Zusätzlicher Laut"
+      },
+      {
+       "text": "Eile",
+       "fehler": "Vokal"
+      }
+     ]
+    },
+    {
+     "typ": "wortbild",
+     "wort": "socke",
+     "optionen": [
+      {
+       "text": "Socke"
+      },
+      {
+       "text": "Locke",
+       "fehler": "Anlaut"
+      },
+      {
+       "text": "Sockel",
+       "fehler": "Zusätzlicher Laut"
+      }
+     ]
+    },
+    {
+     "typ": "wortbild",
+     "wort": "ziege",
+     "optionen": [
+      {
+       "text": "Ziege"
+      },
+      {
+       "text": "Wiege",
+       "fehler": "Anlaut"
+      },
+      {
+       "text": "Ziegel",
+       "fehler": "Zusätzlicher Laut"
+      }
+     ]
+    },
+    {
+     "typ": "wortbild",
+     "wort": "kamm",
+     "optionen": [
+      {
+       "text": "Kamm"
+      },
+      {
+       "text": "Damm",
+       "fehler": "Anlaut"
+      },
+      {
+       "text": "Kamel",
+       "fehler": "Wortende"
+      }
+     ]
+    },
+    {
+     "typ": "wortbild",
+     "wort": "lampe",
+     "optionen": [
+      {
+       "text": "Lampe"
+      },
+      {
+       "text": "Rampe",
+       "fehler": "Anlaut"
+      },
+      {
+       "text": "Lanze",
+       "fehler": "Wortmitte"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "stufe": 4,
+   "name": "Satzebene: stimmt oder stimmt nicht",
+   "kompetenz": "Liest kurze Sätze sinnentnehmend und beurteilt sie.",
+   "aufgaben": [
+    {
+     "typ": "satz",
+     "satz": "Das ist ein Hund.",
+     "stimmt": true,
+     "bild": "hund"
+    },
+    {
+     "typ": "satz",
+     "satz": "Das ist eine Katze.",
+     "stimmt": false,
+     "bild": "hund"
+    },
+    {
+     "typ": "satz",
+     "satz": "Die Sonne ist gelb.",
+     "stimmt": true
+    },
+    {
+     "typ": "satz",
+     "satz": "Eis ist heiß.",
+     "stimmt": false
+    },
+    {
+     "typ": "satz",
+     "satz": "Ein Fisch kann schwimmen.",
+     "stimmt": true
+    },
+    {
+     "typ": "satz",
+     "satz": "Ein Auto kann fliegen.",
+     "stimmt": false
+    },
+    {
+     "typ": "satz",
+     "satz": "Hier ist ein Apfel.",
+     "stimmt": true,
+     "bild": "apfel"
+    },
+    {
+     "typ": "satz",
+     "satz": "Hier ist eine Banane.",
+     "stimmt": false,
+     "bild": "tomate"
+    },
+    {
+     "typ": "satz",
+     "satz": "Im Winter ist es kalt.",
+     "stimmt": true
+    },
+    {
+     "typ": "satz",
+     "satz": "Ein Hase hat lange Ohren.",
+     "stimmt": true
+    },
+    {
+     "typ": "satz",
+     "satz": "Die Kuh sagt miau.",
+     "stimmt": false
+    },
+    {
+     "typ": "satz",
+     "satz": "Mit dem Mund kann man essen.",
+     "stimmt": true
+    },
+    {
+     "typ": "satz",
+     "satz": "Ein Ball ist eckig.",
+     "stimmt": false
+    },
+    {
+     "typ": "satz",
+     "satz": "Das ist ein Schuh.",
+     "stimmt": true,
+     "bild": "schuh"
+    },
+    {
+     "typ": "satz",
+     "satz": "Das ist ein Hut.",
+     "stimmt": false,
+     "bild": "socke"
+    },
+    {
+     "typ": "satz",
+     "satz": "Nachts scheint der Mond.",
+     "stimmt": true
+    },
+    {
+     "typ": "satz",
+     "satz": "Ein Elefant ist kleiner als eine Maus.",
+     "stimmt": false
+    },
+    {
+     "typ": "satz",
+     "satz": "Die Uhr zeigt die Zeit.",
+     "stimmt": true
+    },
+    {
+     "typ": "satz",
+     "satz": "Brot kann man trinken.",
+     "stimmt": false
+    },
+    {
+     "typ": "satz",
+     "satz": "Im Bett kann man schlafen.",
+     "stimmt": true
+    },
+    {
+     "typ": "satz",
+     "satz": "Der Zug fährt auf Schienen.",
+     "stimmt": true
+    },
+    {
+     "typ": "satz",
+     "satz": "Eine Schnecke ist sehr schnell.",
+     "stimmt": false
+    }
+   ]
+  },
+  {
+   "stufe": 5,
+   "name": "Textebene: kurzer Text mit Fragen",
+   "kompetenz": "Versteht kurze Texte und beantwortet Fragen dazu.",
+   "aufgaben": [
+    {
+     "typ": "textfrage",
+     "gruppe": "t1",
+     "text": "Tim hat einen Hund. Der Hund heißt Bello. Bello spielt gern mit dem Ball.",
+     "frage": "Wie heißt der Hund?",
+     "optionen": [
+      {
+       "text": "Bello",
+       "richtig": true
+      },
+      {
+       "text": "Tim"
+      },
+      {
+       "text": "Ball"
+      }
+     ]
+    },
+    {
+     "typ": "textfrage",
+     "gruppe": "t1",
+     "text": "Tim hat einen Hund. Der Hund heißt Bello. Bello spielt gern mit dem Ball.",
+     "frage": "Womit spielt Bello gern?",
+     "optionen": [
+      {
+       "text": "mit dem Ball",
+       "richtig": true
+      },
+      {
+       "text": "mit der Katze"
+      },
+      {
+       "text": "mit dem Auto"
+      }
+     ]
+    },
+    {
+     "typ": "textfrage",
+     "gruppe": "t1",
+     "text": "Tim hat einen Hund. Der Hund heißt Bello. Bello spielt gern mit dem Ball.",
+     "frage": "Wem gehört der Hund?",
+     "optionen": [
+      {
+       "text": "Tim",
+       "richtig": true
+      },
+      {
+       "text": "Lea"
+      },
+      {
+       "text": "Oma"
+      }
+     ]
+    },
+    {
+     "typ": "textfrage",
+     "gruppe": "t2",
+     "text": "Lea geht in den Supermarkt. Sie kauft Äpfel und Milch. Dann geht sie nach Hause.",
+     "frage": "Wo ist Lea?",
+     "optionen": [
+      {
+       "text": "im Supermarkt",
+       "richtig": true
+      },
+      {
+       "text": "in der Schule"
+      },
+      {
+       "text": "im Zoo"
+      }
+     ]
+    },
+    {
+     "typ": "textfrage",
+     "gruppe": "t2",
+     "text": "Lea geht in den Supermarkt. Sie kauft Äpfel und Milch. Dann geht sie nach Hause.",
+     "frage": "Was kauft Lea?",
+     "optionen": [
+      {
+       "text": "Äpfel und Milch",
+       "richtig": true
+      },
+      {
+       "text": "Brot und Käse"
+      },
+      {
+       "text": "Eis und Saft"
+      }
+     ]
+    },
+    {
+     "typ": "textfrage",
+     "gruppe": "t2",
+     "text": "Lea geht in den Supermarkt. Sie kauft Äpfel und Milch. Dann geht sie nach Hause.",
+     "frage": "Wohin geht Lea danach?",
+     "optionen": [
+      {
+       "text": "nach Hause",
+       "richtig": true
+      },
+      {
+       "text": "in den Park"
+      },
+      {
+       "text": "zur Oma"
+      }
+     ]
+    },
+    {
+     "typ": "textfrage",
+     "gruppe": "t3",
+     "text": "Es regnet. Max zieht seine Jacke an. Er nimmt einen Schirm mit. So wird er nicht nass.",
+     "frage": "Wie ist das Wetter?",
+     "optionen": [
+      {
+       "text": "Es regnet.",
+       "richtig": true
+      },
+      {
+       "text": "Die Sonne scheint."
+      },
+      {
+       "text": "Es schneit."
+      }
+     ]
+    },
+    {
+     "typ": "textfrage",
+     "gruppe": "t3",
+     "text": "Es regnet. Max zieht seine Jacke an. Er nimmt einen Schirm mit. So wird er nicht nass.",
+     "frage": "Was nimmt Max mit?",
+     "optionen": [
+      {
+       "text": "einen Schirm",
+       "richtig": true
+      },
+      {
+       "text": "einen Ball"
+      },
+      {
+       "text": "eine Brille"
+      }
+     ]
+    },
+    {
+     "typ": "textfrage",
+     "gruppe": "t3",
+     "text": "Es regnet. Max zieht seine Jacke an. Er nimmt einen Schirm mit. So wird er nicht nass.",
+     "frage": "Warum nimmt Max den Schirm?",
+     "optionen": [
+      {
+       "text": "Damit er nicht nass wird.",
+       "richtig": true
+      },
+      {
+       "text": "Weil er Hunger hat."
+      },
+      {
+       "text": "Weil es heiß ist."
+      }
+     ]
+    },
+    {
+     "typ": "textfrage",
+     "gruppe": "t4",
+     "text": "Die Klasse macht einen Ausflug in den Zoo. Dort sehen die Kinder Affen und Löwen. Am meisten lachen sie über die Affen.",
+     "frage": "Wohin geht die Klasse?",
+     "optionen": [
+      {
+       "text": "in den Zoo",
+       "richtig": true
+      },
+      {
+       "text": "ins Kino"
+      },
+      {
+       "text": "ins Schwimmbad"
+      }
+     ]
+    },
+    {
+     "typ": "textfrage",
+     "gruppe": "t4",
+     "text": "Die Klasse macht einen Ausflug in den Zoo. Dort sehen die Kinder Affen und Löwen. Am meisten lachen sie über die Affen.",
+     "frage": "Welche Tiere sehen die Kinder?",
+     "optionen": [
+      {
+       "text": "Affen und Löwen",
+       "richtig": true
+      },
+      {
+       "text": "Kühe und Schafe"
+      },
+      {
+       "text": "Fische und Enten"
+      }
+     ]
+    },
+    {
+     "typ": "textfrage",
+     "gruppe": "t4",
+     "text": "Die Klasse macht einen Ausflug in den Zoo. Dort sehen die Kinder Affen und Löwen. Am meisten lachen sie über die Affen.",
+     "frage": "Worüber lachen die Kinder am meisten?",
+     "optionen": [
+      {
+       "text": "über die Affen",
+       "richtig": true
+      },
+      {
+       "text": "über die Löwen"
+      },
+      {
+       "text": "über den Lehrer"
+      }
+     ]
+    },
+    {
+     "typ": "textfrage",
+     "gruppe": "t5",
+     "text": "Ali hat heute Geburtstag. Er wird acht Jahre alt. Seine Freunde bringen Geschenke mit. Es gibt Kuchen mit Kerzen.",
+     "frage": "Wie alt wird Ali?",
+     "optionen": [
+      {
+       "text": "acht Jahre",
+       "richtig": true
+      },
+      {
+       "text": "sechs Jahre"
+      },
+      {
+       "text": "zehn Jahre"
+      }
+     ]
+    },
+    {
+     "typ": "textfrage",
+     "gruppe": "t5",
+     "text": "Ali hat heute Geburtstag. Er wird acht Jahre alt. Seine Freunde bringen Geschenke mit. Es gibt Kuchen mit Kerzen.",
+     "frage": "Was bringen die Freunde mit?",
+     "optionen": [
+      {
+       "text": "Geschenke",
+       "richtig": true
+      },
+      {
+       "text": "Blumen"
+      },
+      {
+       "text": "Bücher"
+      }
+     ]
+    },
+    {
+     "typ": "textfrage",
+     "gruppe": "t5",
+     "text": "Ali hat heute Geburtstag. Er wird acht Jahre alt. Seine Freunde bringen Geschenke mit. Es gibt Kuchen mit Kerzen.",
+     "frage": "Was gibt es zu essen?",
+     "optionen": [
+      {
+       "text": "Kuchen",
+       "richtig": true
+      },
+      {
+       "text": "Pizza"
+      },
+      {
+       "text": "Suppe"
+      }
+     ]
+    },
+    {
+     "typ": "textfrage",
+     "gruppe": "t6",
+     "text": "Im Herbst fallen die Blätter von den Bäumen. Sie sind rot, gelb und braun. Mia sammelt die schönsten Blätter.",
+     "frage": "Wann fallen die Blätter?",
+     "optionen": [
+      {
+       "text": "im Herbst",
+       "richtig": true
+      },
+      {
+       "text": "im Sommer"
+      },
+      {
+       "text": "im Frühling"
+      }
+     ]
+    },
+    {
+     "typ": "textfrage",
+     "gruppe": "t6",
+     "text": "Im Herbst fallen die Blätter von den Bäumen. Sie sind rot, gelb und braun. Mia sammelt die schönsten Blätter.",
+     "frage": "Welche Farbe haben die Blätter?",
+     "optionen": [
+      {
+       "text": "rot, gelb und braun",
+       "richtig": true
+      },
+      {
+       "text": "blau und lila"
+      },
+      {
+       "text": "schwarz und weiß"
+      }
+     ]
+    },
+    {
+     "typ": "textfrage",
+     "gruppe": "t6",
+     "text": "Im Herbst fallen die Blätter von den Bäumen. Sie sind rot, gelb und braun. Mia sammelt die schönsten Blätter.",
+     "frage": "Was macht Mia?",
+     "optionen": [
+      {
+       "text": "Sie sammelt Blätter.",
+       "richtig": true
+      },
+      {
+       "text": "Sie malt ein Bild."
+      },
+      {
+       "text": "Sie fährt Rad."
+      }
+     ]
+    }
+   ]
+  }
+ ]
 }

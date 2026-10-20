@@ -24,7 +24,16 @@ const TYP_NAMEN = {
   menge: 'Mengen vergleichen',
   simultan: 'Mengen auf einen Blick erfassen',
   zahlmenge: 'Zahl und Menge zuordnen',
-  rechnen: 'Plus und Minus',
+  rechnen: 'Rechnen',
+  satz: 'Sätze verstehen',
+  textfrage: 'Textverständnis',
+  schreibweise: 'Rechtschreibmuster',
+  satzlegen: 'Diktierte Sätze legen',
+  beschriften: 'Bilder beschriften',
+  stellenwert: 'Zehner und Einer',
+  geld: 'Geld zählen',
+  uhr: 'Uhr lesen',
+  textaufgabe: 'Textaufgaben',
 };
 
 // Hinweise auf zählendes Rechnen und nicht-simultane Mengenerfassung (über die Bearbeitungszeit)
@@ -66,6 +75,7 @@ export function schuelerText(test, fruehere = []) {
     ? `Stufe ${test.erreichteStufe} (${test.stufen[test.erreichteStufe].name})`
     : `keine Stufe sicher (unterhalb von Stufe ${Math.min(...test.verlauf)})`;
   z.push(`- Sicher erreichte Stufe: ${erreicht}`);
+  if (test.bedienung) z.push(`- Bedienung: ${test.bedienung}`);
   if (test.abgebrochen) z.push('- Hinweis: Der Test wurde vorzeitig beendet.');
   z.push('');
   z.push('## Ergebnisse je Stufe');
@@ -78,11 +88,12 @@ export function schuelerText(test, fruehere = []) {
     z.push('');
     z.push(`### Stufe ${s} – ${st.name}`);
     z.push(`${b.r} von ${b.n} richtig (${prozent(b.q)}), Bewertung: ${b.urteil}. Mittlere Bearbeitungszeit (Median): ${sek(zeit)}.`);
-    const typen = [...new Set(st.antworten.map((a) => a.typ))];
+    const art = (a) => a.kategorie || TYP_NAMEN[a.typ] || a.typ;
+    const typen = [...new Set(st.antworten.map(art))];
     if (typen.length > 1) {
       for (const t of typen) {
-        const tb = stufenBewertung(st.antworten.filter((a) => a.typ === t));
-        z.push(`- ${TYP_NAMEN[t] || t}: ${tb.r} von ${tb.n} richtig`);
+        const tb = stufenBewertung(st.antworten.filter((a) => art(a) === t));
+        z.push(`- ${t}: ${tb.r} von ${tb.n} richtig`);
       }
     }
     const falsch = st.antworten.filter((a) => !a.richtig);
@@ -158,15 +169,40 @@ export function bogenText(bogen, bogenDef) {
   return z.join('\n');
 }
 
-export function gesamtText(tests, bogen, bogenDef) {
-  const teile = ['# Gesamtprotokoll Förderdiagnostik', '', `Pseudonym: ${(bogen || tests[0]).pseudonym}`, ''];
-  if (bogen) teile.push(bogenText(bogen, bogenDef).replace(/^# /m, '## ').replace(/\n## /g, '\n### '));
-  for (const t of tests) {
-    teile.push('', schuelerText(t, tests).replace(/^# /m, '## ').replace(/\n### /g, '\n#### ').replace(/\n## /g, '\n### '));
+export function lautleseText(r, fruehere = []) {
+  const z = [];
+  z.push('# Protokoll lautes Lesen');
+  z.push('');
+  z.push(`- Pseudonym: ${r.pseudonym}`);
+  z.push(`- Datum: ${datumText(r.datum)}`);
+  z.push(`- Text: „${r.titel}“ (${r.niveau}, ${r.woerterGesamt} Wörter)`);
+  z.push(`- Gelesen: ${r.woerterGelesen} von ${r.woerterGesamt} Wörtern in ${r.zeitSek} Sekunden`);
+  z.push(`- Lesetempo: ${r.wpm} Wörter pro Minute, davon ${r.wcpm} richtig gelesen`);
+  z.push(`- Genauigkeit: ${r.genauigkeit} %`);
+  z.push(`- Fehler: ${r.fehler.length ? r.fehler.map((f) => `„${f.wort}“`).join(', ') : 'keine'}`);
+  z.push(`- Selbstkorrekturen: ${r.korrigiert.length ? r.korrigiert.map((f) => `„${f.wort}“`).join(', ') : 'keine'}`);
+  if (r.notiz) z.push(`- Beobachtung der Lehrkraft: ${r.notiz}`);
+  const vorher = fruehere.filter((x) => x.id !== r.id && x.datum < r.datum);
+  if (vorher.length) {
+    z.push('');
+    z.push('## Frühere Messungen');
+    vorher.forEach((x) => z.push(`- ${tagText(x.datum)}: „${x.titel}“, ${x.wcpm} richtig gelesene Wörter pro Minute, ${x.genauigkeit} % Genauigkeit`));
   }
+  z.push('');
+  z.push('## Hinweis für die KI');
+  z.push('Das Kind hat den Text laut vorgelesen, die Lehrkraft hat Fehler mitgetippt. Bitte leite passende Leseübungen ab (z. B. Silbenlesen, Blitzlesen, Lautlesetandem) und greife die falsch gelesenen Wörter auf.');
+  return z.join('\n');
+}
+
+export function gesamtText(tests, bogen, bogenDef, lesen = []) {
+  const ebene = (text) => text.replace(/^# /m, '## ').replace(/\n### /g, '\n#### ').replace(/\n## /g, '\n### ');
+  const teile = ['# Gesamtprotokoll Förderdiagnostik', '', `Pseudonym: ${(bogen || tests[0] || lesen[0]).pseudonym}`, ''];
+  if (bogen) teile.push(ebene(bogenText(bogen, bogenDef)));
+  for (const t of tests) teile.push('', ebene(schuelerText(t, tests)));
+  for (const r of lesen) teile.push('', ebene(lautleseText(r, lesen)));
   teile.push('', '## Auftrag an die KI');
   teile.push(
-    'Bitte erstelle auf Grundlage des Kompetenzprotokolls und der Schülerprotokolle konkretes, sofort einsetzbares Arbeitsmaterial ' +
+    'Bitte erstelle auf Grundlage des Kompetenzprotokolls und der Schüler- und Leseprotokolle konkretes, sofort einsetzbares Arbeitsmaterial ' +
       '(z. B. 2–3 Arbeitsblätter) sowie kurze Förderhinweise für die Lehrkraft.'
   );
   return teile.join('\n');

@@ -1,61 +1,1121 @@
 {
-  "bereich": "rechtschreibung",
-  "titel": "Schreiben",
-  "aufgabenProStufe": 6,
-  "stufen": [
+ "bereich": "rechtschreibung",
+ "titel": "Schreiben",
+ "aufgabenProStufe": 6,
+ "stufen": [
+  {
+   "stufe": 1,
+   "name": "Basal: Buchstaben erkennen und zuordnen",
+   "kompetenz": "Erkennt gleiche Buchstaben und ordnet kleine und große Buchstaben einander zu.",
+   "aufgaben": [
     {
-      "stufe": 1,
-      "name": "Basal: Buchstaben erkennen und zuordnen",
-      "kompetenz": "Erkennt gleiche Buchstaben und ordnet kleine und große Buchstaben einander zu.",
-      "aufgaben": [
-        { "typ": "buchstabezuordnen", "art": "gleich", "zeige": "M", "ziel": "M", "optionen": ["M", "N", "W", "H"] },
-        { "typ": "buchstabezuordnen", "art": "gleich", "zeige": "S", "ziel": "S", "optionen": ["S", "Z", "G", "C"] },
-        { "typ": "buchstabezuordnen", "art": "gleich", "zeige": "b", "ziel": "b", "optionen": ["b", "d", "p", "q"] },
-        { "typ": "buchstabezuordnen", "art": "gleich", "zeige": "E", "ziel": "E", "optionen": ["E", "F", "B", "L"] },
-        { "typ": "buchstabezuordnen", "art": "gleich", "zeige": "u", "ziel": "u", "optionen": ["u", "n", "v", "w"] },
-        { "typ": "buchstabezuordnen", "art": "gross", "zeige": "a", "ziel": "A", "optionen": ["A", "O", "E", "H"] },
-        { "typ": "buchstabezuordnen", "art": "gross", "zeige": "m", "ziel": "M", "optionen": ["M", "N", "W", "H"] },
-        { "typ": "buchstabezuordnen", "art": "gross", "zeige": "t", "ziel": "T", "optionen": ["T", "F", "L", "I"] },
-        { "typ": "buchstabezuordnen", "art": "gross", "zeige": "r", "ziel": "R", "optionen": ["R", "P", "B", "K"] },
-        { "typ": "buchstabezuordnen", "art": "gross", "zeige": "d", "ziel": "D", "optionen": ["D", "B", "P", "O"] }
-      ]
+     "typ": "buchstabezuordnen",
+     "art": "gleich",
+     "zeige": "M",
+     "ziel": "M",
+     "optionen": [
+      "M",
+      "N",
+      "W",
+      "H"
+     ]
     },
     {
-      "stufe": 2,
-      "name": "Lautebene: Anfangsbuchstaben finden",
-      "kompetenz": "Hört den Anlaut eines Wortes und ordnet ihm den passenden Buchstaben zu.",
-      "aufgaben": [
-        { "typ": "anlaut", "wort": "auto",  "ziel": "A", "optionen": ["A", "O", "U"] },
-        { "typ": "anlaut", "wort": "baum",  "ziel": "B", "optionen": ["B", "P", "D"] },
-        { "typ": "anlaut", "wort": "kuh",   "ziel": "K", "optionen": ["K", "G", "T"] },
-        { "typ": "anlaut", "wort": "nase",  "ziel": "N", "optionen": ["N", "M", "L"] },
-        { "typ": "anlaut", "wort": "rose",  "ziel": "R", "optionen": ["R", "L", "H"] },
-        { "typ": "anlaut", "wort": "tasse", "ziel": "T", "optionen": ["T", "D", "K"] },
-        { "typ": "anlaut", "wort": "uhr",   "ziel": "U", "optionen": ["U", "O", "A"] },
-        { "typ": "anlaut", "wort": "zug",   "ziel": "Z", "optionen": ["Z", "S", "T"] },
-        { "typ": "anlaut", "wort": "mond",  "ziel": "M", "optionen": ["M", "N", "W"] },
-        { "typ": "anlaut", "wort": "igel",  "ziel": "I", "optionen": ["I", "E", "A"] }
-      ]
+     "typ": "buchstabezuordnen",
+     "art": "gleich",
+     "zeige": "S",
+     "ziel": "S",
+     "optionen": [
+      "S",
+      "Z",
+      "G",
+      "C"
+     ]
     },
     {
-      "stufe": 3,
-      "name": "Lautgetreue Wörter: Wörter aus Buchstaben legen",
-      "kompetenz": "Schreibt lautgetreue Wörter vollständig und in der richtigen Reihenfolge.",
-      "aufgaben": [
-        { "typ": "legen", "wort": "hose",   "teile": ["H", "o", "s", "e"],           "extra": ["a", "n"] },
-        { "typ": "legen", "wort": "nase",   "teile": ["N", "a", "s", "e"],           "extra": ["o", "m"] },
-        { "typ": "legen", "wort": "igel",   "teile": ["I", "g", "e", "l"],           "extra": ["k", "a"] },
-        { "typ": "legen", "wort": "tomate", "teile": ["T", "o", "m", "a", "t", "e"], "extra": ["n", "i"] },
-        { "typ": "legen", "wort": "banane", "teile": ["B", "a", "n", "a", "n", "e"], "extra": ["m", "o"] },
-        { "typ": "legen", "wort": "auto",   "teile": ["Au", "t", "o"],               "extra": ["d", "ei"] },
-        { "typ": "legen", "wort": "maus",   "teile": ["M", "au", "s"],               "extra": ["n", "ei"] },
-        { "typ": "legen", "wort": "fisch",  "teile": ["F", "i", "sch"],              "extra": ["w", "e"] },
-        { "typ": "legen", "wort": "rose",   "teile": ["R", "o", "s", "e"],           "extra": ["l", "a"] },
-        { "typ": "legen", "wort": "hase",   "teile": ["H", "a", "s", "e"],           "extra": ["o", "f"] },
-        { "typ": "legen", "wort": "ente",   "teile": ["E", "n", "t", "e"],           "extra": ["a", "d"] }
-      ]
+     "typ": "buchstabezuordnen",
+     "art": "gleich",
+     "zeige": "b",
+     "ziel": "b",
+     "optionen": [
+      "b",
+      "d",
+      "p",
+      "q"
+     ]
     },
-    { "stufe": 4, "name": "Rechtschreibmuster: Doppelkonsonanten, ie, ck, Großschreibung", "kompetenz": "Wendet erste Rechtschreibmuster an.", "aufgaben": [] },
-    { "stufe": 5, "name": "Sätze schreiben", "kompetenz": "Schreibt kurze Sätze.", "aufgaben": [] }
-  ]
+    {
+     "typ": "buchstabezuordnen",
+     "art": "gleich",
+     "zeige": "E",
+     "ziel": "E",
+     "optionen": [
+      "E",
+      "F",
+      "B",
+      "L"
+     ]
+    },
+    {
+     "typ": "buchstabezuordnen",
+     "art": "gleich",
+     "zeige": "u",
+     "ziel": "u",
+     "optionen": [
+      "u",
+      "n",
+      "v",
+      "w"
+     ]
+    },
+    {
+     "typ": "buchstabezuordnen",
+     "art": "gross",
+     "zeige": "a",
+     "ziel": "A",
+     "optionen": [
+      "A",
+      "O",
+      "E",
+      "H"
+     ]
+    },
+    {
+     "typ": "buchstabezuordnen",
+     "art": "gross",
+     "zeige": "m",
+     "ziel": "M",
+     "optionen": [
+      "M",
+      "N",
+      "W",
+      "H"
+     ]
+    },
+    {
+     "typ": "buchstabezuordnen",
+     "art": "gross",
+     "zeige": "t",
+     "ziel": "T",
+     "optionen": [
+      "T",
+      "F",
+      "L",
+      "I"
+     ]
+    },
+    {
+     "typ": "buchstabezuordnen",
+     "art": "gross",
+     "zeige": "r",
+     "ziel": "R",
+     "optionen": [
+      "R",
+      "P",
+      "B",
+      "K"
+     ]
+    },
+    {
+     "typ": "buchstabezuordnen",
+     "art": "gross",
+     "zeige": "d",
+     "ziel": "D",
+     "optionen": [
+      "D",
+      "B",
+      "P",
+      "O"
+     ]
+    }
+   ],
+   "generatoren": [
+    {
+     "gen": "buchstabezuordnen",
+     "anzahl": 10
+    }
+   ]
+  },
+  {
+   "stufe": 2,
+   "name": "Lautebene: Anfangsbuchstaben finden",
+   "kompetenz": "Hört den Anlaut eines Wortes und ordnet ihm den passenden Buchstaben zu.",
+   "aufgaben": [
+    {
+     "typ": "anlaut",
+     "wort": "auto",
+     "ziel": "A",
+     "optionen": [
+      "A",
+      "O",
+      "U"
+     ]
+    },
+    {
+     "typ": "anlaut",
+     "wort": "baum",
+     "ziel": "B",
+     "optionen": [
+      "B",
+      "P",
+      "D"
+     ]
+    },
+    {
+     "typ": "anlaut",
+     "wort": "kuh",
+     "ziel": "K",
+     "optionen": [
+      "K",
+      "G",
+      "T"
+     ]
+    },
+    {
+     "typ": "anlaut",
+     "wort": "nase",
+     "ziel": "N",
+     "optionen": [
+      "N",
+      "M",
+      "L"
+     ]
+    },
+    {
+     "typ": "anlaut",
+     "wort": "rose",
+     "ziel": "R",
+     "optionen": [
+      "R",
+      "L",
+      "H"
+     ]
+    },
+    {
+     "typ": "anlaut",
+     "wort": "tasse",
+     "ziel": "T",
+     "optionen": [
+      "T",
+      "D",
+      "K"
+     ]
+    },
+    {
+     "typ": "anlaut",
+     "wort": "uhr",
+     "ziel": "U",
+     "optionen": [
+      "U",
+      "O",
+      "A"
+     ]
+    },
+    {
+     "typ": "anlaut",
+     "wort": "zug",
+     "ziel": "Z",
+     "optionen": [
+      "Z",
+      "S",
+      "T"
+     ]
+    },
+    {
+     "typ": "anlaut",
+     "wort": "mond",
+     "ziel": "M",
+     "optionen": [
+      "M",
+      "N",
+      "W"
+     ]
+    },
+    {
+     "typ": "anlaut",
+     "wort": "igel",
+     "ziel": "I",
+     "optionen": [
+      "I",
+      "E",
+      "A"
+     ]
+    }
+   ],
+   "generatoren": [
+    {
+     "gen": "anlaut",
+     "anzahl": 10
+    }
+   ]
+  },
+  {
+   "stufe": 3,
+   "name": "Lautgetreue Wörter: Wörter aus Buchstaben legen",
+   "kompetenz": "Schreibt lautgetreue Wörter vollständig und in der richtigen Reihenfolge.",
+   "aufgaben": [
+    {
+     "typ": "legen",
+     "wort": "hose",
+     "teile": [
+      "H",
+      "o",
+      "s",
+      "e"
+     ],
+     "extra": [
+      "a",
+      "n"
+     ]
+    },
+    {
+     "typ": "legen",
+     "wort": "nase",
+     "teile": [
+      "N",
+      "a",
+      "s",
+      "e"
+     ],
+     "extra": [
+      "o",
+      "m"
+     ]
+    },
+    {
+     "typ": "legen",
+     "wort": "igel",
+     "teile": [
+      "I",
+      "g",
+      "e",
+      "l"
+     ],
+     "extra": [
+      "k",
+      "a"
+     ]
+    },
+    {
+     "typ": "legen",
+     "wort": "tomate",
+     "teile": [
+      "T",
+      "o",
+      "m",
+      "a",
+      "t",
+      "e"
+     ],
+     "extra": [
+      "n",
+      "i"
+     ]
+    },
+    {
+     "typ": "legen",
+     "wort": "banane",
+     "teile": [
+      "B",
+      "a",
+      "n",
+      "a",
+      "n",
+      "e"
+     ],
+     "extra": [
+      "m",
+      "o"
+     ]
+    },
+    {
+     "typ": "legen",
+     "wort": "auto",
+     "teile": [
+      "Au",
+      "t",
+      "o"
+     ],
+     "extra": [
+      "d",
+      "ei"
+     ]
+    },
+    {
+     "typ": "legen",
+     "wort": "maus",
+     "teile": [
+      "M",
+      "au",
+      "s"
+     ],
+     "extra": [
+      "n",
+      "ei"
+     ]
+    },
+    {
+     "typ": "legen",
+     "wort": "fisch",
+     "teile": [
+      "F",
+      "i",
+      "sch"
+     ],
+     "extra": [
+      "w",
+      "e"
+     ]
+    },
+    {
+     "typ": "legen",
+     "wort": "rose",
+     "teile": [
+      "R",
+      "o",
+      "s",
+      "e"
+     ],
+     "extra": [
+      "l",
+      "a"
+     ]
+    },
+    {
+     "typ": "legen",
+     "wort": "hase",
+     "teile": [
+      "H",
+      "a",
+      "s",
+      "e"
+     ],
+     "extra": [
+      "o",
+      "f"
+     ]
+    },
+    {
+     "typ": "legen",
+     "wort": "ente",
+     "teile": [
+      "E",
+      "n",
+      "t",
+      "e"
+     ],
+     "extra": [
+      "a",
+      "d"
+     ]
+    },
+    {
+     "typ": "legen",
+     "wort": "oma",
+     "teile": [
+      "O",
+      "m",
+      "a"
+     ]
+    },
+    {
+     "typ": "legen",
+     "wort": "opa",
+     "teile": [
+      "O",
+      "p",
+      "a"
+     ]
+    },
+    {
+     "typ": "legen",
+     "wort": "sofa",
+     "teile": [
+      "S",
+      "o",
+      "f",
+      "a"
+     ]
+    },
+    {
+     "typ": "legen",
+     "wort": "lupe",
+     "teile": [
+      "L",
+      "u",
+      "p",
+      "e"
+     ]
+    },
+    {
+     "typ": "legen",
+     "wort": "hut",
+     "teile": [
+      "H",
+      "u",
+      "t"
+     ]
+    },
+    {
+     "typ": "legen",
+     "wort": "nest",
+     "teile": [
+      "N",
+      "e",
+      "s",
+      "t"
+     ]
+    },
+    {
+     "typ": "legen",
+     "wort": "pilz",
+     "teile": [
+      "P",
+      "i",
+      "l",
+      "z"
+     ]
+    },
+    {
+     "typ": "legen",
+     "wort": "kamel",
+     "teile": [
+      "K",
+      "a",
+      "m",
+      "e",
+      "l"
+     ]
+    },
+    {
+     "typ": "legen",
+     "wort": "palme",
+     "teile": [
+      "P",
+      "a",
+      "l",
+      "m",
+      "e"
+     ]
+    },
+    {
+     "typ": "legen",
+     "wort": "rakete",
+     "teile": [
+      "R",
+      "a",
+      "k",
+      "e",
+      "t",
+      "e"
+     ]
+    },
+    {
+     "typ": "legen",
+     "wort": "salat",
+     "teile": [
+      "S",
+      "a",
+      "l",
+      "a",
+      "t"
+     ]
+    },
+    {
+     "typ": "legen",
+     "wort": "melone",
+     "teile": [
+      "M",
+      "e",
+      "l",
+      "o",
+      "n",
+      "e"
+     ]
+    },
+    {
+     "typ": "legen",
+     "wort": "gurke",
+     "teile": [
+      "G",
+      "u",
+      "r",
+      "k",
+      "e"
+     ]
+    },
+    {
+     "typ": "legen",
+     "wort": "eule",
+     "teile": [
+      "Eu",
+      "l",
+      "e"
+     ]
+    },
+    {
+     "typ": "legen",
+     "wort": "kiwi",
+     "teile": [
+      "K",
+      "i",
+      "w",
+      "i"
+     ]
+    },
+    {
+     "typ": "legen",
+     "wort": "taxi",
+     "teile": [
+      "T",
+      "a",
+      "x",
+      "i"
+     ]
+    }
+   ]
+  },
+  {
+   "stufe": 4,
+   "name": "Rechtschreibmuster: Doppelkonsonanten, ie, ck, Großschreibung",
+   "kompetenz": "Erkennt die richtige Schreibweise bei häufigen Rechtschreibmustern.",
+   "aufgaben": [
+    {
+     "typ": "schreibweise",
+     "wort": "sonne",
+     "muster": "Doppelkonsonant",
+     "optionen": [
+      {
+       "text": "Sonne"
+      },
+      {
+       "text": "Sone",
+       "fehler": "Doppelkonsonant"
+      },
+      {
+       "text": "sonne",
+       "fehler": "Großschreibung"
+      }
+     ]
+    },
+    {
+     "typ": "schreibweise",
+     "wort": "tasse",
+     "muster": "Doppelkonsonant",
+     "optionen": [
+      {
+       "text": "Tasse"
+      },
+      {
+       "text": "Tase",
+       "fehler": "Doppelkonsonant"
+      },
+      {
+       "text": "tasse",
+       "fehler": "Großschreibung"
+      }
+     ]
+    },
+    {
+     "typ": "schreibweise",
+     "wort": "ball",
+     "muster": "Doppelkonsonant",
+     "optionen": [
+      {
+       "text": "Ball"
+      },
+      {
+       "text": "Bal",
+       "fehler": "Doppelkonsonant"
+      },
+      {
+       "text": "ball",
+       "fehler": "Großschreibung"
+      }
+     ]
+    },
+    {
+     "typ": "schreibweise",
+     "wort": "teller",
+     "muster": "Doppelkonsonant",
+     "optionen": [
+      {
+       "text": "Teller"
+      },
+      {
+       "text": "Teler",
+       "fehler": "Doppelkonsonant"
+      },
+      {
+       "text": "teller",
+       "fehler": "Großschreibung"
+      }
+     ]
+    },
+    {
+     "typ": "schreibweise",
+     "wort": "koffer",
+     "muster": "Doppelkonsonant",
+     "optionen": [
+      {
+       "text": "Koffer"
+      },
+      {
+       "text": "Kofer",
+       "fehler": "Doppelkonsonant"
+      },
+      {
+       "text": "koffer",
+       "fehler": "Großschreibung"
+      }
+     ]
+    },
+    {
+     "typ": "schreibweise",
+     "wort": "affe",
+     "muster": "Doppelkonsonant",
+     "optionen": [
+      {
+       "text": "Affe"
+      },
+      {
+       "text": "Afe",
+       "fehler": "Doppelkonsonant"
+      },
+      {
+       "text": "affe",
+       "fehler": "Großschreibung"
+      }
+     ]
+    },
+    {
+     "typ": "schreibweise",
+     "wort": "tanne",
+     "muster": "Doppelkonsonant",
+     "optionen": [
+      {
+       "text": "Tanne"
+      },
+      {
+       "text": "Tane",
+       "fehler": "Doppelkonsonant"
+      },
+      {
+       "text": "tanne",
+       "fehler": "Großschreibung"
+      }
+     ]
+    },
+    {
+     "typ": "schreibweise",
+     "wort": "bett",
+     "muster": "Doppelkonsonant",
+     "optionen": [
+      {
+       "text": "Bett"
+      },
+      {
+       "text": "Bet",
+       "fehler": "Doppelkonsonant"
+      },
+      {
+       "text": "bett",
+       "fehler": "Großschreibung"
+      }
+     ]
+    },
+    {
+     "typ": "schreibweise",
+     "wort": "biene",
+     "muster": "ie",
+     "optionen": [
+      {
+       "text": "Biene"
+      },
+      {
+       "text": "Bine",
+       "fehler": "ie"
+      },
+      {
+       "text": "biene",
+       "fehler": "Großschreibung"
+      }
+     ]
+    },
+    {
+     "typ": "schreibweise",
+     "wort": "ziege",
+     "muster": "ie",
+     "optionen": [
+      {
+       "text": "Ziege"
+      },
+      {
+       "text": "Zige",
+       "fehler": "ie"
+      },
+      {
+       "text": "ziege",
+       "fehler": "Großschreibung"
+      }
+     ]
+    },
+    {
+     "typ": "schreibweise",
+     "wort": "fliege",
+     "muster": "ie",
+     "optionen": [
+      {
+       "text": "Fliege"
+      },
+      {
+       "text": "Flige",
+       "fehler": "ie"
+      },
+      {
+       "text": "fliege",
+       "fehler": "Großschreibung"
+      }
+     ]
+    },
+    {
+     "typ": "schreibweise",
+     "wort": "brief",
+     "muster": "ie",
+     "optionen": [
+      {
+       "text": "Brief"
+      },
+      {
+       "text": "Brif",
+       "fehler": "ie"
+      },
+      {
+       "text": "brief",
+       "fehler": "Großschreibung"
+      }
+     ]
+    },
+    {
+     "typ": "schreibweise",
+     "wort": "tiger",
+     "muster": "ie",
+     "optionen": [
+      {
+       "text": "Tiger"
+      },
+      {
+       "text": "Tieger",
+       "fehler": "ie"
+      },
+      {
+       "text": "tiger",
+       "fehler": "Großschreibung"
+      }
+     ]
+    },
+    {
+     "typ": "schreibweise",
+     "wort": "socke",
+     "muster": "ck",
+     "optionen": [
+      {
+       "text": "Socke"
+      },
+      {
+       "text": "Soke",
+       "fehler": "ck"
+      },
+      {
+       "text": "socke",
+       "fehler": "Großschreibung"
+      }
+     ]
+    },
+    {
+     "typ": "schreibweise",
+     "wort": "glocke",
+     "muster": "ck",
+     "optionen": [
+      {
+       "text": "Glocke"
+      },
+      {
+       "text": "Glokke",
+       "fehler": "ck"
+      },
+      {
+       "text": "glocke",
+       "fehler": "Großschreibung"
+      }
+     ]
+    },
+    {
+     "typ": "schreibweise",
+     "wort": "jacke",
+     "muster": "ck",
+     "optionen": [
+      {
+       "text": "Jacke"
+      },
+      {
+       "text": "Jake",
+       "fehler": "ck"
+      },
+      {
+       "text": "jacke",
+       "fehler": "Großschreibung"
+      }
+     ]
+    },
+    {
+     "typ": "schreibweise",
+     "wort": "schnecke",
+     "muster": "ck",
+     "optionen": [
+      {
+       "text": "Schnecke"
+      },
+      {
+       "text": "Schneke",
+       "fehler": "ck"
+      },
+      {
+       "text": "schnecke",
+       "fehler": "Großschreibung"
+      }
+     ]
+    },
+    {
+     "typ": "schreibweise",
+     "wort": "hund",
+     "muster": "Großschreibung",
+     "optionen": [
+      {
+       "text": "Hund"
+      },
+      {
+       "text": "hund",
+       "fehler": "Großschreibung"
+      },
+      {
+       "text": "Hunt",
+       "fehler": "Sonstige Schreibweise"
+      }
+     ]
+    },
+    {
+     "typ": "schreibweise",
+     "wort": "maus",
+     "muster": "Großschreibung",
+     "optionen": [
+      {
+       "text": "Maus"
+      },
+      {
+       "text": "maus",
+       "fehler": "Großschreibung"
+      },
+      {
+       "text": "Mauss",
+       "fehler": "Sonstige Schreibweise"
+      }
+     ]
+    },
+    {
+     "typ": "schreibweise",
+     "wort": "baum",
+     "muster": "Großschreibung",
+     "optionen": [
+      {
+       "text": "Baum"
+      },
+      {
+       "text": "baum",
+       "fehler": "Großschreibung"
+      },
+      {
+       "text": "Boum",
+       "fehler": "Sonstige Schreibweise"
+      }
+     ]
+    },
+    {
+     "typ": "schreibweise",
+     "wort": "lampe",
+     "muster": "Großschreibung",
+     "optionen": [
+      {
+       "text": "Lampe"
+      },
+      {
+       "text": "lampe",
+       "fehler": "Großschreibung"
+      },
+      {
+       "text": "Lambe",
+       "fehler": "Sonstige Schreibweise"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "stufe": 5,
+   "name": "Sätze schreiben: diktierte Sätze, Bilder beschriften",
+   "kompetenz": "Schreibt diktierte Sätze und beschriftet Bilder selbstständig.",
+   "aufgaben": [
+    {
+     "typ": "satzlegen",
+     "satz": "Der Hund bellt.",
+     "woerter": [
+      "Der",
+      "Hund",
+      "bellt."
+     ],
+     "extra": [
+      "hund",
+      "Bellt."
+     ]
+    },
+    {
+     "typ": "satzlegen",
+     "satz": "Die Katze schläft.",
+     "woerter": [
+      "Die",
+      "Katze",
+      "schläft."
+     ],
+     "extra": [
+      "katze",
+      "Der"
+     ]
+    },
+    {
+     "typ": "satzlegen",
+     "satz": "Ich esse einen Apfel.",
+     "woerter": [
+      "Ich",
+      "esse",
+      "einen",
+      "Apfel."
+     ],
+     "extra": [
+      "apfel.",
+      "isst"
+     ]
+    },
+    {
+     "typ": "satzlegen",
+     "satz": "Mama liest ein Buch.",
+     "woerter": [
+      "Mama",
+      "liest",
+      "ein",
+      "Buch."
+     ],
+     "extra": [
+      "buch.",
+      "list"
+     ]
+    },
+    {
+     "typ": "satzlegen",
+     "satz": "Der Ball ist rot.",
+     "woerter": [
+      "Der",
+      "Ball",
+      "ist",
+      "rot."
+     ],
+     "extra": [
+      "ball",
+      "Rot."
+     ]
+    },
+    {
+     "typ": "satzlegen",
+     "satz": "Wir spielen im Garten.",
+     "woerter": [
+      "Wir",
+      "spielen",
+      "im",
+      "Garten."
+     ],
+     "extra": [
+      "garten.",
+      "Spielen"
+     ]
+    },
+    {
+     "typ": "satzlegen",
+     "satz": "Tom fährt mit dem Rad.",
+     "woerter": [
+      "Tom",
+      "fährt",
+      "mit",
+      "dem",
+      "Rad."
+     ],
+     "extra": [
+      "rad.",
+      "fährd"
+     ]
+    },
+    {
+     "typ": "satzlegen",
+     "satz": "Die Sonne scheint.",
+     "woerter": [
+      "Die",
+      "Sonne",
+      "scheint."
+     ],
+     "extra": [
+      "sonne",
+      "schaint."
+     ]
+    },
+    {
+     "typ": "beschriften",
+     "wort": "hund"
+    },
+    {
+     "typ": "beschriften",
+     "wort": "sonne"
+    },
+    {
+     "typ": "beschriften",
+     "wort": "tasse"
+    },
+    {
+     "typ": "beschriften",
+     "wort": "kuchen"
+    },
+    {
+     "typ": "beschriften",
+     "wort": "fisch"
+    },
+    {
+     "typ": "beschriften",
+     "wort": "brille"
+    },
+    {
+     "typ": "beschriften",
+     "wort": "giraffe"
+    },
+    {
+     "typ": "beschriften",
+     "wort": "schnecke"
+    },
+    {
+     "typ": "beschriften",
+     "wort": "zitrone"
+    },
+    {
+     "typ": "beschriften",
+     "wort": "elefant"
+    }
+   ]
+  }
+ ]
 }

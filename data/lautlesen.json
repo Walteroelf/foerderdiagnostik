@@ -1,0 +1,9 @@
+{
+  "_hinweis": "Texte für das laute Lesen im Lehrkraftmodus. Neue Texte einfach ergänzen.",
+  "texte": [
+    { "id": "l1", "titel": "Mein Hund", "niveau": "sehr leicht", "text": "Ich habe einen Hund. Er ist braun. Er heißt Bello. Bello ist lieb." },
+    { "id": "l2", "titel": "Im Park", "niveau": "leicht", "text": "Mama und ich gehen in den Park. Dort ist ein See. Auf dem See sind Enten. Wir geben den Enten Brot. Die Enten freuen sich." },
+    { "id": "l3", "titel": "Der Ausflug", "niveau": "mittel", "text": "Heute macht unsere Klasse einen Ausflug. Wir fahren mit dem Bus zum Bauernhof. Dort leben Kühe, Schweine und Hühner. Ein Kalb ist erst zwei Tage alt. Wir dürfen es streicheln. Zum Schluss bekommt jedes Kind ein frisches Ei." },
+    { "id": "l4", "titel": "Das Gewitter", "niveau": "schwer", "text": "Am Nachmittag wurde der Himmel plötzlich dunkel. Der Wind wehte so stark, dass die Äste der Bäume hin und her schaukelten. Dann begann es zu blitzen und zu donnern. Lena lief schnell ins Haus und schaute aus dem Fenster. Nach einer halben Stunde war das Gewitter vorbei, und über den Feldern leuchtete ein bunter Regenbogen." }
+  ]
+}

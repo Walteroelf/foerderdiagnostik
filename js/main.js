@@ -1,3 +1,6 @@
+import { h, knopf } from './dom.js';
+import { anweisung, optionInhalt, legenSeite, satzLegenSeite, tastaturSeite, vorlageKlasse } from './aufgaben.js';
+import { aktivierbar, neueSeite, scanStopp, einstellungen, speichereEinstellungen, wendeAn } from './bedienung.js';
 import { speicher } from './storage.js';
 import { erzeugePseudonym, siehtAusWiePseudonym, schoenesPseudonym } from './pseudonym.js';
 import { sprich, stopp, spracheVerfuegbar, deutscheStimmen, setzeStimme, aktuelleStimme, tempo, setzeTempo } from './sprache.js';
@@ -5,41 +8,29 @@ import {
   initSymbole, bildElement, wortInfo, anzahlBilder, speichereBild, loescheSatz, wortAusDateiname, ladeArasaac,
 } from './symbole.js';
 import { Testlauf } from './testlauf.js';
-import { schuelerText, bogenText, gesamtText, dateiname } from './protokoll.js';
+import { hatAufgaben } from './generatoren.js';
+import { schuelerText, bogenText, gesamtText, lautleseText, dateiname } from './protokoll.js';
 
 const daten = {};
 const app = document.getElementById('app');
 
 // ---------- Hilfsfunktionen ----------
-function h(tag, attrs = {}, ...kinder) {
-  const el = document.createElement(tag);
-  for (const [k, v] of Object.entries(attrs || {})) {
-    if (k === 'class') el.className = v;
-    else if (k.startsWith('on') && typeof v === 'function') el.addEventListener(k.slice(2), v);
-    else if (v === true) el.setAttribute(k, '');
-    else if (v !== false && v != null) el.setAttribute(k, v);
-  }
-  for (const kind of kinder.flat()) {
-    if (kind == null || kind === false) continue;
-    el.append(kind instanceof Node ? kind : String(kind));
-  }
-  return el;
-}
-
 function zeige(...knoten) {
   stopp();
+  scanStopp();
   app.replaceChildren(...knoten);
   window.scrollTo(0, 0);
   aktualisiereFuss();
 }
-
-const knopf = (text, onclick, klasse = 'knopf') => h('button', { class: klasse, type: 'button', onclick }, text);
 
 const kopf = (titel, zurueck) =>
   h('header', { class: 'kopf' },
     zurueck ? knopf('← Zurück', zurueck, 'knopf klein leise') : h('span'),
     h('h1', {}, titel),
     h('span'));
+
+// Großer Knopf in der Kinderansicht (auch per Taster/Haltezeit bedienbar)
+const kinderKnopf = (text, fn) => aktivierbar(h('button', { class: 'knopf riesig', type: 'button' }, text), fn);
 
 const vorlesen = (text) =>
   h('button', { class: 'vorlesen', type: 'button', 'aria-label': 'Vorlesen', onclick: () => sprich(text) }, '🔊');
@@ -104,7 +95,7 @@ function pseudonymSeite(modus) {
   const weiter = (p) => {
     speicher.merkePseudonym(p);
     if (modus === 'schueler') bereichSeite(p);
-    else bogenSeite(p);
+    else lehrkraftMenue(p);
   };
   const neu = () => {
     let p = erzeugePseudonym(speicher.pseudonyme());
@@ -181,8 +172,8 @@ function stufeSeite(p, def) {
       h('p', { class: 'unter' }, 'Für die Lehrkraft: Mit welcher Stufe soll das Kind beginnen? Die App passt die Stufe danach selbst an.'),
       h('div', { class: 'stufen' },
         def.stufen.map((s) =>
-          h('button', { class: 'stufe', type: 'button', disabled: !s.aufgaben.length, onclick: () => testStarten(p, def, s.stufe) },
-            h('strong', {}, `Stufe ${s.stufe}`), h('span', {}, s.name), !s.aufgaben.length && h('small', {}, 'folgt bald'))))));
+          h('button', { class: 'stufe', type: 'button', disabled: !hatAufgaben(s), onclick: () => testStarten(p, def, s.stufe) },
+            h('strong', {}, `Stufe ${s.stufe}`), h('span', {}, s.name), !hatAufgaben(s) && h('small', {}, 'folgt bald'))))));
 }
 
 function testStarten(p, def, stufe) {
@@ -192,128 +183,9 @@ function testStarten(p, def, stufe) {
       h('div', { class: 'pseudonym klein' }, '🌟'),
       h('h2', {}, 'Hallo! Los geht\'s.'),
       h('p', {}, 'Hör gut zu und tippe auf die richtige Antwort.'),
-      knopf('Start', () => aufgabeSeite(lauf), 'knopf riesig')));
+      kinderKnopf('Start', () => aufgabeSeite(lauf))));
+  neueSeite();
   sprich('Hallo! Hör gut zu und tippe auf die richtige Antwort. Tippe auf Start.');
-}
-
-function anweisung(a) {
-  const w = (k) => wortInfo(k).wort;
-  switch (a.typ) {
-    case 'zuordnen':
-      return { text: 'Was passt zusammen?', sprache: 'Schau dir das Bild an. Was passt dazu? Tippe auf das passende Bild.', vorlage: bildElement(a.ziel, 'foto') };
-    case 'buchstabe':
-      return { text: 'Hör gut zu. Tippe auf den Buchstaben.', sprache: `Tippe auf das ${a.ziel}.` };
-    case 'anlaut':
-      return { text: 'Womit fängt das Wort an?', sprache: `${w(a.wort)}. Womit fängt ${w(a.wort)} an? Tippe auf den Buchstaben.`, vorlage: bildElement(a.wort, 'symbol') };
-    case 'silben':
-      return { text: 'Wie viele Silben? Klatsch mit!', sprache: `${w(a.wort)}. Wie viele Silben hat ${w(a.wort)}? Klatsch mit.`, vorlage: bildElement(a.wort, 'symbol') };
-    case 'wortbild':
-      return { text: 'Welches Wort passt zum Bild?', sprache: 'Welches Wort passt zum Bild? Lies genau.', vorlage: bildElement(a.wort, 'symbol') };
-    case 'buchstabezuordnen':
-      return a.art === 'gross'
-        ? { text: 'Finde den großen Buchstaben.', sprache: 'Hier ist ein kleiner Buchstabe. Finde den passenden großen Buchstaben.', vorlage: h('span', { class: 'buchstabe' }, a.zeige) }
-        : { text: 'Finde den gleichen Buchstaben.', sprache: 'Finde den gleichen Buchstaben.', vorlage: h('span', { class: 'buchstabe' }, a.zeige) };
-    case 'legen':
-      return { text: 'Schreib das Wort.', sprache: `Schreib das Wort ${w(a.wort)}. Tippe die Buchstaben nacheinander an.` };
-    case 'menge':
-      return { text: `Wo sind ${a.frage}?`, sprache: `Wo sind ${a.frage}? Tippe auf die Seite mit ${a.frage === 'mehr' ? 'mehr' : 'weniger'} Bildern.` };
-    case 'simultan':
-      return { text: 'Wie viele Punkte?', sprache: 'Wie viele Punkte siehst du?', vorlage: wuerfel(a.ziel) };
-    case 'zahlmenge':
-      return { text: `Wo sind ${a.ziel}?`, sprache: `Wo sind ${a.ziel}? Tippe auf das passende Bild.`, vorlage: h('span', { class: 'zahl-gross' }, a.ziel) };
-    case 'rechnen': {
-      const wort = a.op === '+' ? 'plus' : 'minus';
-      return {
-        text: 'Rechne.',
-        sprache: `Wie viel ist ${a.a} ${wort} ${a.b}?`,
-        vorlage: a.bilder
-          ? h('span', { class: 'rechenbild-mit-text' }, rechenBild(a), h('span', { class: 'rechentext' }, `${a.a} ${a.op === '-' ? '−' : '+'} ${a.b} = ?`))
-          : h('span', { class: 'rechentext gross' }, `${a.a} ${a.op === '-' ? '−' : '+'} ${a.b} = ?`),
-      };
-    }
-    default:
-      return { text: '', sprache: '' };
-  }
-}
-
-function optionInhalt(a, o) {
-  switch (a.typ) {
-    case 'zuordnen':
-      return [o, bildElement(o, 'symbol')];
-    case 'buchstabe':
-    case 'anlaut':
-      return [o, h('span', { class: 'buchstabe' }, o)];
-    case 'silben':
-      return [o, h('span', { class: 'silben' }, h('span', { class: 'zahl' }, o), h('span', {}, '👏'.repeat(o)))];
-    case 'wortbild':
-      return [o.text, h('span', { class: 'wort' }, o.text)];
-    case 'buchstabezuordnen':
-    case 'simultan':
-    case 'rechnen':
-      return [o, h('span', { class: 'buchstabe' }, o)];
-    case 'menge':
-      return [o, menge(o === 'links' ? a.links : a.rechts, a.ding)];
-    case 'zahlmenge':
-      return [o, menge(o, a.ding)];
-    default:
-      return [o, String(o)];
-  }
-}
-
-function menge(n, ding) {
-  return h('span', { class: 'menge', 'aria-label': `${n} Bilder` },
-    Array.from({ length: n }, () => h('span', {}, wortInfo(ding).emoji)));
-}
-
-// Würfelbild: Punkte in fester Anordnung (3×3-Raster)
-const WUERFEL = { 1: [4], 2: [0, 8], 3: [0, 4, 8], 4: [0, 2, 6, 8], 5: [0, 2, 4, 6, 8], 6: [0, 2, 3, 5, 6, 8], 7: [0, 2, 3, 4, 5, 6, 8] };
-function wuerfel(n) {
-  const an = new Set(WUERFEL[n] || []);
-  return h('span', { class: 'wuerfel', 'aria-label': `${n} Punkte` },
-    Array.from({ length: 9 }, (_, i) => h('span', { class: an.has(i) ? 'punkt' : '' })));
-}
-
-function rechenBild(a) {
-  const e = wortInfo(a.ding).emoji;
-  if (a.op === '+') {
-    return h('span', { class: 'rechenbild' }, menge(a.a, a.ding), h('span', { class: 'op' }, '+'), menge(a.b, a.ding));
-  }
-  return h('span', { class: 'rechenbild' },
-    h('span', { class: 'menge' }, Array.from({ length: a.a }, (_, i) => h('span', { class: i >= a.a - a.b ? 'weg' : '' }, e))));
-}
-
-// Schreiben: Wort aus Buchstabenkärtchen legen
-function legenSeite(lauf, a, anw, fertig) {
-  const kaertchen = [...a.teile, ...a.extra]
-    .map((t, i) => ({ t: i === 0 ? t : t.toLowerCase(), id: i }))
-    .sort(() => Math.random() - 0.5);
-  const gelegt = [];
-  const zeile = h('div', { class: 'gelegt' });
-  const knoepfe = kaertchen.map((k) => {
-    const el = h('button', { class: 'kaertchen', type: 'button' }, k.t);
-    el.addEventListener('click', () => {
-      gelegt.push({ k, el });
-      el.disabled = true;
-      male();
-    });
-    return el;
-  });
-  const male = () => {
-    zeile.replaceChildren(...(gelegt.length ? gelegt.map((g) => h('span', { class: 'teil' }, g.k.t)) : [h('span', { class: 'leer' }, '…')]));
-  };
-  male();
-  const loeschen = knopf('⌫', () => {
-    const g = gelegt.pop();
-    if (g) g.el.disabled = false;
-    male();
-  }, 'knopf leise gross-knopf');
-  const ok = knopf('✓ Fertig', () => fertig(gelegt.map((g) => g.k.t).join('|')), 'knopf gross-knopf');
-  return [
-    h('div', { class: 'vorlage klein' }, bildElement(a.wort, 'symbol')),
-    h('div', { class: 'legezeile' }, zeile, loeschen),
-    h('div', { class: 'kaertchen-feld' }, knoepfe),
-    ok,
-  ];
 }
 
 const LOB = ['Danke!', 'Prima, weiter geht\'s!', 'Toll, wie du arbeitest!', 'Super, weiter so!', 'Gut gemacht!'];
@@ -335,10 +207,11 @@ function aufgabeSeite(lauf) {
     setTimeout(() => weiter(lauf), 900);
   };
 
-  const optionen = a.typ === 'legen' ? [] : a.optionen.map((o) => {
+  const sonderform = { legen: legenSeite, satzlegen: satzLegenSeite, beschriften: tastaturSeite }[a.typ];
+  const optionen = sonderform ? [] : a.optionen.map((o) => {
     const [wert, inhalt] = optionInhalt(a, o);
     const el = h('button', { class: `option typ-${a.typ}`, type: 'button' }, inhalt);
-    el.addEventListener('click', () => waehle(wert, el));
+    aktivierbar(el, () => waehle(wert, el));
     return el;
   });
 
@@ -348,13 +221,14 @@ function aufgabeSeite(lauf) {
         Array.from({ length: gesamt }, (_, i) => h('span', { class: i < lauf.index ? 'an' : '' }, '★'))),
       knopf('Beenden', () => {
         if (confirm('Test beenden? Das Protokoll enthält dann nur die bisherigen Aufgaben.')) testEnde(lauf, true);
-      }, 'knopf klein leise')),
+      }, 'knopf klein leise lehrkraft')),
     h('main', { class: 'aufgabe' },
       h('div', { class: 'anweisung' }, vorlesen(anw.sprache), h('p', {}, anw.text)),
-      anw.vorlage && h('div', { class: `vorlage${a.typ === 'rechnen' || a.typ === 'menge' ? ' breit' : ''}` }, anw.vorlage),
-      a.typ === 'legen'
-        ? legenSeite(lauf, a, anw, (wert) => waehle(wert, document.querySelector('.legezeile')))
+      anw.vorlage && h('div', { class: `vorlage ${vorlageKlasse(a)}` }, anw.vorlage),
+      sonderform
+        ? sonderform(a, (wert) => waehle(wert, document.querySelector('.legezeile')))
         : h('div', { class: `optionen anzahl-${optionen.length} typ-${a.typ}` }, optionen)));
+  neueSeite();
   // Zeit erst nach der Anweisung messen
   setTimeout(() => {
     sprich(anw.sprache);
@@ -370,10 +244,11 @@ function weiter(lauf) {
     h('main', { class: 'mitte kindansicht' },
       h('div', { class: 'pseudonym klein' }, '🎈'),
       h('h2', {}, 'Super! Jetzt kommen neue Aufgaben.'),
-      knopf('Weiter', () => {
+      kinderKnopf('Weiter', () => {
         lauf.starteStufe(naechste);
         aufgabeSeite(lauf);
-      }, 'knopf riesig')));
+      })));
+  neueSeite();
   sprich('Super! Jetzt kommen neue Aufgaben. Tippe auf Weiter.');
 }
 
@@ -385,7 +260,7 @@ function testEnde(lauf, abgebrochen) {
       h('div', { class: 'pseudonym klein' }, '🏆'),
       h('h2', {}, 'Geschafft! Das hast du toll gemacht.'),
       !gespeichert && h('p', { class: 'hinweis' }, 'Speichern im Browser nicht möglich. Bitte das Protokoll jetzt als Datei sichern.'),
-      knopf('Für die Lehrkraft: Protokoll', () => schuelerProtokollSeite(ergebnis, startseite), 'knopf leise')));
+      knopf('Für die Lehrkraft: Protokoll', () => schuelerProtokollSeite(ergebnis, startseite), 'knopf leise lehrkraft')));
   sprich('Geschafft! Das hast du toll gemacht.');
 }
 
@@ -430,6 +305,144 @@ function bogenProtokollSeite(bogen, zurueck) {
     text: bogenText(bogen, daten.bogen),
     json: bogen,
     basis: dateiname('kompetenzprotokoll', bogen.pseudonym, '', '').replace(/\.$/, ''),
+    zurueck,
+  });
+}
+
+// ---------- Lehrkraftmodus ----------
+function lehrkraftMenue(p) {
+  zeige(
+    kopf(`Lehrkraftmodus: ${p}`, startseite),
+    h('main', { class: 'mitte' },
+      h('div', { class: 'kacheln' },
+        h('button', { class: 'kachel', type: 'button', onclick: () => bogenSeite(p) },
+          h('span', { class: 'gross' }, '📋'), 'Kompetenzbogen', h('small', {}, 'Einschätzung ausfüllen oder aktualisieren')),
+        h('button', { class: 'kachel', type: 'button', onclick: () => lautLesenAuswahl(p) },
+          h('span', { class: 'gross' }, '🗣️'), 'Lautes Lesen', h('small', {}, 'Kind liest vor, du tippst Fehler mit')))));
+}
+
+// ---------- Lehrkraftmodus: Lautes Lesen ----------
+const woerterVon = (text) => text.split(/\s+/).filter(Boolean);
+
+function lautLesenAuswahl(p) {
+  zeige(
+    kopf('Lautes Lesen: Text wählen', () => lehrkraftMenue(p)),
+    h('main', { class: 'mitte' },
+      h('p', { class: 'unter' }, 'Das Kind liest den Text auf dem iPad vor. Du sitzt daneben und tippst falsch gelesene Wörter an.'),
+      h('div', { class: 'stufen' },
+        daten.lautlesen.texte.map((t) =>
+          h('button', { class: 'stufe', type: 'button', onclick: () => lautLesenSeite(p, t) },
+            h('strong', {}, t.niveau), h('span', {}, t.titel), h('small', {}, `${woerterVon(t.text).length} Wörter`))))));
+}
+
+function lautLesenSeite(p, t) {
+  const woerter = woerterVon(t.text);
+  const status = woerter.map(() => null); // null | 'fehler' | 'korrigiert'
+  let start = null;
+  let ende = null;
+  let endeIndex = woerter.length - 1;
+  let endeModus = false;
+  let uhrTimer = null;
+  const uhr = h('span', { class: 'stoppuhr' }, '0:00');
+  const zeit = () => ((ende || performance.now()) - start) / 1000;
+  const zeigeZeit = () => {
+    const s = Math.floor(zeit());
+    uhr.textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+  };
+  const spans = woerter.map((wort, i) => {
+    const el = h('span', { class: 'lesewort' }, wort);
+    el.addEventListener('click', () => {
+      if (!start || ende) return;
+      if (endeModus) {
+        endeIndex = i;
+        endeModus = false;
+        endeKnopf.classList.remove('an');
+        spans.forEach((x, j) => x.classList.toggle('nicht-gelesen', j > endeIndex));
+        return;
+      }
+      status[i] = status[i] === null ? 'fehler' : status[i] === 'fehler' ? 'korrigiert' : null;
+      el.className = 'lesewort' + (status[i] ? ' ' + status[i] : '') + (i > endeIndex ? ' nicht-gelesen' : '');
+    });
+    return el;
+  });
+  const startKnopf = knopf('▶ Start', () => {
+    if (!start) {
+      start = performance.now();
+      uhrTimer = setInterval(zeigeZeit, 250);
+      startKnopf.textContent = '■ Stopp';
+      textFeld.classList.add('laeuft');
+    } else if (!ende) {
+      ende = performance.now();
+      clearInterval(uhrTimer);
+      zeigeZeit();
+      lautLesenErgebnis(p, t, woerter, status, endeIndex, zeit());
+    }
+  });
+  const endeKnopf = knopf('Hier aufgehört …', () => {
+    endeModus = !endeModus;
+    endeKnopf.classList.toggle('an', endeModus);
+  }, 'knopf klein leise');
+  const textFeld = h('div', { class: 'lautlesetext' }, spans.flatMap((s) => [s, ' ']));
+  zeige(
+    kopf(`Lautes Lesen: ${t.titel}`, () => {
+      clearInterval(uhrTimer);
+      lautLesenAuswahl(p);
+    }),
+    h('main', { class: 'lautlesen' },
+      h('div', { class: 'reihe' }, startKnopf, uhr, endeKnopf),
+      h('p', { class: 'unter' }, 'Nach dem Start: Wort 1× antippen = Fehler (rot), 2× = selbst korrigiert (orange), 3× = zurücksetzen. Liest das Kind nicht bis zum Ende, tippe „Hier aufgehört …“ und dann das letzte gelesene Wort.'),
+      textFeld));
+}
+
+function lautLesenErgebnis(p, t, woerter, status, endeIndex, zeitSek) {
+  const gelesen = endeIndex + 1;
+  const fehler = status.map((s, i) => (s === 'fehler' && i <= endeIndex ? { index: i, wort: woerter[i] } : null)).filter(Boolean);
+  const korrigiert = status.map((s, i) => (s === 'korrigiert' && i <= endeIndex ? { index: i, wort: woerter[i] } : null)).filter(Boolean);
+  const minuten = Math.max(zeitSek, 1) / 60;
+  const ergebnis = {
+    typ: 'lautleseprotokoll',
+    version: 1,
+    id: `l-${Date.now().toString(36)}`,
+    pseudonym: p,
+    datum: new Date().toISOString(),
+    textId: t.id,
+    titel: t.titel,
+    niveau: t.niveau,
+    woerterGesamt: woerter.length,
+    woerterGelesen: gelesen,
+    zeitSek: Math.round(zeitSek),
+    fehler,
+    korrigiert,
+    wpm: Math.round(gelesen / minuten),
+    wcpm: Math.round((gelesen - fehler.length) / minuten),
+    genauigkeit: Math.round(((gelesen - fehler.length) / gelesen) * 100),
+    notiz: '',
+  };
+  const notiz = h('textarea', { rows: 3, placeholder: 'Beobachtungen, z. B. liest silbierend, rät Wortenden (ohne identifizierende Angaben)' });
+  zeige(
+    kopf('Lautes Lesen: Ergebnis', () => lautLesenAuswahl(p)),
+    h('main', { class: 'bogen' },
+      h('section', { class: 'karte' },
+        h('h2', {}, t.titel),
+        h('ul', { class: 'kennzahlen' },
+          h('li', {}, h('strong', {}, ergebnis.wcpm), ' richtig gelesene Wörter pro Minute'),
+          h('li', {}, h('strong', {}, `${ergebnis.genauigkeit} %`), ' Genauigkeit'),
+          h('li', {}, h('strong', {}, `${ergebnis.zeitSek} s`), ` für ${gelesen} von ${woerter.length} Wörtern`),
+          h('li', {}, h('strong', {}, fehler.length), ' Fehler, ', h('strong', {}, korrigiert.length), ' Selbstkorrekturen')),
+        h('label', { class: 'textzeile' }, 'Notiz', notiz)),
+      knopf('Speichern und Protokoll anzeigen', () => {
+        ergebnis.notiz = notiz.value.trim();
+        speicher.speichereLautlesen(ergebnis);
+        lautleseProtokollSeite(ergebnis, () => lehrkraftMenue(p));
+      })));
+}
+
+function lautleseProtokollSeite(r, zurueck) {
+  protokollSeite({
+    titel: 'Protokoll lautes Lesen',
+    text: lautleseText(r, speicher.lautlesen(r.pseudonym)),
+    json: r,
+    basis: dateiname('lautlesen', r.pseudonym, '', '').replace(/\.$/, ''),
     zurueck,
   });
 }
@@ -485,7 +498,7 @@ function bogenSeite(p) {
   });
 
   zeige(
-    kopf(`Kompetenzbogen: ${p}`, startseite),
+    kopf(`Kompetenzbogen: ${p}`, () => lehrkraftMenue(p)),
     h('main', { class: 'bogen' },
       h('p', { class: 'unter' }, 'Antippen zum Auswählen, erneut antippen zum Entfernen. Alles wird automatisch auf diesem iPad gespeichert. ', status),
       bereiche,
@@ -493,6 +506,63 @@ function bogenSeite(p) {
         sichern();
         bogenProtokollSeite(bogen, () => bogenSeite(p));
       })));
+}
+
+// ---------- Fortschritt ----------
+function fortschritt(tests, lesen) {
+  const tag = (iso) => new Date(iso).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: '2-digit' });
+  const bereiche = [...new Set(tests.map((t) => t.bereichTitel))];
+  if (!bereiche.length && !lesen.length) return h('p', { class: 'unter' }, 'Noch keine Ergebnisse auf diesem iPad.');
+  return h('div', { class: 'fortschritt' },
+    bereiche.map((b) =>
+      h('div', { class: 'verlauf' },
+        h('h3', {}, b),
+        tests.filter((t) => t.bereichTitel === b).map((t) =>
+          h('div', { class: 'verlaufzeile' },
+            h('span', { class: 'datum' }, tag(t.datum)),
+            h('span', { class: 'balken', 'aria-label': `sicher bis Stufe ${t.erreichteStufe || 0}` },
+              [1, 2, 3, 4, 5].map((n) => {
+                const st = t.stufen[n];
+                const q = st?.antworten.length ? st.antworten.filter((x) => x.richtig).length / st.antworten.length : null;
+                const klasse = n <= (t.erreichteStufe || 0) ? 'sicher' : q != null && q >= 0.5 ? 'teilweise' : q != null ? 'versucht' : '';
+                return h('span', { class: klasse }, n);
+              })),
+            h('span', { class: 'unter' }, t.erreichteStufe ? `Stufe ${t.erreichteStufe}` : '–'))))),
+    lesen.length > 0 && h('div', { class: 'verlauf' },
+      h('h3', {}, 'Lautes Lesen'),
+      lesen.map((r) =>
+        h('div', { class: 'verlaufzeile' },
+          h('span', { class: 'datum' }, tag(r.datum)),
+          h('span', {}, `${r.wcpm} Wörter/Min. · ${r.genauigkeit} % · „${r.titel}“`)))),
+    h('p', { class: 'legende' },
+      h('span', { class: 'sicher' }, ' '), ' sicher ', h('span', { class: 'teilweise' }, ' '), ' teilweise ', h('span', { class: 'versucht' }, ' '), ' noch nicht'));
+}
+
+// ---------- Bedienung (motorische Hilfen) ----------
+function bedienungKarte() {
+  const e = einstellungen();
+  const auswahl = (schluessel, optionen) => {
+    const sel = h('select', { class: 'auswahl' },
+      optionen.map(([wert, text]) => h('option', { value: wert, selected: String(e[schluessel]) === String(wert) }, text)));
+    sel.addEventListener('change', () => speichereEinstellungen({ [schluessel]: isNaN(sel.value) ? sel.value : Number(sel.value) }));
+    return sel;
+  };
+  return h('section', { class: 'karte' },
+    h('h2', {}, 'Bedienung für das Kind'),
+    h('p', { class: 'unter' }, 'Gilt für dieses iPad. Die gewählte Bedienung steht im Schülerprotokoll, damit Bearbeitungszeiten richtig eingeordnet werden.'),
+    h('label', { class: 'textzeile' }, 'Größe der Antwortfelder',
+      auswahl('groesse', [['normal', 'normal'], ['gross', 'groß'], ['sehrgross', 'sehr groß (2 Felder pro Reihe)']])),
+    h('label', { class: 'textzeile' }, 'Haltezeit (Feld muss kurz gehalten werden, verhindert versehentliches Tippen)',
+      auswahl('haltezeit', [[0, 'aus, einfaches Antippen'], [500, '0,5 Sekunden'], [1000, '1 Sekunde'], [1500, '1,5 Sekunden'], [2000, '2 Sekunden']])),
+    h('label', { class: 'textzeile' }, 'Sperrzeit nach jeder neuen Aufgabe (gegen Doppeltippen)',
+      auswahl('sperrzeit', [[0, 'aus'], [500, '0,5 Sekunden'], [1000, '1 Sekunde'], [2000, '2 Sekunden']])),
+    h('label', { class: 'textzeile' }, 'Tasterbedienung (Scanning)',
+      auswahl('taster', [['aus', 'aus'], ['1', '1 Taster: Markierung wandert automatisch, Taster wählt aus'], ['2', '2 Taster: Taster 1 = weiter, Taster 2 = auswählen']])),
+    h('label', { class: 'textzeile' }, 'Tempo der Markierung (1 Taster)',
+      auswahl('scanTempo', [[1500, '1,5 Sekunden'], [2000, '2 Sekunden'], [3000, '3 Sekunden'], [4000, '4 Sekunden']])),
+    h('p', { class: 'unter' },
+      'Taster: Bluetooth-Taster, die als Tastatur arbeiten (Leertaste und Eingabe). Im 1-Taster-Modus reicht auch Tippen irgendwo auf den Bildschirm. ',
+      'Alternativ kann die iPad-eigene Schaltersteuerung genutzt werden (Einstellungen → Bedienungshilfen → Schaltersteuerung).'));
 }
 
 // ---------- Stimme ----------
@@ -529,32 +599,39 @@ function stimmenKarte() {
 
 // ---------- Verwaltung ----------
 function verwaltung() {
+  const tag = (iso) => new Date(iso).toLocaleDateString('de-DE');
   const liste = speicher.pseudonyme().map((p) => {
     const tests = speicher.tests(p);
     const bogen = speicher.bogen(p);
-    const tag = (iso) => new Date(iso).toLocaleDateString('de-DE');
+    const lesen = speicher.lautlesen(p);
     return h('section', { class: 'karte' },
       h('h2', {}, p),
-      tests.length
-        ? h('ul', { class: 'eintraege' }, tests.map((t) =>
-          h('li', {},
-            h('span', {}, `${tag(t.datum)} · ${t.bereichTitel} · sicher: ${t.erreichteStufe ? 'Stufe ' + t.erreichteStufe : 'keine Stufe'}`),
-            knopf('Anzeigen', () => schuelerProtokollSeite(t, verwaltung), 'knopf klein leise'))))
-        : h('p', { class: 'unter' }, 'Noch kein Schülerprotokoll auf diesem iPad.'),
+      fortschritt(tests, lesen),
+      h('details', {},
+        h('summary', {}, `Einzelne Protokolle (${tests.length + lesen.length})`),
+        h('ul', { class: 'eintraege' },
+          tests.map((t) =>
+            h('li', {},
+              h('span', {}, `${tag(t.datum)} · ${t.bereichTitel} · sicher: ${t.erreichteStufe ? 'Stufe ' + t.erreichteStufe : 'keine Stufe'}`),
+              knopf('Anzeigen', () => schuelerProtokollSeite(t, verwaltung), 'knopf klein leise'))),
+          lesen.map((r) =>
+            h('li', {},
+              h('span', {}, `${tag(r.datum)} · Lautes Lesen „${r.titel}“ · ${r.wcpm} Wörter/Min.`),
+              knopf('Anzeigen', () => lautleseProtokollSeite(r, verwaltung), 'knopf klein leise'))))),
       h('div', { class: 'reihe' },
         bogen
           ? knopf(`Kompetenzbogen (Stand ${tag(bogen.aktualisiert)})`, () => bogenProtokollSeite(bogen, verwaltung), 'knopf klein leise')
           : h('span', { class: 'unter' }, 'Noch kein Kompetenzbogen.'),
         knopf('Kompetenzbogen bearbeiten', () => bogenSeite(p), 'knopf klein leise'),
         knopf('Gesamtprotokoll', () => {
-          if (!tests.length || !bogen) {
-            alert('Für das Gesamtprotokoll braucht es ein Schülerprotokoll und einen Kompetenzbogen. Importiere die fehlende Datei vom anderen iPad.');
+          if (!(tests.length || lesen.length) || !bogen) {
+            alert('Für das Gesamtprotokoll braucht es ein Schüler- oder Leseprotokoll und einen Kompetenzbogen. Importiere die fehlende Datei vom anderen iPad.');
             return;
           }
           protokollSeite({
             titel: 'Gesamtprotokoll',
-            text: gesamtText(tests, bogen, daten.bogen),
-            json: { typ: 'gesamtprotokoll', pseudonym: p, kompetenz: bogen, tests },
+            text: gesamtText(tests, bogen, daten.bogen, lesen),
+            json: { typ: 'gesamtprotokoll', pseudonym: p, kompetenz: bogen, tests, lautlesen: lesen },
             basis: dateiname('gesamtprotokoll', p, '', '').replace(/\.$/, ''),
             zurueck: verwaltung,
           });
@@ -578,8 +655,12 @@ function verwaltung() {
             speicher.speichereBogen(d);
             n++;
           }
+        } else if (d.typ === 'lautleseprotokoll' && d.pseudonym) {
+          speicher.speichereLautlesen(d);
+          n++;
         } else if (d.typ === 'gesamtprotokoll') {
           d.tests?.forEach((t) => speicher.speichereTest(t));
+          d.lautlesen?.forEach((r) => speicher.speichereLautlesen(r));
           if (d.kompetenz) speicher.speichereBogen(d.kompetenz);
           n++;
         } else fehler.push(datei.name);
@@ -624,6 +705,7 @@ function verwaltung() {
         h('h2', {}, 'Protokolle importieren'),
         h('p', { class: 'unter' }, 'JSON-Dateien von einem anderen iPad oder einem früheren Test einlesen, z. B. den Kompetenzbogen vom Lehrkraft-iPad.'),
         importFeld, knopf('Dateien auswählen', () => importFeld.click(), 'knopf leise'), importMeldung),
+      bedienungKarte(),
       stimmenKarte(),
       h('section', { class: 'karte' },
         h('h2', {}, 'Symbole und Fotos'),
@@ -665,14 +747,16 @@ function verwaltung() {
 // ---------- Start ----------
 async function init() {
   const lade = (pfad) => fetch(pfad).then((r) => r.json());
-  const [woerter, lesen, rechtschreibung, mathe, bogen] = await Promise.all(
-    ['woerter', 'lesen', 'rechtschreibung', 'mathe', 'kompetenzbogen'].map((n) => lade(`data/${n}.json`)));
+  const [woerter, lesen, rechtschreibung, mathe, bogen, lautlesen] = await Promise.all(
+    ['woerter', 'lesen', 'rechtschreibung', 'mathe', 'kompetenzbogen', 'lautlesen'].map((n) => lade(`data/${n}.json`)));
+  daten.lautlesen = lautlesen;
   daten.woerter = woerter.woerter;
   daten.lesen = lesen;
   daten.rechtschreibung = rechtschreibung;
   daten.mathe = mathe;
   daten.bogen = bogen;
   await initSymbole(daten.woerter);
+  wendeAn();
   startseite();
   if ('serviceWorker' in navigator && location.protocol === 'https:') {
     navigator.serviceWorker.register('sw.js').catch(() => {});

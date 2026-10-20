@@ -1,5 +1,7 @@
 // Adaptiver Testablauf: Aufgabenblock je Stufe, danach Stufe hoch, runter oder Ende.
 import { wortInfo } from './symbole.js';
+import { erzeugeAufgaben, hatAufgaben } from './generatoren.js';
+import { beschreibung as bedienungText } from './bedienung.js';
 
 export const SICHER_AB = 0.8; // ab 80 % richtig gilt eine Stufe als sicher
 export const UNSICHER_UNTER = 0.5; // unter 50 % geht es eine Stufe zurück
@@ -13,21 +15,49 @@ const mische = (liste) => {
   return a;
 };
 
-// Aufgaben auswählen, Aufgabentypen gleichmäßig mischen
+// Aufgaben auswählen: feste und erzeugte Aufgaben, Aufgabentypen gleichmäßig mischen.
+// Aufgaben mit "gruppe" (z. B. mehrere Fragen zu einem Text) bleiben zusammen.
 function waehleAufgaben(stufeDef, anzahl) {
-  const nachTyp = {};
-  for (const a of mische(stufeDef.aufgaben)) (nachTyp[a.typ] ||= []).push(a);
-  const gruppen = Object.values(nachTyp);
-  const out = [];
-  while (out.length < anzahl && gruppen.some((g) => g.length)) {
-    for (const g of gruppen) if (g.length && out.length < anzahl) out.push(g.shift());
+  const pool = [...(stufeDef.aufgaben || []), ...erzeugeAufgaben(stufeDef.generatoren)];
+  const gesehen = new Set();
+  const eindeutig = pool.filter((a) => {
+    const k = JSON.stringify(a);
+    if (gesehen.has(k)) return false;
+    gesehen.add(k);
+    return true;
+  });
+  let out = [];
+  if (eindeutig.some((a) => a.gruppe)) {
+    const gruppen = {};
+    for (const a of eindeutig) (gruppen[a.gruppe || a.typ] ||= []).push(a);
+    for (const g of mische(Object.values(gruppen))) {
+      if (out.length >= anzahl) break;
+      out.push(...g);
+    }
+  } else {
+    const nachTyp = {};
+    for (const a of mische(eindeutig)) (nachTyp[a.typ] ||= []).push(a);
+    const gruppen = Object.values(nachTyp);
+    while (out.length < anzahl && gruppen.some((g) => g.length)) {
+      for (const g of gruppen) if (g.length && out.length < anzahl) out.push(g.shift());
+    }
+    out = mische(out);
   }
-  return mische(out).map((a) => ({ ...a, optionen: a.typ === 'menge' ? ['links', 'rechts'] : mische(a.optionen || []) }));
+  return out.map((a) => ({ ...a, optionen: a.typ === 'menge' ? ['links', 'rechts'] : a.typ === 'satz' ? ['stimmt', 'stimmt nicht'] : mische(a.optionen || []) }));
 }
 
 const w = (key) => wortInfo(key).wort;
 
-export const rechne = (a, op, b) => (op === '+' ? a + b : a - b);
+export const rechne = (a, op, b) => (op === '+' ? a + b : op === '-' ? a - b : a * b);
+
+export const euro = (cent) => (cent % 100 ? (cent / 100).toFixed(2).replace('.', ',') : String(cent / 100)) + ' €';
+
+// Antworten mit Optionsobjekten: richtig ist die Option ohne "fehler" (bzw. mit richtig: true)
+function optionsBewertung(aufgabe, gewaehlt) {
+  const richtige = aufgabe.optionen.find((o) => o.richtig || (!o.fehler && !aufgabe.optionen.some((x) => x.richtig)));
+  const gewaehlteOption = aufgabe.optionen.find((o) => o.text === gewaehlt);
+  return { richtige: richtige.text, richtig: gewaehlteOption === richtige, fehlerArt: gewaehlteOption?.fehler };
+}
 
 const istTeilfolge = (kurz, lang) => {
   let i = 0;
@@ -136,12 +166,95 @@ export function bewerte(aufgabe, gewaehlt) {
     case 'rechnen': {
       const ziel = rechne(aufgabe.a, aufgabe.op, aufgabe.b);
       const g = Number(gewaehlt);
-      const anders = rechne(aufgabe.a, aufgabe.op === '+' ? '-' : '+', aufgabe.b);
+      const anders = aufgabe.op === '·' ? aufgabe.a + aufgabe.b : rechne(aufgabe.a, aufgabe.op === '+' ? '-' : '+', aufgabe.b);
+      const dreh = ziel >= 10 && ziel < 100 ? (ziel % 10) * 10 + Math.floor(ziel / 10) : null;
+      let fehlerTyp = 'Rechenfehler';
+      if (aufgabe.op === '·' && Math.abs(g - ziel) === aufgabe.b) fehlerTyp = 'Einmaleins: Nachbaraufgabe';
+      else if (g === dreh) fehlerTyp = 'Zahlendreher';
+      else if (g === anders) fehlerTyp = aufgabe.op === '·' ? 'Plus statt mal' : 'Rechenart verwechselt';
+      else if (Math.abs(g - ziel) === 1) fehlerTyp = 'Abweichung um 1 (Hinweis auf Zählfehler)';
+      else if (Math.abs(g - ziel) === 10) fehlerTyp = 'Stellenwertfehler (um 10 daneben)';
       return {
         aufgabe: `${aufgabe.a} ${aufgabe.op} ${aufgabe.b}${aufgabe.bilder ? ' (mit Bildern)' : ''}`,
         richtig: g === ziel,
         fehler: `${g} statt ${ziel}`,
-        fehlerTyp: Math.abs(g - ziel) === 1 ? 'Abweichung um 1 (Hinweis auf Zählfehler)' : g === anders ? 'Rechenart verwechselt' : 'Rechenfehler',
+        fehlerTyp,
+        kategorie: aufgabe.op === '·' ? 'Einmaleins' : aufgabe.bilder ? 'Plus/Minus mit Bildern' : `Plus/Minus bis ${Math.max(ziel, aufgabe.a) > 20 ? 100 : 20}`,
+      };
+    }
+    case 'stellenwert': {
+      const ziel = aufgabe.zehner * 10 + aufgabe.einer;
+      const g = Number(gewaehlt);
+      return {
+        aufgabe: `${aufgabe.zehner} Zehner und ${aufgabe.einer} Einer`,
+        richtig: g === ziel,
+        fehler: `${g} statt ${ziel}`,
+        fehlerTyp: g === aufgabe.einer * 10 + aufgabe.zehner ? 'Zahlendreher (Zehner und Einer vertauscht)' : g === aufgabe.zehner + aufgabe.einer ? 'Zehner als Einer gezählt' : 'Stellenwertfehler',
+      };
+    }
+    case 'geld': {
+      const g = Number(gewaehlt);
+      return {
+        aufgabe: `Geld zählen (${aufgabe.stuecke.map(euro).join(' + ')})`,
+        richtig: g === aufgabe.ziel,
+        fehler: `${euro(g)} statt ${euro(aufgabe.ziel)}`,
+        fehlerTyp: 'Geldbetrag falsch',
+      };
+    }
+    case 'textaufgabe':
+      return {
+        aufgabe: `Textaufgabe: ${aufgabe.text}`,
+        richtig: Number(gewaehlt) === aufgabe.ziel,
+        fehler: `${gewaehlt} statt ${aufgabe.ziel}`,
+        fehlerTyp: 'Textaufgabe',
+      };
+    case 'uhr':
+    case 'schreibweise':
+    case 'satz':
+    case 'textfrage': {
+      if (aufgabe.typ === 'satz') {
+        const richtig = (gewaehlt === 'stimmt') === aufgabe.stimmt;
+        return { aufgabe: `Satz „${aufgabe.satz}“ (${aufgabe.stimmt ? 'stimmt' : 'stimmt nicht'})`, richtig, fehler: `„${gewaehlt}“ gewählt`, fehlerTyp: 'Satzverständnis' };
+      }
+      const b = optionsBewertung(aufgabe, gewaehlt);
+      const aufgabeText =
+        aufgabe.typ === 'uhr' ? `Uhr lesen (${b.richtige})`
+          : aufgabe.typ === 'schreibweise' ? `Schreibweise „${b.richtige}“`
+            : `Text „${aufgabe.text.slice(0, 30)}…“: ${aufgabe.frage}`;
+      return {
+        aufgabe: aufgabeText,
+        richtig: b.richtig,
+        fehler: `„${gewaehlt}“ statt „${b.richtige}“`,
+        fehlerTyp: aufgabe.typ === 'textfrage' ? 'Textverständnis' : aufgabe.typ === 'uhr' ? `Uhr: ${b.fehlerArt || 'falsch'}` : `Rechtschreibung: ${b.fehlerArt || 'falsch'}`,
+        kategorie: aufgabe.typ === 'schreibweise' ? aufgabe.muster : undefined,
+      };
+    }
+    case 'satzlegen': {
+      const soll = aufgabe.woerter;
+      const ist = String(gewaehlt).split('|').filter(Boolean);
+      const klein = (l) => l.map((x) => x.toLowerCase().replace(/[.!?]/g, ''));
+      let fehlerTyp = 'Satz abweichend';
+      if (klein(ist).join(' ') === klein(soll).join(' ')) fehlerTyp = 'Großschreibung oder Satzzeichen';
+      else if (ist.length === soll.length && [...klein(ist)].sort().join() === [...klein(soll)].sort().join()) fehlerTyp = 'Wortreihenfolge';
+      else if (ist.length < soll.length) fehlerTyp = 'Wort ausgelassen';
+      else if (ist.some((x) => aufgabe.extra.includes(x))) fehlerTyp = 'Falsche Wortform gewählt';
+      return {
+        aufgabe: `Diktierter Satz „${aufgabe.satz}“`,
+        richtig: ist.join(' ') === soll.join(' '),
+        fehler: `„${ist.join(' ') || '(nichts)'}“`,
+        fehlerTyp,
+      };
+    }
+    case 'beschriften': {
+      const soll = wortInfo(aufgabe.wort).wort;
+      const ist = String(gewaehlt);
+      let fehlerTyp = schreibFehler([...soll.toLowerCase()], [...ist.toLowerCase()]);
+      if (ist.toLowerCase() === soll.toLowerCase()) fehlerTyp = 'Großschreibung';
+      return {
+        aufgabe: `Bild beschriften „${soll}“`,
+        richtig: ist === soll,
+        fehler: `„${ist || '(nichts)'}“ statt „${soll}“`,
+        fehlerTyp,
       };
     }
     default:
@@ -152,7 +265,7 @@ export function bewerte(aufgabe, gewaehlt) {
 export class Testlauf {
   constructor(bereichDef, pseudonym, einstiegsstufe) {
     this.def = bereichDef;
-    this.verfuegbar = bereichDef.stufen.filter((s) => s.aufgaben.length).map((s) => s.stufe);
+    this.verfuegbar = bereichDef.stufen.filter(hatAufgaben).map((s) => s.stufe);
     this.ergebnis = {
       typ: 'schuelerprotokoll',
       version: 1,
@@ -166,6 +279,7 @@ export class Testlauf {
       stufen: {},
       erreichteStufe: null,
       abgebrochen: false,
+      bedienung: bedienungText(),
     };
     this.starteStufe(einstiegsstufe);
   }
@@ -201,6 +315,7 @@ export class Testlauf {
       gewaehlt: String(gewaehlt),
       fehler: b.richtig ? null : b.fehler,
       fehlerTyp: b.richtig ? null : b.fehlerTyp,
+      kategorie: b.kategorie || null,
       zeitMs: Math.round(zeitMs),
     });
     this.index++;

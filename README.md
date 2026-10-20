@@ -2,17 +2,21 @@
 
 Informelles Förderdiagnostik-Werkzeug für die Förderschule KME. Läuft im Browser auf dem iPad (Safari), ohne Server, ohne Tracking. Alle Eingaben bleiben auf dem Gerät. Ersetzt keine standardisierte Diagnostik.
 
-## Stand (Grundversion)
+## Funktionen
 
-- **Schülermodus:** Pseudonym erzeugen oder eingeben, Bereiche Lesen, Schreiben und Mathe, jeweils Stufen 1–3 mit adaptiver Stufenanpassung, Schülerprotokoll.
-  - Lesen: Bild–Symbol, Buchstaben/Anlaute/Silben, Wort zum Bild.
-  - Schreiben: Buchstaben zuordnen (auch klein–groß), Anfangsbuchstaben, lautgetreue Wörter aus Kärtchen legen mit Fehleranalyse (ausgelassen, hinzugefügt, vertauscht, ersetzt).
-  - Mathe: Mengen vergleichen und Gleiches zuordnen, Würfelbilder und Zahl–Menge, Plus/Minus bis 20 mit und ohne Bilder; Hinweis auf zählendes Rechnen über die Bearbeitungszeit.
+- **Schülermodus:** Pseudonym erzeugen oder eingeben, Bereiche Lesen, Schreiben und Mathe mit je 5 Stufen und adaptiver Stufenanpassung, Schülerprotokoll.
+  - Lesen: 1 Bild–Symbol, 2 Buchstaben/Anlaute/Silben, 3 Wort zum Bild, 4 Sätze „stimmt / stimmt nicht“, 5 kurze Texte mit Fragen.
+  - Schreiben: 1 Buchstaben zuordnen, 2 Anfangsbuchstaben, 3 Wörter aus Kärtchen legen, 4 Rechtschreibmuster (Doppelkonsonant, ie, ck, Großschreibung), 5 diktierte Sätze legen und Bilder mit einer Buchstabentastatur beschriften. Fehleranalyse: ausgelassen, hinzugefügt, vertauscht, ersetzt, Großschreibung, Wortreihenfolge.
+  - Mathe: 1 Mengen vergleichen, 2 Würfelbilder und Zahl–Menge, 3 Plus/Minus bis 20, 4 Zehner/Einer, Plus/Minus bis 100, Einmaleins, 5 Geld, Uhr, Textaufgaben. Hinweise auf zählendes Rechnen, Zahlendreher und Stellenwertfehler.
+  - Viele Aufgaben werden bei jedem Test neu erzeugt (Mathe, Buchstaben, Anlaute, Silben, Bildzuordnung), damit Wiederholungstests vergleichbar bleiben, ohne dass sich Aufgaben wiederholen.
+- **Lehrkraftmodus:**
+  - Kompetenzbogen, unabhängig vom Schülertest und auf einem anderen iPad nutzbar.
+  - Lautes Lesen: Das Kind liest einen Text vom iPad vor, die Lehrkraft tippt Fehler und Selbstkorrekturen mit. Ergebnis: richtig gelesene Wörter pro Minute, Genauigkeit, Fehlerwörter.
+- **Protokolle:** Text zum Kopieren für Claude, Download als `.md` und `.json`, Import, Gesamtprotokoll aus Kompetenzbogen, Schüler- und Leseprotokollen.
+- **Fortschritt:** Unter „Protokolle und Einstellungen“ zeigt jede Pseudonym-Karte die erreichten Stufen je Test und das Lesetempo im Verlauf.
+- **Bedienung für das Kind** (motorische Hilfen, pro iPad): größere Antwortfelder, Haltezeit gegen versehentliches Tippen, Sperrzeit nach jeder Aufgabe, Tasterbedienung mit 1 Taster (automatisches Scanning, auch Tippen irgendwo) oder 2 Tastern (weiter/auswählen). Die gewählte Bedienung steht im Protokoll.
 - **Vorlesestimme:** Die App nimmt automatisch die beste deutsche Stimme. In den Einstellungen lassen sich Stimme und Tempo wählen. Bessere Stimmen auf dem iPad: Einstellungen → Bedienungshilfen → Gesprochene Inhalte → Stimmen → Deutsch (z. B. „Anna (Premium)“ laden).
-- **Lehrkraftmodus:** Kompetenzbogen, unabhängig vom Schülertest und auf einem anderen iPad nutzbar, eigenes Kompetenzprotokoll.
-- **Protokolle:** Text zum Kopieren für Claude, Download als `.md` und `.json`, Import früherer oder fremder Protokolle, Gesamtprotokoll aus Schüler- und Kompetenzprotokoll.
 - **Symbole:** Emoji als Ersatz; ARASAAC-Piktogramme lassen sich in der App einmalig laden; eigene Symbole (z. B. METACOM) und Fotos werden nur lokal gespeichert.
-- Folgt: jeweils Stufen 4–5, Lehrkraftmodus für lautes Lesen.
 
 ## Adaptive Logik
 
@@ -53,6 +57,10 @@ js/sprache.js            Sprachausgabe (Web Speech API)
 data/lesen.json          Aufgaben Lesen
 data/rechtschreibung.json Aufgaben Schreiben
 data/mathe.json          Aufgaben Mathe
+data/lautlesen.json      Texte für das laute Lesen
+js/aufgaben.js           Darstellung der Aufgaben
+js/generatoren.js        Automatisch erzeugte Aufgaben
+js/bedienung.js          Motorische Hilfen und Tasterbedienung
 data/woerter.json        Wortschatz mit Emoji und ARASAAC-Suchwort
 data/kompetenzbogen.json Fragen des Kompetenzbogens
 sw.js, manifest.webmanifest  Offline-Nutzung (PWA)

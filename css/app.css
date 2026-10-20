@@ -199,3 +199,85 @@ input[type="range"] { display: block; width: 100%; margin: 12px 0; }
 .rechenbild-mit-text { display: flex; flex-direction: column; align-items: center; gap: 14px; }
 .rechentext { font-size: 48px; font-weight: 700; }
 .rechentext.gross { font-size: 90px; color: var(--akzent); }
+
+/* Lesen Stufe 4–5 */
+.satzvorlage { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.satzvorlage .bild.emoji { font-size: 90px; }
+.satzvorlage img.bild { max-height: 140px; }
+.lesesatz { font-size: 40px; font-weight: 600; text-align: center; }
+.textvorlage { display: flex; flex-direction: column; gap: 16px; text-align: left; max-width: 760px; }
+.lesetext { font-size: 28px; line-height: 1.6; }
+.frage-text { font-size: 28px; color: var(--akzent); }
+.wort.klein { font-size: 30px; text-align: center; }
+.zahl-mittel { font-size: 64px; font-weight: 700; }
+.optionen.typ-textfrage { grid-template-columns: 1fr; }
+.optionen.typ-uhr { grid-template-columns: repeat(3, 1fr); }
+.optionen.typ-textfrage .option, .optionen.typ-uhr .option, .optionen.typ-satz .option { min-height: 100px; }
+
+/* Mathe Stufe 4–5 */
+.stellenwert { display: flex; gap: 28px; align-items: flex-end; flex-wrap: wrap; justify-content: center; }
+.zehner { display: flex; gap: 8px; }
+.streifen { display: grid; grid-template-rows: repeat(10, 14px); gap: 3px; padding: 4px; border: 2px solid var(--akzent); border-radius: 8px; }
+.streifen i, .einer i { display: block; width: 14px; height: 14px; border-radius: 50%; background: var(--akzent); }
+.einer { display: grid; grid-template-columns: repeat(3, 18px); gap: 6px; }
+.einer i { width: 18px; height: 18px; background: #d9a400; }
+.geld { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: center; }
+.muenze { width: 84px; height: 84px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px; border: 4px solid #a07a1a; background: #f1d27a; }
+.muenze.cent { width: 70px; height: 70px; font-size: 18px; background: #e8b27a; border-color: #9a5a22; }
+.muenze.euro { background: radial-gradient(circle, #f1d27a 52%, #c9ccd1 54%); }
+.schein { min-width: 150px; height: 82px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 700; background: #cfe3c6; border: 3px solid #5f8a4f; }
+.uhr { width: 230px; height: 230px; }
+.uhr .zifferblatt { fill: #fff; stroke: var(--text); stroke-width: 5; }
+.uhr .ziffer { font-size: 22px; font-weight: 700; fill: var(--text); font-family: var(--schrift); }
+.uhr .stundenzeiger { stroke: var(--text); stroke-width: 9; stroke-linecap: round; }
+.uhr .minutenzeiger { stroke: var(--akzent); stroke-width: 5; stroke-linecap: round; }
+.uhr .mitte-punkt { fill: var(--text); }
+.vorlage:has(.uhr) { width: 270px; height: 270px; }
+
+/* Schreiben Stufe 5 */
+.kaertchen.wortkarte { font-size: 34px; min-width: 120px; }
+.gelegt.wortkarte { font-size: 40px; flex-wrap: wrap; gap: 14px; }
+.tastatur { display: grid; grid-template-columns: repeat(10, 1fr); gap: 8px; width: 100%; max-width: 900px; }
+.taste { min-height: 64px; font-size: 30px; font-weight: 700; background: var(--flaeche); border: 3px solid var(--rand); border-radius: 14px; }
+.taste.breit { grid-column: span 2; font-size: 20px; }
+.taste.breit.an { background: var(--akzent); color: #fff; border-color: var(--akzent); }
+
+/* Motorische Hilfen */
+.scanfokus { outline: 8px solid #d9a400 !important; outline-offset: 4px; box-shadow: 0 0 0 14px rgba(217, 164, 0, .25) !important; }
+.halten { position: relative; overflow: hidden; }
+.halten::after {
+  content: ""; position: absolute; left: 0; bottom: 0; height: 10px; width: 0; background: var(--akzent);
+  animation: haltefuellung var(--halte, 1000ms) linear forwards;
+}
+@keyframes haltefuellung { to { width: 100%; } }
+html[data-groesse="gross"] .aufgabe { zoom: 1.15; }
+html[data-groesse="sehrgross"] .aufgabe { zoom: 1.3; }
+html[data-groesse="sehrgross"] .optionen, html[data-groesse="sehrgross"] .optionen.anzahl-4 { grid-template-columns: repeat(2, 1fr); }
+html[data-groesse="sehrgross"] .tastatur { grid-template-columns: repeat(6, 1fr); }
+
+/* Lautes Lesen */
+.lautlesen { max-width: 960px; margin: 0 auto; }
+.stoppuhr { font-size: 34px; font-weight: 700; font-variant-numeric: tabular-nums; min-width: 100px; }
+.knopf.an { background: var(--akzent); color: #fff; }
+.lautlesetext { background: var(--flaeche); border: 2px solid var(--rand); border-radius: var(--radius); padding: 28px; font-size: 36px; line-height: 2; }
+.lesewort { padding: 2px 4px; border-radius: 6px; cursor: pointer; }
+.lautlesetext:not(.laeuft) .lesewort { cursor: default; }
+.lesewort.fehler { background: #f6d0d0; text-decoration: underline wavy var(--warn); }
+.lesewort.korrigiert { background: #fbe3c2; text-decoration: underline dotted #b46b00; }
+.lesewort.nicht-gelesen { color: #aaa; }
+.kennzahlen { list-style: none; padding: 0; margin: 0 0 12px; display: grid; gap: 8px; }
+.kennzahlen strong { font-size: 28px; color: var(--akzent); }
+
+/* Fortschritt */
+.fortschritt { display: grid; gap: 12px; margin-bottom: 8px; }
+.verlauf h3 { font-size: 18px; margin: 4px 0; }
+.verlaufzeile { display: flex; align-items: center; gap: 12px; padding: 4px 0; font-size: 17px; }
+.verlaufzeile .datum { min-width: 80px; color: var(--leise); }
+.balken { display: inline-grid; grid-template-columns: repeat(5, 34px); gap: 4px; }
+.balken span, .legende span { display: inline-flex; align-items: center; justify-content: center; height: 26px; border-radius: 6px; background: #eee; color: #999; font-size: 14px; }
+.legende span { width: 20px; height: 16px; vertical-align: middle; }
+.sicher { background: #3f7d4f !important; color: #fff !important; }
+.teilweise { background: #e6c766 !important; color: #333 !important; }
+.versucht { background: #e9b3b3 !important; color: #333 !important; }
+.legende { font-size: 14px; color: var(--leise); }
+details summary { cursor: pointer; padding: 8px 0; color: var(--akzent); font-weight: 600; }
