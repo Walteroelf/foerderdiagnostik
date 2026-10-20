@@ -1,0 +1,148 @@
+// Protokolle als KI-freundlicher Text (Markdown) und als JSON-Datei.
+import { SICHER_AB } from './testlauf.js';
+
+const datumText = (iso) =>
+  new Date(iso).toLocaleString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + ' Uhr';
+const tagText = (iso) => new Date(iso).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+const sek = (ms) => (ms / 1000).toLocaleString('de-DE', { maximumFractionDigits: 1 }) + ' s';
+const prozent = (x) => Math.round(x * 100) + ' %';
+const median = (werte) => {
+  if (!werte.length) return 0;
+  const s = [...werte].sort((a, b) => a - b);
+  const m = Math.floor(s.length / 2);
+  return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
+};
+
+const TYP_NAMEN = {
+  zuordnen: 'Bild-Symbol-Zuordnung',
+  buchstabe: 'Buchstaben erkennen',
+  anlaut: 'Anlaute hören',
+  silben: 'Silben gliedern',
+  wortbild: 'Wörter lesen',
+};
+
+export function stufenBewertung(antworten) {
+  const r = antworten.filter((a) => a.richtig).length;
+  const q = antworten.length ? r / antworten.length : 0;
+  const urteil = q >= SICHER_AB ? 'sicher' : q >= 0.5 ? 'teilweise sicher' : 'noch nicht sicher';
+  return { r, n: antworten.length, q, urteil };
+}
+
+export function schuelerText(test, fruehere = []) {
+  const z = [];
+  z.push(`# Schülerprotokoll Förderdiagnostik: ${test.bereichTitel}`);
+  z.push('');
+  z.push(`- Pseudonym: ${test.pseudonym}`);
+  z.push(`- Datum: ${datumText(test.datum)}`);
+  z.push(`- Bereich: ${test.bereichTitel}`);
+  z.push(`- Einstiegsstufe: ${test.einstiegsstufe}`);
+  z.push(`- Durchlaufene Stufen: ${test.verlauf.join(' → ')}`);
+  const erreicht = test.erreichteStufe
+    ? `Stufe ${test.erreichteStufe} (${test.stufen[test.erreichteStufe].name})`
+    : `keine Stufe sicher (unterhalb von Stufe ${Math.min(...test.verlauf)})`;
+  z.push(`- Sicher erreichte Stufe: ${erreicht}`);
+  if (test.abgebrochen) z.push('- Hinweis: Der Test wurde vorzeitig beendet.');
+  z.push('');
+  z.push('## Ergebnisse je Stufe');
+  const alleFehler = {};
+  for (const s of Object.keys(test.stufen).map(Number).sort((a, b) => a - b)) {
+    const st = test.stufen[s];
+    if (!st.antworten.length) continue;
+    const b = stufenBewertung(st.antworten);
+    const zeit = median(st.antworten.map((a) => a.zeitMs));
+    z.push('');
+    z.push(`### Stufe ${s} – ${st.name}`);
+    z.push(`${b.r} von ${b.n} richtig (${prozent(b.q)}), Bewertung: ${b.urteil}. Mittlere Bearbeitungszeit (Median): ${sek(zeit)}.`);
+    const typen = [...new Set(st.antworten.map((a) => a.typ))];
+    if (typen.length > 1) {
+      for (const t of typen) {
+        const tb = stufenBewertung(st.antworten.filter((a) => a.typ === t));
+        z.push(`- ${TYP_NAMEN[t] || t}: ${tb.r} von ${tb.n} richtig`);
+      }
+    }
+    const falsch = st.antworten.filter((a) => !a.richtig);
+    if (falsch.length) {
+      z.push('- Fehler:');
+      for (const f of falsch) {
+        z.push(`  - ${f.aufgabe}: ${f.fehler} (${sek(f.zeitMs)})`);
+        alleFehler[f.fehlerTyp] = (alleFehler[f.fehlerTyp] || 0) + 1;
+      }
+    } else {
+      z.push('- Keine Fehler.');
+    }
+    const langsam = st.antworten.filter((a) => a.zeitMs > Math.max(2 * zeit, 8000));
+    if (langsam.length) z.push(`- Auffällig lange Bearbeitungszeit bei: ${langsam.map((a) => a.aufgabe).join('; ')}`);
+  }
+  z.push('');
+  z.push('## Fehlermuster');
+  const muster = Object.entries(alleFehler).sort((a, b) => b[1] - a[1]);
+  if (muster.length) muster.forEach(([t, n]) => z.push(`- ${t}: ${n}×`));
+  else z.push('- Keine Fehler aufgetreten.');
+  const vorher = fruehere.filter((t) => t.id !== test.id && t.bereich === test.bereich && t.datum < test.datum);
+  if (vorher.length) {
+    z.push('');
+    z.push('## Frühere Tests (gleiches Pseudonym, gleicher Bereich)');
+    for (const t of vorher) {
+      z.push(`- ${tagText(t.datum)}: Einstieg Stufe ${t.einstiegsstufe}, sicher erreicht: ${t.erreichteStufe ? 'Stufe ' + t.erreichteStufe : 'keine Stufe'}`);
+    }
+  }
+  z.push('');
+  z.push('## Hinweis für die KI');
+  z.push(
+    'Dies ist ein informelles Förderdiagnostik-Protokoll aus einer Förderschule mit dem Schwerpunkt körperliche und motorische Entwicklung (NRW), keine standardisierte Diagnostik. ' +
+      'Bitte leite daraus passgenaues Arbeitsmaterial auf der Stufe knapp oberhalb der sicher erreichten Stufe ab, greife die Fehlermuster gezielt auf und ' +
+      'berücksichtige, falls vorhanden, das Kompetenzprotokoll der Lehrkraft (Motorik, Antwortformen, bearbeitbare Formate, Wahrnehmung).'
+  );
+  return z.join('\n');
+}
+
+export function bogenText(bogen, bogenDef) {
+  const z = [];
+  z.push('# Kompetenzprotokoll der Lehrkraft');
+  z.push('');
+  z.push(`- Pseudonym: ${bogen.pseudonym}`);
+  z.push(`- Stand: ${datumText(bogen.aktualisiert)}`);
+  for (const bereich of bogenDef.bereiche) {
+    const zeilen = [];
+    for (const item of bereich.items) {
+      const wert = bogen.antworten[`${bereich.id}.${item.id}`];
+      if (wert) zeilen.push(`- ${item.text}: ${wert}`);
+    }
+    const notiz = bogen.notizen?.[bereich.id];
+    if (notiz) zeilen.push(`- Notiz: ${notiz}`);
+    if (zeilen.length) {
+      z.push('');
+      z.push(`## ${bereich.titel}`);
+      z.push(...zeilen);
+    }
+  }
+  z.push('');
+  z.push('## Hinweis für die KI');
+  z.push(
+    'Diese Einschätzung der Lehrkraft beschreibt, unter welchen Bedingungen das Kind arbeiten kann. ' +
+      'Bitte richte Format, Umfang, Schriftgröße, Abstraktionsebene und Antwortform des Materials danach aus.'
+  );
+  return z.join('\n');
+}
+
+export function gesamtText(tests, bogen, bogenDef) {
+  const teile = ['# Gesamtprotokoll Förderdiagnostik', '', `Pseudonym: ${(bogen || tests[0]).pseudonym}`, ''];
+  if (bogen) teile.push(bogenText(bogen, bogenDef).replace(/^# /m, '## ').replace(/\n## /g, '\n### '));
+  for (const t of tests) {
+    teile.push('', schuelerText(t, tests).replace(/^# /m, '## ').replace(/\n### /g, '\n#### ').replace(/\n## /g, '\n### '));
+  }
+  teile.push('', '## Auftrag an die KI');
+  teile.push(
+    'Bitte erstelle auf Grundlage des Kompetenzprotokolls und der Schülerprotokolle konkretes, sofort einsetzbares Arbeitsmaterial ' +
+      '(z. B. 2–3 Arbeitsblätter) sowie kurze Förderhinweise für die Lehrkraft.'
+  );
+  return teile.join('\n');
+}
+
+const slug = (s) =>
+  s.toLowerCase().replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+export function dateiname(art, pseudonym, zusatz, endung) {
+  const tag = new Date().toISOString().slice(0, 10);
+  return [art, slug(pseudonym), zusatz, tag].filter(Boolean).join('_') + '.' + endung;
+}

@@ -1,0 +1,65 @@
+{
+  "_hinweis": "Kompetenzbogen für die Lehrkraft. Fehlt 'optionen', gilt die Standardskala. 'typ: text' ist ein Freitextfeld.",
+  "standardSkala": ["sicher", "mit Hilfe", "noch nicht"],
+  "bereiche": [
+    { "id": "motorik", "titel": "Motorik", "items": [
+      { "id": "schneiden", "text": "Schneiden" },
+      { "id": "kleben", "text": "Kleben" },
+      { "id": "nachspuren", "text": "Nachspuren" },
+      { "id": "freischreiben", "text": "Frei schreiben" },
+      { "id": "zeigen", "text": "Zeigen / Tippen" }
+    ]},
+    { "id": "antwortformen", "titel": "Antwortformen", "items": [
+      { "id": "spricht", "text": "Spricht" },
+      { "id": "zeigt", "text": "Zeigt" },
+      { "id": "symbole", "text": "Nutzt Symbole oder Talker" },
+      { "id": "schreibt", "text": "Schreibt" }
+    ]},
+    { "id": "formate", "titel": "Bearbeitbare Formate", "items": [
+      { "id": "zuordnen", "text": "Zuordnen" },
+      { "id": "verbinden", "text": "Verbinden" },
+      { "id": "ankreuzen", "text": "Ankreuzen" },
+      { "id": "lueckentext", "text": "Lückentext" },
+      { "id": "freiesschreiben", "text": "Freies Schreiben" }
+    ]},
+    { "id": "arbeitsverhalten", "titel": "Arbeitsverhalten", "items": [
+      { "id": "konzentration", "text": "Konzentrationsdauer", "optionen": ["über 15 Min.", "5–15 Min.", "unter 5 Min."] },
+      { "id": "begleitung", "text": "Eins-zu-eins-Begleitung", "optionen": ["selten nötig", "teilweise nötig", "durchgehend nötig"] },
+      { "id": "menge", "text": "Verträgliche Aufgaben pro Blatt", "optionen": ["mehr als 5", "3–5", "1–2"] }
+    ]},
+    { "id": "wahrnehmung", "titel": "Wahrnehmung", "items": [
+      { "id": "sehen", "text": "Sehen", "optionen": ["unauffällig", "eingeschränkt", "stark eingeschränkt"] },
+      { "id": "hoeren", "text": "Hören", "optionen": ["unauffällig", "eingeschränkt", "stark eingeschränkt"] },
+      { "id": "grosseschrift", "text": "Braucht große Schrift", "optionen": ["nein", "teilweise", "ja"] },
+      { "id": "reizarm", "text": "Braucht reizarme Gestaltung", "optionen": ["nein", "teilweise", "ja"] }
+    ]},
+    { "id": "abstraktion", "titel": "Abstraktionsebene", "items": [
+      { "id": "gegenstaende", "text": "Reale Gegenstände" },
+      { "id": "fotos", "text": "Fotos" },
+      { "id": "symbole", "text": "Symbole" },
+      { "id": "schrift", "text": "Schrift" }
+    ]},
+    { "id": "anweisungen", "titel": "Anweisungsverständnis", "items": [
+      { "id": "einschrittig", "text": "Einschrittige Anweisungen" },
+      { "id": "mehrschrittig", "text": "Mehrschrittige Anweisungen" }
+    ]},
+    { "id": "fehler", "titel": "Umgang mit Fehlern", "items": [
+      { "id": "frustration", "text": "Frustrationstoleranz", "optionen": ["hoch", "mittel", "gering"] },
+      { "id": "fehlerfrei", "text": "Braucht fehlerfreie Aufgaben", "optionen": ["nein", "teilweise", "ja"] }
+    ]},
+    { "id": "sprache", "titel": "Sprache", "items": [
+      { "id": "erstsprache", "text": "Deutsch als Erstsprache", "optionen": ["ja", "nein"] },
+      { "id": "zweisprachig", "text": "Braucht zweisprachige Hilfen", "optionen": ["nein", "teilweise", "ja"] }
+    ]},
+    { "id": "selbstkontrolle", "titel": "Selbstkontrolle", "items": [
+      { "id": "loesungsblatt", "text": "Arbeitet mit Lösungsblättern" },
+      { "id": "kontrollsystem", "text": "Nutzt Kontrollsysteme (z. B. Klammerkarten)" }
+    ]},
+    { "id": "motivation", "titel": "Motivation", "items": [
+      { "id": "interessen", "typ": "text", "text": "Interessen und Lieblingsthemen", "platzhalter": "z. B. Dinosaurier, Feuerwehr, Musik (bitte keine Namen von Personen, Orten oder Vereinen)" }
+    ]},
+    { "id": "beobachtung", "titel": "Freie Beobachtungen", "items": [
+      { "id": "freitext", "typ": "text", "text": "Beobachtungen der Lehrkraft", "platzhalter": "Was fällt dir auf? Bitte keine identifizierenden Angaben." }
+    ]}
+  ]
+}

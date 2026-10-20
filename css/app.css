@@ -1,0 +1,162 @@
+/* Reizarm, kontrastreich, große Schaltflächen */
+:root {
+  --hg: #f7f5f0;
+  --flaeche: #ffffff;
+  --text: #1a1a1a;
+  --leise: #555;
+  --akzent: #2f5d8a;
+  --akzent-hell: #dce8f3;
+  --rand: #c9c4b8;
+  --warn: #8a2f2f;
+  --radius: 18px;
+  --schrift: "Avenir Next", "Helvetica Neue", Arial, system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--hg);
+  color: var(--text);
+  font-family: var(--schrift);
+  font-size: 20px;
+  line-height: 1.4;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+#app { max-width: 1000px; margin: 0 auto; padding: 16px; min-height: 85vh; }
+button { font: inherit; color: inherit; cursor: pointer; touch-action: manipulation; }
+button:disabled { opacity: .45; cursor: default; }
+h1, h2 { line-height: 1.2; }
+
+/* Kopfzeile */
+.kopf { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; margin-bottom: 16px; }
+.kopf > button { justify-self: start; }
+.kopf h1 { font-size: 24px; margin: 0; text-align: center; }
+
+/* Knöpfe */
+.knopf {
+  background: var(--akzent); color: #fff; border: none; border-radius: var(--radius);
+  padding: 16px 28px; font-size: 20px; font-weight: 600; min-height: 60px;
+}
+.knopf.leise { background: var(--flaeche); color: var(--akzent); border: 2px solid var(--akzent); }
+.knopf.klein { padding: 8px 16px; font-size: 17px; min-height: 44px; border-radius: 12px; }
+.knopf.riesig { font-size: 30px; padding: 24px 64px; min-height: 96px; border-radius: 28px; }
+.knopf.warnung { color: var(--warn); border-color: var(--warn); background: var(--flaeche); border: 2px solid var(--warn); }
+.reihe { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 12px 0; }
+
+/* Startseite */
+.start { text-align: center; padding-top: 6vh; }
+.titel { font-size: 44px; margin: 0; color: var(--akzent); }
+.unter { color: var(--leise); }
+.kacheln { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin: 28px 0; }
+.kachel {
+  background: var(--flaeche); border: 3px solid var(--rand); border-radius: 24px;
+  padding: 28px 16px; font-size: 26px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 8px;
+  min-height: 200px; justify-content: center;
+}
+.kachel:not(:disabled):active { border-color: var(--akzent); background: var(--akzent-hell); }
+.kachel small { font-size: 17px; font-weight: 400; color: var(--leise); }
+.gross { font-size: 64px; line-height: 1; }
+
+.mitte { text-align: center; max-width: 720px; margin: 0 auto; }
+.mitte label { display: block; font-weight: 600; margin: 20px 0; }
+.eingabe {
+  display: block; width: 100%; margin-top: 10px; font: inherit; font-size: 28px; padding: 16px;
+  border: 3px solid var(--rand); border-radius: var(--radius); text-align: center; background: var(--flaeche);
+}
+.eingabe:focus { outline: none; border-color: var(--akzent); }
+.pseudonym {
+  font-size: 48px; font-weight: 700; color: var(--akzent); background: var(--flaeche);
+  border: 3px dashed var(--akzent); border-radius: 24px; padding: 28px; margin: 20px 0;
+}
+.pseudonym.klein { font-size: 80px; border: none; background: none; padding: 0; }
+.liste { margin-top: 32px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.liste p { width: 100%; color: var(--leise); }
+.hinweis { background: #fff6dd; border: 2px solid #e6c766; border-radius: 12px; padding: 12px 16px; font-size: 17px; text-align: left; }
+
+/* Stufenwahl */
+.stufen { display: grid; gap: 12px; margin-top: 20px; }
+.stufe {
+  display: flex; gap: 16px; align-items: center; text-align: left; background: var(--flaeche);
+  border: 3px solid var(--rand); border-radius: var(--radius); padding: 18px 22px; font-size: 20px; min-height: 72px;
+}
+.stufe strong { min-width: 90px; color: var(--akzent); }
+.stufe small { margin-left: auto; color: var(--leise); }
+
+/* Aufgaben (Kinderansicht) */
+.kindansicht h2 { font-size: 34px; }
+.kindansicht p { font-size: 24px; }
+.testleiste { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.sterne { font-size: 28px; letter-spacing: 4px; color: var(--rand); }
+.sterne .an { color: #d9a400; }
+.aufgabe { display: flex; flex-direction: column; align-items: center; gap: 20px; padding-top: 8px; }
+.anweisung { display: flex; align-items: center; gap: 16px; }
+.anweisung p { font-size: 30px; font-weight: 600; margin: 0; }
+.vorlesen {
+  width: 72px; height: 72px; border-radius: 50%; border: 3px solid var(--akzent);
+  background: var(--akzent-hell); font-size: 34px; flex: none;
+}
+.vorlage {
+  background: var(--flaeche); border: 4px solid var(--akzent); border-radius: 28px;
+  width: 240px; height: 240px; display: flex; align-items: center; justify-content: center; overflow: hidden;
+}
+.bild { max-width: 90%; max-height: 90%; object-fit: contain; }
+.bild.emoji { font-size: 130px; line-height: 1; }
+.optionen { display: grid; gap: 20px; width: 100%; grid-template-columns: repeat(3, 1fr); }
+.optionen.anzahl-4 { grid-template-columns: repeat(4, 1fr); }
+.option {
+  background: var(--flaeche); border: 4px solid var(--rand); border-radius: 28px;
+  min-height: 190px; display: flex; align-items: center; justify-content: center; padding: 12px;
+}
+.option .bild.emoji { font-size: 100px; }
+.option.gewaehlt { border-color: var(--akzent); background: var(--akzent-hell); }
+.buchstabe { font-size: 110px; font-weight: 700; line-height: 1; }
+.wort { font-size: 54px; font-weight: 600; }
+.silben { display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 34px; }
+.silben .zahl { font-size: 72px; font-weight: 700; }
+.lob {
+  position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: rgba(247, 245, 240, .88); font-size: 40px; font-weight: 700; color: var(--akzent);
+  animation: einblenden .2s ease-out;
+}
+.lob span { font-size: 110px; }
+@keyframes einblenden { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .lob { animation: none; } }
+
+/* Kompetenzbogen */
+.bogen, .verwaltung, .protokoll { max-width: 900px; margin: 0 auto; }
+.karte { background: var(--flaeche); border: 2px solid var(--rand); border-radius: var(--radius); padding: 16px 20px; margin: 16px 0; }
+.karte h2 { font-size: 22px; margin: 4px 0 12px; color: var(--akzent); }
+.zeile { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 0; border-top: 1px solid #eee; }
+.zeile:first-of-type { border-top: none; }
+.frage { font-weight: 600; flex: 1 1 220px; }
+.wahlen { display: flex; gap: 8px; flex-wrap: wrap; }
+.wahl {
+  border: 2px solid var(--rand); background: var(--flaeche); border-radius: 12px;
+  padding: 10px 14px; min-height: 48px; min-width: 110px; font-size: 17px;
+}
+.wahl.an { background: var(--akzent); border-color: var(--akzent); color: #fff; font-weight: 600; }
+textarea {
+  width: 100%; font: inherit; font-size: 18px; padding: 12px; border: 2px solid var(--rand);
+  border-radius: 12px; margin-top: 10px; background: #fff;
+}
+.textzeile { display: block; font-weight: 600; }
+.status { color: var(--leise); font-size: 17px; }
+
+/* Protokoll */
+.text {
+  white-space: pre-wrap; background: var(--flaeche); border: 2px solid var(--rand); border-radius: var(--radius);
+  padding: 20px; font-size: 16px; line-height: 1.5; font-family: ui-monospace, Menlo, monospace; overflow-wrap: anywhere;
+}
+.eintraege { list-style: none; padding: 0; margin: 0; }
+.eintraege li { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 8px 0; border-top: 1px solid #eee; }
+
+footer { max-width: 1000px; margin: 0 auto; padding: 16px; color: var(--leise); font-size: 14px; text-align: center; }
+footer p { margin: 4px 0; }
+
+@media (max-width: 700px) {
+  .optionen, .optionen.anzahl-4 { grid-template-columns: repeat(2, 1fr); }
+  .vorlage { width: 180px; height: 180px; }
+  .anweisung p { font-size: 24px; }
+}

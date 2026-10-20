@@ -1,0 +1,71 @@
+{
+  "bereich": "lesen",
+  "titel": "Lesen",
+  "aufgabenProStufe": 6,
+  "stufen": [
+    {
+      "stufe": 1,
+      "name": "Basal: Bild und Symbol zuordnen",
+      "kompetenz": "Ordnet ein Bild eines realen Gegenstands dem passenden Symbol zu.",
+      "aufgaben": [
+        { "typ": "zuordnen", "ziel": "apfel",  "optionen": ["apfel", "ball", "hund"] },
+        { "typ": "zuordnen", "ziel": "auto",   "optionen": ["auto", "baum", "tasse"] },
+        { "typ": "zuordnen", "ziel": "ball",   "optionen": ["ball", "schuh", "katze"] },
+        { "typ": "zuordnen", "ziel": "banane", "optionen": ["banane", "apfel", "bus"] },
+        { "typ": "zuordnen", "ziel": "hund",   "optionen": ["hund", "katze", "haus"] },
+        { "typ": "zuordnen", "ziel": "tasse",  "optionen": ["tasse", "buch", "sonne"] },
+        { "typ": "zuordnen", "ziel": "schuh",  "optionen": ["schuh", "hose", "ei"] },
+        { "typ": "zuordnen", "ziel": "baum",   "optionen": ["baum", "blume", "auto"] },
+        { "typ": "zuordnen", "ziel": "brot",   "optionen": ["brot", "uhr", "ente"] },
+        { "typ": "zuordnen", "ziel": "bus",    "optionen": ["bus", "zug", "fisch"] }
+      ]
+    },
+    {
+      "stufe": 2,
+      "name": "Vorläuferfähigkeiten: Buchstaben, Anlaute, Silben",
+      "kompetenz": "Erkennt Buchstaben, hört Anlaute heraus und gliedert Wörter in Silben.",
+      "aufgaben": [
+        { "typ": "buchstabe", "ziel": "M", "optionen": ["M", "N", "W", "H"] },
+        { "typ": "buchstabe", "ziel": "B", "optionen": ["B", "D", "P", "R"] },
+        { "typ": "buchstabe", "ziel": "O", "optionen": ["O", "Q", "C", "D"] },
+        { "typ": "buchstabe", "ziel": "L", "optionen": ["L", "I", "T", "F"] },
+        { "typ": "buchstabe", "ziel": "E", "optionen": ["E", "F", "B", "A"] },
+        { "typ": "anlaut", "wort": "maus",  "ziel": "M", "optionen": ["M", "H", "S"] },
+        { "typ": "anlaut", "wort": "ball",  "ziel": "B", "optionen": ["B", "D", "P"] },
+        { "typ": "anlaut", "wort": "sonne", "ziel": "S", "optionen": ["S", "Z", "M"] },
+        { "typ": "anlaut", "wort": "fisch", "ziel": "F", "optionen": ["F", "W", "T"] },
+        { "typ": "anlaut", "wort": "ente",  "ziel": "E", "optionen": ["E", "A", "O"] },
+        { "typ": "anlaut", "wort": "igel",  "ziel": "I", "optionen": ["I", "E", "L"] },
+        { "typ": "anlaut", "wort": "hund",  "ziel": "H", "optionen": ["H", "N", "K"] },
+        { "typ": "silben", "wort": "banane", "silbenText": "Ba-na-ne", "ziel": 3, "optionen": [1, 2, 3] },
+        { "typ": "silben", "wort": "ball",   "silbenText": "Ball",     "ziel": 1, "optionen": [1, 2, 3] },
+        { "typ": "silben", "wort": "tomate", "silbenText": "To-ma-te", "ziel": 3, "optionen": [1, 2, 3] },
+        { "typ": "silben", "wort": "hase",   "silbenText": "Ha-se",    "ziel": 2, "optionen": [1, 2, 3] },
+        { "typ": "silben", "wort": "katze",  "silbenText": "Kat-ze",   "ziel": 2, "optionen": [1, 2, 3] },
+        { "typ": "silben", "wort": "eis",    "silbenText": "Eis",      "ziel": 1, "optionen": [1, 2, 3] }
+      ]
+    },
+    {
+      "stufe": 3,
+      "name": "Wortebene: Wort zum Bild finden",
+      "kompetenz": "Liest einfache Wörter und unterscheidet sie von ähnlich aussehenden Wörtern.",
+      "aufgaben": [
+        { "typ": "wortbild", "wort": "maus",  "optionen": [{ "text": "Maus" },  { "text": "Haus",  "fehler": "Anlaut" },   { "text": "Mais",   "fehler": "Vokal" }] },
+        { "typ": "wortbild", "wort": "hose",  "optionen": [{ "text": "Hose" },  { "text": "Rose",  "fehler": "Anlaut" },   { "text": "Hase",   "fehler": "Vokal" }] },
+        { "typ": "wortbild", "wort": "hund",  "optionen": [{ "text": "Hund" },  { "text": "Mund",  "fehler": "Anlaut" },   { "text": "Hand",   "fehler": "Vokal" }] },
+        { "typ": "wortbild", "wort": "hase",  "optionen": [{ "text": "Hase" },  { "text": "Nase",  "fehler": "Anlaut" },   { "text": "Hose",   "fehler": "Vokal" }] },
+        { "typ": "wortbild", "wort": "fisch", "optionen": [{ "text": "Fisch" }, { "text": "Tisch", "fehler": "Anlaut" },   { "text": "frisch", "fehler": "Zusätzlicher Laut" }] },
+        { "typ": "wortbild", "wort": "mond",  "optionen": [{ "text": "Mond" },  { "text": "Mund",  "fehler": "Vokal" },    { "text": "Mohn",   "fehler": "Endlaut" }] },
+        { "typ": "wortbild", "wort": "schuh", "optionen": [{ "text": "Schuh" }, { "text": "Kuh",   "fehler": "Anlaut" },   { "text": "Schal",  "fehler": "Wortende" }] },
+        { "typ": "wortbild", "wort": "baum",  "optionen": [{ "text": "Baum" },  { "text": "Raum",  "fehler": "Anlaut" },   { "text": "Bau",    "fehler": "Endlaut" }] },
+        { "typ": "wortbild", "wort": "buch",  "optionen": [{ "text": "Buch" },  { "text": "Tuch",  "fehler": "Anlaut" },   { "text": "Bach",   "fehler": "Vokal" }] },
+        { "typ": "wortbild", "wort": "eis",   "optionen": [{ "text": "Eis" },   { "text": "Ei",    "fehler": "Endlaut" },  { "text": "Reis",   "fehler": "Zusätzlicher Laut" }] },
+        { "typ": "wortbild", "wort": "boot",  "optionen": [{ "text": "Boot" },  { "text": "Brot",  "fehler": "Zusätzlicher Laut" }, { "text": "Bett", "fehler": "Vokal" }] },
+        { "typ": "wortbild", "wort": "rose",  "optionen": [{ "text": "Rose" },  { "text": "Hose",  "fehler": "Anlaut" },   { "text": "Rabe",   "fehler": "Wortmitte" }] },
+        { "typ": "wortbild", "wort": "tasse", "optionen": [{ "text": "Tasse" }, { "text": "Kasse", "fehler": "Anlaut" },   { "text": "Tasche", "fehler": "Wortmitte" }] }
+      ]
+    },
+    { "stufe": 4, "name": "Satzebene: stimmt oder stimmt nicht", "kompetenz": "Versteht kurze Sätze.", "aufgaben": [] },
+    { "stufe": 5, "name": "Textebene: kurzer Text mit Fragen", "kompetenz": "Versteht kurze Texte.", "aufgaben": [] }
+  ]
+}
