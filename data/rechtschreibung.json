@@ -1,0 +1,61 @@
+{
+  "bereich": "rechtschreibung",
+  "titel": "Schreiben",
+  "aufgabenProStufe": 6,
+  "stufen": [
+    {
+      "stufe": 1,
+      "name": "Basal: Buchstaben erkennen und zuordnen",
+      "kompetenz": "Erkennt gleiche Buchstaben und ordnet kleine und große Buchstaben einander zu.",
+      "aufgaben": [
+        { "typ": "buchstabezuordnen", "art": "gleich", "zeige": "M", "ziel": "M", "optionen": ["M", "N", "W", "H"] },
+        { "typ": "buchstabezuordnen", "art": "gleich", "zeige": "S", "ziel": "S", "optionen": ["S", "Z", "G", "C"] },
+        { "typ": "buchstabezuordnen", "art": "gleich", "zeige": "b", "ziel": "b", "optionen": ["b", "d", "p", "q"] },
+        { "typ": "buchstabezuordnen", "art": "gleich", "zeige": "E", "ziel": "E", "optionen": ["E", "F", "B", "L"] },
+        { "typ": "buchstabezuordnen", "art": "gleich", "zeige": "u", "ziel": "u", "optionen": ["u", "n", "v", "w"] },
+        { "typ": "buchstabezuordnen", "art": "gross", "zeige": "a", "ziel": "A", "optionen": ["A", "O", "E", "H"] },
+        { "typ": "buchstabezuordnen", "art": "gross", "zeige": "m", "ziel": "M", "optionen": ["M", "N", "W", "H"] },
+        { "typ": "buchstabezuordnen", "art": "gross", "zeige": "t", "ziel": "T", "optionen": ["T", "F", "L", "I"] },
+        { "typ": "buchstabezuordnen", "art": "gross", "zeige": "r", "ziel": "R", "optionen": ["R", "P", "B", "K"] },
+        { "typ": "buchstabezuordnen", "art": "gross", "zeige": "d", "ziel": "D", "optionen": ["D", "B", "P", "O"] }
+      ]
+    },
+    {
+      "stufe": 2,
+      "name": "Lautebene: Anfangsbuchstaben finden",
+      "kompetenz": "Hört den Anlaut eines Wortes und ordnet ihm den passenden Buchstaben zu.",
+      "aufgaben": [
+        { "typ": "anlaut", "wort": "auto",  "ziel": "A", "optionen": ["A", "O", "U"] },
+        { "typ": "anlaut", "wort": "baum",  "ziel": "B", "optionen": ["B", "P", "D"] },
+        { "typ": "anlaut", "wort": "kuh",   "ziel": "K", "optionen": ["K", "G", "T"] },
+        { "typ": "anlaut", "wort": "nase",  "ziel": "N", "optionen": ["N", "M", "L"] },
+        { "typ": "anlaut", "wort": "rose",  "ziel": "R", "optionen": ["R", "L", "H"] },
+        { "typ": "anlaut", "wort": "tasse", "ziel": "T", "optionen": ["T", "D", "K"] },
+        { "typ": "anlaut", "wort": "uhr",   "ziel": "U", "optionen": ["U", "O", "A"] },
+        { "typ": "anlaut", "wort": "zug",   "ziel": "Z", "optionen": ["Z", "S", "T"] },
+        { "typ": "anlaut", "wort": "mond",  "ziel": "M", "optionen": ["M", "N", "W"] },
+        { "typ": "anlaut", "wort": "igel",  "ziel": "I", "optionen": ["I", "E", "A"] }
+      ]
+    },
+    {
+      "stufe": 3,
+      "name": "Lautgetreue Wörter: Wörter aus Buchstaben legen",
+      "kompetenz": "Schreibt lautgetreue Wörter vollständig und in der richtigen Reihenfolge.",
+      "aufgaben": [
+        { "typ": "legen", "wort": "hose",   "teile": ["H", "o", "s", "e"],           "extra": ["a", "n"] },
+        { "typ": "legen", "wort": "nase",   "teile": ["N", "a", "s", "e"],           "extra": ["o", "m"] },
+        { "typ": "legen", "wort": "igel",   "teile": ["I", "g", "e", "l"],           "extra": ["k", "a"] },
+        { "typ": "legen", "wort": "tomate", "teile": ["T", "o", "m", "a", "t", "e"], "extra": ["n", "i"] },
+        { "typ": "legen", "wort": "banane", "teile": ["B", "a", "n", "a", "n", "e"], "extra": ["m", "o"] },
+        { "typ": "legen", "wort": "auto",   "teile": ["Au", "t", "o"],               "extra": ["d", "ei"] },
+        { "typ": "legen", "wort": "maus",   "teile": ["M", "au", "s"],               "extra": ["n", "ei"] },
+        { "typ": "legen", "wort": "fisch",  "teile": ["F", "i", "sch"],              "extra": ["w", "e"] },
+        { "typ": "legen", "wort": "rose",   "teile": ["R", "o", "s", "e"],           "extra": ["l", "a"] },
+        { "typ": "legen", "wort": "hase",   "teile": ["H", "a", "s", "e"],           "extra": ["o", "f"] },
+        { "typ": "legen", "wort": "ente",   "teile": ["E", "n", "t", "e"],           "extra": ["a", "d"] }
+      ]
+    },
+    { "stufe": 4, "name": "Rechtschreibmuster: Doppelkonsonanten, ie, ck, Großschreibung", "kompetenz": "Wendet erste Rechtschreibmuster an.", "aufgaben": [] },
+    { "stufe": 5, "name": "Sätze schreiben", "kompetenz": "Schreibt kurze Sätze.", "aufgaben": [] }
+  ]
+}

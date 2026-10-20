@@ -22,10 +22,31 @@ function waehleAufgaben(stufeDef, anzahl) {
   while (out.length < anzahl && gruppen.some((g) => g.length)) {
     for (const g of gruppen) if (g.length && out.length < anzahl) out.push(g.shift());
   }
-  return mische(out).map((a) => ({ ...a, optionen: mische(a.optionen) }));
+  return mische(out).map((a) => ({ ...a, optionen: a.typ === 'menge' ? ['links', 'rechts'] : mische(a.optionen || []) }));
 }
 
 const w = (key) => wortInfo(key).wort;
+
+export const rechne = (a, op, b) => (op === '+' ? a + b : a - b);
+
+const istTeilfolge = (kurz, lang) => {
+  let i = 0;
+  for (const x of lang) if (x === kurz[i]) i++;
+  return i === kurz.length;
+};
+
+// Grobe Fehleranalyse beim Schreiben (Lautebene)
+export function schreibFehler(soll, ist) {
+  if (!ist.length) return 'Keine Eingabe';
+  if (ist.length < soll.length && istTeilfolge(ist, soll)) return 'Laut ausgelassen';
+  if (ist.length > soll.length && istTeilfolge(soll, ist)) return 'Laut hinzugefügt';
+  if (ist.length === soll.length) {
+    if ([...ist].sort().join() === [...soll].sort().join()) return 'Laute vertauscht';
+    const unterschiede = soll.filter((x, i) => x !== ist[i]).length;
+    return unterschiede === 1 ? 'Laut ersetzt' : 'Mehrere Laute ersetzt';
+  }
+  return 'Wort stark abweichend';
+}
 
 // Beschreibung und Bewertung einer Antwort für das Protokoll
 export function bewerte(aufgabe, gewaehlt) {
@@ -66,6 +87,61 @@ export function bewerte(aufgabe, gewaehlt) {
         richtig: !gewaehlteOption?.fehler,
         fehler: `„${gewaehlt}“ statt „${richtigesWort}“`,
         fehlerTyp: `Wortverwechslung (${gewaehlteOption?.fehler || 'unbekannt'})`,
+      };
+    }
+    case 'buchstabezuordnen':
+      return {
+        aufgabe: aufgabe.art === 'gross' ? `Zu „${aufgabe.zeige}“ den großen Buchstaben finden` : `Gleichen Buchstaben zu „${aufgabe.zeige}“ finden`,
+        richtig: gewaehlt === aufgabe.ziel,
+        fehler: `${gewaehlt} statt ${aufgabe.ziel}`,
+        fehlerTyp: aufgabe.art === 'gross' ? 'Groß-Klein-Zuordnung' : 'Buchstabenverwechslung',
+      };
+    case 'legen': {
+      const soll = aufgabe.teile.map((t) => t.toLowerCase());
+      const ist = String(gewaehlt).split('|').filter(Boolean).map((t) => t.toLowerCase());
+      const istText = String(gewaehlt).split('|').join('') || '(nichts)';
+      return {
+        aufgabe: `Wort „${w(aufgabe.wort)}“ legen`,
+        richtig: soll.join('|') === ist.join('|'),
+        fehler: `„${istText}“ statt „${aufgabe.teile.join('')}“`,
+        fehlerTyp: schreibFehler(soll, ist),
+      };
+    }
+    case 'menge': {
+      const richtigeSeite =
+        (aufgabe.frage === 'mehr') === aufgabe.links > aufgabe.rechts ? 'links' : 'rechts';
+      return {
+        aufgabe: `Wo sind ${aufgabe.frage}? (${aufgabe.links} gegen ${aufgabe.rechts})`,
+        richtig: gewaehlt === richtigeSeite,
+        fehler: `${gewaehlt === 'links' ? aufgabe.links : aufgabe.rechts} gewählt`,
+        fehlerTyp: `Mengenvergleich (${aufgabe.frage})`,
+      };
+    }
+    case 'simultan': {
+      const diff = Math.abs(Number(gewaehlt) - aufgabe.ziel);
+      return {
+        aufgabe: `${aufgabe.ziel} Punkte erfassen`,
+        richtig: diff === 0,
+        fehler: `${gewaehlt} statt ${aufgabe.ziel}`,
+        fehlerTyp: diff === 1 ? 'Mengenerfassung (um 1 daneben)' : 'Mengenerfassung',
+      };
+    }
+    case 'zahlmenge':
+      return {
+        aufgabe: `Zur Zahl ${aufgabe.ziel} die Menge finden`,
+        richtig: Number(gewaehlt) === aufgabe.ziel,
+        fehler: `Menge ${gewaehlt} statt ${aufgabe.ziel}`,
+        fehlerTyp: 'Zahl-Menge-Zuordnung',
+      };
+    case 'rechnen': {
+      const ziel = rechne(aufgabe.a, aufgabe.op, aufgabe.b);
+      const g = Number(gewaehlt);
+      const anders = rechne(aufgabe.a, aufgabe.op === '+' ? '-' : '+', aufgabe.b);
+      return {
+        aufgabe: `${aufgabe.a} ${aufgabe.op} ${aufgabe.b}${aufgabe.bilder ? ' (mit Bildern)' : ''}`,
+        richtig: g === ziel,
+        fehler: `${g} statt ${ziel}`,
+        fehlerTyp: Math.abs(g - ziel) === 1 ? 'Abweichung um 1 (Hinweis auf Zählfehler)' : g === anders ? 'Rechenart verwechselt' : 'Rechenfehler',
       };
     }
     default:

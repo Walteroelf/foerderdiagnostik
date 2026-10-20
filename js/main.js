@@ -1,6 +1,6 @@
 import { speicher } from './storage.js';
 import { erzeugePseudonym, siehtAusWiePseudonym, schoenesPseudonym } from './pseudonym.js';
-import { sprich, stopp, spracheVerfuegbar } from './sprache.js';
+import { sprich, stopp, spracheVerfuegbar, deutscheStimmen, setzeStimme, aktuelleStimme, tempo, setzeTempo } from './sprache.js';
 import {
   initSymbole, bildElement, wortInfo, anzahlBilder, speichereBild, loescheSatz, wortAusDateiname, ladeArasaac,
 } from './symbole.js';
@@ -161,8 +161,8 @@ function pseudonymSeite(modus) {
 function bereichSeite(p) {
   const bereiche = [
     { id: 'lesen', titel: 'Lesen', symbol: '📖', bereit: true },
-    { id: 'rechtschreibung', titel: 'Rechtschreibung', symbol: '✏️', bereit: false },
-    { id: 'mathe', titel: 'Mathe', symbol: '🔢', bereit: false },
+    { id: 'rechtschreibung', titel: 'Schreiben', symbol: '✏️', bereit: true },
+    { id: 'mathe', titel: 'Mathe', symbol: '🔢', bereit: true },
   ];
   zeige(
     kopf(p, startseite),
@@ -209,6 +209,28 @@ function anweisung(a) {
       return { text: 'Wie viele Silben? Klatsch mit!', sprache: `${w(a.wort)}. Wie viele Silben hat ${w(a.wort)}? Klatsch mit.`, vorlage: bildElement(a.wort, 'symbol') };
     case 'wortbild':
       return { text: 'Welches Wort passt zum Bild?', sprache: 'Welches Wort passt zum Bild? Lies genau.', vorlage: bildElement(a.wort, 'symbol') };
+    case 'buchstabezuordnen':
+      return a.art === 'gross'
+        ? { text: 'Finde den großen Buchstaben.', sprache: 'Hier ist ein kleiner Buchstabe. Finde den passenden großen Buchstaben.', vorlage: h('span', { class: 'buchstabe' }, a.zeige) }
+        : { text: 'Finde den gleichen Buchstaben.', sprache: 'Finde den gleichen Buchstaben.', vorlage: h('span', { class: 'buchstabe' }, a.zeige) };
+    case 'legen':
+      return { text: 'Schreib das Wort.', sprache: `Schreib das Wort ${w(a.wort)}. Tippe die Buchstaben nacheinander an.` };
+    case 'menge':
+      return { text: `Wo sind ${a.frage}?`, sprache: `Wo sind ${a.frage}? Tippe auf die Seite mit ${a.frage === 'mehr' ? 'mehr' : 'weniger'} Bildern.` };
+    case 'simultan':
+      return { text: 'Wie viele Punkte?', sprache: 'Wie viele Punkte siehst du?', vorlage: wuerfel(a.ziel) };
+    case 'zahlmenge':
+      return { text: `Wo sind ${a.ziel}?`, sprache: `Wo sind ${a.ziel}? Tippe auf das passende Bild.`, vorlage: h('span', { class: 'zahl-gross' }, a.ziel) };
+    case 'rechnen': {
+      const wort = a.op === '+' ? 'plus' : 'minus';
+      return {
+        text: 'Rechne.',
+        sprache: `Wie viel ist ${a.a} ${wort} ${a.b}?`,
+        vorlage: a.bilder
+          ? h('span', { class: 'rechenbild-mit-text' }, rechenBild(a), h('span', { class: 'rechentext' }, `${a.a} ${a.op === '-' ? '−' : '+'} ${a.b} = ?`))
+          : h('span', { class: 'rechentext gross' }, `${a.a} ${a.op === '-' ? '−' : '+'} ${a.b} = ?`),
+      };
+    }
     default:
       return { text: '', sprache: '' };
   }
@@ -225,9 +247,73 @@ function optionInhalt(a, o) {
       return [o, h('span', { class: 'silben' }, h('span', { class: 'zahl' }, o), h('span', {}, '👏'.repeat(o)))];
     case 'wortbild':
       return [o.text, h('span', { class: 'wort' }, o.text)];
+    case 'buchstabezuordnen':
+    case 'simultan':
+    case 'rechnen':
+      return [o, h('span', { class: 'buchstabe' }, o)];
+    case 'menge':
+      return [o, menge(o === 'links' ? a.links : a.rechts, a.ding)];
+    case 'zahlmenge':
+      return [o, menge(o, a.ding)];
     default:
       return [o, String(o)];
   }
+}
+
+function menge(n, ding) {
+  return h('span', { class: 'menge', 'aria-label': `${n} Bilder` },
+    Array.from({ length: n }, () => h('span', {}, wortInfo(ding).emoji)));
+}
+
+// Würfelbild: Punkte in fester Anordnung (3×3-Raster)
+const WUERFEL = { 1: [4], 2: [0, 8], 3: [0, 4, 8], 4: [0, 2, 6, 8], 5: [0, 2, 4, 6, 8], 6: [0, 2, 3, 5, 6, 8], 7: [0, 2, 3, 4, 5, 6, 8] };
+function wuerfel(n) {
+  const an = new Set(WUERFEL[n] || []);
+  return h('span', { class: 'wuerfel', 'aria-label': `${n} Punkte` },
+    Array.from({ length: 9 }, (_, i) => h('span', { class: an.has(i) ? 'punkt' : '' })));
+}
+
+function rechenBild(a) {
+  const e = wortInfo(a.ding).emoji;
+  if (a.op === '+') {
+    return h('span', { class: 'rechenbild' }, menge(a.a, a.ding), h('span', { class: 'op' }, '+'), menge(a.b, a.ding));
+  }
+  return h('span', { class: 'rechenbild' },
+    h('span', { class: 'menge' }, Array.from({ length: a.a }, (_, i) => h('span', { class: i >= a.a - a.b ? 'weg' : '' }, e))));
+}
+
+// Schreiben: Wort aus Buchstabenkärtchen legen
+function legenSeite(lauf, a, anw, fertig) {
+  const kaertchen = [...a.teile, ...a.extra]
+    .map((t, i) => ({ t: i === 0 ? t : t.toLowerCase(), id: i }))
+    .sort(() => Math.random() - 0.5);
+  const gelegt = [];
+  const zeile = h('div', { class: 'gelegt' });
+  const knoepfe = kaertchen.map((k) => {
+    const el = h('button', { class: 'kaertchen', type: 'button' }, k.t);
+    el.addEventListener('click', () => {
+      gelegt.push({ k, el });
+      el.disabled = true;
+      male();
+    });
+    return el;
+  });
+  const male = () => {
+    zeile.replaceChildren(...(gelegt.length ? gelegt.map((g) => h('span', { class: 'teil' }, g.k.t)) : [h('span', { class: 'leer' }, '…')]));
+  };
+  male();
+  const loeschen = knopf('⌫', () => {
+    const g = gelegt.pop();
+    if (g) g.el.disabled = false;
+    male();
+  }, 'knopf leise gross-knopf');
+  const ok = knopf('✓ Fertig', () => fertig(gelegt.map((g) => g.k.t).join('|')), 'knopf gross-knopf');
+  return [
+    h('div', { class: 'vorlage klein' }, bildElement(a.wort, 'symbol')),
+    h('div', { class: 'legezeile' }, zeile, loeschen),
+    h('div', { class: 'kaertchen-feld' }, knoepfe),
+    ok,
+  ];
 }
 
 const LOB = ['Danke!', 'Prima, weiter geht\'s!', 'Toll, wie du arbeitest!', 'Super, weiter so!', 'Gut gemacht!'];
@@ -249,7 +335,7 @@ function aufgabeSeite(lauf) {
     setTimeout(() => weiter(lauf), 900);
   };
 
-  const optionen = a.optionen.map((o) => {
+  const optionen = a.typ === 'legen' ? [] : a.optionen.map((o) => {
     const [wert, inhalt] = optionInhalt(a, o);
     const el = h('button', { class: `option typ-${a.typ}`, type: 'button' }, inhalt);
     el.addEventListener('click', () => waehle(wert, el));
@@ -265,8 +351,10 @@ function aufgabeSeite(lauf) {
       }, 'knopf klein leise')),
     h('main', { class: 'aufgabe' },
       h('div', { class: 'anweisung' }, vorlesen(anw.sprache), h('p', {}, anw.text)),
-      anw.vorlage && h('div', { class: 'vorlage' }, anw.vorlage),
-      h('div', { class: `optionen anzahl-${optionen.length}` }, optionen)));
+      anw.vorlage && h('div', { class: `vorlage${a.typ === 'rechnen' || a.typ === 'menge' ? ' breit' : ''}` }, anw.vorlage),
+      a.typ === 'legen'
+        ? legenSeite(lauf, a, anw, (wert) => waehle(wert, document.querySelector('.legezeile')))
+        : h('div', { class: `optionen anzahl-${optionen.length} typ-${a.typ}` }, optionen)));
   // Zeit erst nach der Anweisung messen
   setTimeout(() => {
     sprich(anw.sprache);
@@ -407,6 +495,38 @@ function bogenSeite(p) {
       })));
 }
 
+// ---------- Stimme ----------
+function stimmenKarte() {
+  const auswahl = h('select', { class: 'auswahl' });
+  const fuelle = () => {
+    const stimmen = deutscheStimmen();
+    const aktiv = aktuelleStimme();
+    auswahl.replaceChildren(...(stimmen.length
+      ? stimmen.map((v) => h('option', { value: v.voiceURI, selected: aktiv && v.voiceURI === aktiv.voiceURI }, v.name))
+      : [h('option', {}, 'Keine deutsche Stimme gefunden')]));
+  };
+  fuelle();
+  window.speechSynthesis?.addEventListener?.('voiceschanged', fuelle);
+  auswahl.addEventListener('change', () => {
+    setzeStimme(auswahl.value);
+    sprich('Hallo! So klinge ich.');
+  });
+  const regler = h('input', { type: 'range', min: '0.6', max: '1.2', step: '0.05', value: String(tempo()) });
+  regler.addEventListener('change', () => {
+    setzeTempo(regler.value);
+    sprich('Hallo! So schnell spreche ich.');
+  });
+  return h('section', { class: 'karte' },
+    h('h2', {}, 'Vorlesestimme'),
+    h('label', { class: 'textzeile' }, 'Stimme', auswahl),
+    h('label', { class: 'textzeile' }, 'Sprechtempo', regler),
+    knopf('🔊 Probe hören', () => sprich('Hallo! Hör gut zu und tippe auf die richtige Antwort.'), 'knopf klein leise'),
+    h('p', { class: 'unter' },
+      'Bessere Stimmen auf dem iPad: Einstellungen → Bedienungshilfen → Gesprochene Inhalte → Stimmen → Deutsch. ',
+      'Dort z. B. „Anna (Premium)“ oder eine „Erweitert“-Stimme laden. Danach Safari neu öffnen und die Stimme hier auswählen. ',
+      'Die beste verfügbare Stimme wird automatisch genommen.'));
+}
+
 // ---------- Verwaltung ----------
 function verwaltung() {
   const liste = speicher.pseudonyme().map((p) => {
@@ -504,6 +624,7 @@ function verwaltung() {
         h('h2', {}, 'Protokolle importieren'),
         h('p', { class: 'unter' }, 'JSON-Dateien von einem anderen iPad oder einem früheren Test einlesen, z. B. den Kompetenzbogen vom Lehrkraft-iPad.'),
         importFeld, knopf('Dateien auswählen', () => importFeld.click(), 'knopf leise'), importMeldung),
+      stimmenKarte(),
       h('section', { class: 'karte' },
         h('h2', {}, 'Symbole und Fotos'),
         symbolStatus,
@@ -544,9 +665,12 @@ function verwaltung() {
 // ---------- Start ----------
 async function init() {
   const lade = (pfad) => fetch(pfad).then((r) => r.json());
-  const [woerter, lesen, bogen] = await Promise.all([lade('data/woerter.json'), lade('data/lesen.json'), lade('data/kompetenzbogen.json')]);
+  const [woerter, lesen, rechtschreibung, mathe, bogen] = await Promise.all(
+    ['woerter', 'lesen', 'rechtschreibung', 'mathe', 'kompetenzbogen'].map((n) => lade(`data/${n}.json`)));
   daten.woerter = woerter.woerter;
   daten.lesen = lesen;
+  daten.rechtschreibung = rechtschreibung;
+  daten.mathe = mathe;
   daten.bogen = bogen;
   await initSymbole(daten.woerter);
   startseite();

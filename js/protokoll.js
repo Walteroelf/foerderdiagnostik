@@ -19,7 +19,32 @@ const TYP_NAMEN = {
   anlaut: 'Anlaute hören',
   silben: 'Silben gliedern',
   wortbild: 'Wörter lesen',
+  buchstabezuordnen: 'Buchstaben zuordnen',
+  legen: 'Wörter legen',
+  menge: 'Mengen vergleichen',
+  simultan: 'Mengen auf einen Blick erfassen',
+  zahlmenge: 'Zahl und Menge zuordnen',
+  rechnen: 'Plus und Minus',
 };
+
+// Hinweise auf zählendes Rechnen und nicht-simultane Mengenerfassung (über die Bearbeitungszeit)
+function matheHinweise(test) {
+  const alle = Object.values(test.stufen).flatMap((s) => s.antworten);
+  const out = [];
+  const gross = alle.filter((a) => a.typ === 'simultan' && a.richtig && /^[4-9]/.test(a.aufgabe));
+  if (gross.length >= 2 && median(gross.map((a) => a.zeitMs)) > 4000) {
+    out.push(`Mengen ab 4 wurden richtig, aber langsam erkannt (Median ${sek(median(gross.map((a) => a.zeitMs)))}). Das spricht für Abzählen statt simultaner Erfassung.`);
+  }
+  const ohneBild = alle.filter((a) => a.typ === 'rechnen' && !a.aufgabe.includes('Bildern'));
+  if (ohneBild.length >= 2) {
+    const m = median(ohneBild.map((a) => a.zeitMs));
+    const einsDaneben = ohneBild.filter((a) => a.fehlerTyp?.startsWith('Abweichung um 1')).length;
+    if (m > 6000 || einsDaneben >= 2) {
+      out.push(`Hinweis auf zählendes Rechnen: Aufgaben ohne Bilder dauerten im Median ${sek(m)}` + (einsDaneben ? `, ${einsDaneben}× lag das Ergebnis um 1 daneben.` : '.'));
+    }
+  }
+  return out;
+}
 
 export function stufenBewertung(antworten) {
   const r = antworten.filter((a) => a.richtig).length;
@@ -72,6 +97,14 @@ export function schuelerText(test, fruehere = []) {
     }
     const langsam = st.antworten.filter((a) => a.zeitMs > Math.max(2 * zeit, 8000));
     if (langsam.length) z.push(`- Auffällig lange Bearbeitungszeit bei: ${langsam.map((a) => a.aufgabe).join('; ')}`);
+  }
+  if (test.bereich === 'mathe') {
+    const hinweise = matheHinweise(test);
+    if (hinweise.length) {
+      z.push('');
+      z.push('## Hinweise aus der Bearbeitungszeit');
+      hinweise.forEach((x) => z.push(`- ${x}`));
+    }
   }
   z.push('');
   z.push('## Fehlermuster');

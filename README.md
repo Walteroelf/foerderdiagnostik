@@ -4,11 +4,15 @@ Informelles Förderdiagnostik-Werkzeug für die Förderschule KME. Läuft im Bro
 
 ## Stand (Grundversion)
 
-- **Schülermodus:** Pseudonym erzeugen oder eingeben, Bereich Lesen, Stufen 1–3 mit adaptiver Stufenanpassung, Schülerprotokoll.
+- **Schülermodus:** Pseudonym erzeugen oder eingeben, Bereiche Lesen, Schreiben und Mathe, jeweils Stufen 1–3 mit adaptiver Stufenanpassung, Schülerprotokoll.
+  - Lesen: Bild–Symbol, Buchstaben/Anlaute/Silben, Wort zum Bild.
+  - Schreiben: Buchstaben zuordnen (auch klein–groß), Anfangsbuchstaben, lautgetreue Wörter aus Kärtchen legen mit Fehleranalyse (ausgelassen, hinzugefügt, vertauscht, ersetzt).
+  - Mathe: Mengen vergleichen und Gleiches zuordnen, Würfelbilder und Zahl–Menge, Plus/Minus bis 20 mit und ohne Bilder; Hinweis auf zählendes Rechnen über die Bearbeitungszeit.
+- **Vorlesestimme:** Die App nimmt automatisch die beste deutsche Stimme. In den Einstellungen lassen sich Stimme und Tempo wählen. Bessere Stimmen auf dem iPad: Einstellungen → Bedienungshilfen → Gesprochene Inhalte → Stimmen → Deutsch (z. B. „Anna (Premium)“ laden).
 - **Lehrkraftmodus:** Kompetenzbogen, unabhängig vom Schülertest und auf einem anderen iPad nutzbar, eigenes Kompetenzprotokoll.
 - **Protokolle:** Text zum Kopieren für Claude, Download als `.md` und `.json`, Import früherer oder fremder Protokolle, Gesamtprotokoll aus Schüler- und Kompetenzprotokoll.
 - **Symbole:** Emoji als Ersatz; ARASAAC-Piktogramme lassen sich in der App einmalig laden; eigene Symbole (z. B. METACOM) und Fotos werden nur lokal gespeichert.
-- Folgt: Lesen Stufen 4–5, lautes Lesen, Rechtschreibung, Mathe.
+- Folgt: jeweils Stufen 4–5, Lehrkraftmodus für lautes Lesen.
 
 ## Adaptive Logik
 
@@ -47,6 +51,8 @@ js/storage.js            Lokale Speicherung (localStorage)
 js/symbole.js            Bilder: eigene Fotos/Symbole, ARASAAC, Emoji (IndexedDB)
 js/sprache.js            Sprachausgabe (Web Speech API)
 data/lesen.json          Aufgaben Lesen
+data/rechtschreibung.json Aufgaben Schreiben
+data/mathe.json          Aufgaben Mathe
 data/woerter.json        Wortschatz mit Emoji und ARASAAC-Suchwort
 data/kompetenzbogen.json Fragen des Kompetenzbogens
 sw.js, manifest.webmanifest  Offline-Nutzung (PWA)
