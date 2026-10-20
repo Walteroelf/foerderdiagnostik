@@ -281,3 +281,23 @@ html[data-groesse="sehrgross"] .tastatur { grid-template-columns: repeat(6, 1fr)
 .versucht { background: #e9b3b3 !important; color: #333 !important; }
 .legende { font-size: 14px; color: var(--leise); }
 details summary { cursor: pointer; padding: 8px 0; color: var(--akzent); font-weight: 600; }
+
+/* Ende des Tests: nur ein kleiner Knopf für die Lehrkraft */
+.ende-lehrkraft { margin-top: 18vh; display: flex; justify-content: flex-end; gap: 12px; align-items: center; }
+
+/* Lesetext für das Kind */
+.kindtext { max-width: 900px; margin: 0 auto; }
+.kindtext h2 { font-size: 36px; }
+.kindtext p { font-size: 40px; line-height: 2; letter-spacing: .02em; word-spacing: .15em; }
+.lautlesetext { font-size: 26px; }
+.ablauf { text-align: left; }
+.ablauf ol { margin: 0; padding-left: 24px; }
+.ablauf li { margin: 6px 0; }
+
+#druck { display: none; }
+@media print {
+  #app, footer { display: none !important; }
+  #druck { display: block; font-family: var(--schrift); }
+  #druck h1 { font-size: 28pt; }
+  #druck p { font-size: 24pt; line-height: 2; }
+}

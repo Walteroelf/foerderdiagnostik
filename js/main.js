@@ -155,6 +155,8 @@ function bereichSeite(p) {
     { id: 'rechtschreibung', titel: 'Schreiben', symbol: '✏️', bereit: true },
     { id: 'mathe', titel: 'Mathe', symbol: '🔢', bereit: true },
   ];
+  const vorlesen = h('button', { class: 'kachel', type: 'button', onclick: () => vorleseAuswahl(p) },
+    h('span', { class: 'gross' }, '🗣️'), 'Vorlesen', h('small', {}, 'Text zum lauten Lesen'));
   zeige(
     kopf(p, startseite),
     h('main', { class: 'mitte' },
@@ -162,7 +164,32 @@ function bereichSeite(p) {
       h('div', { class: 'kacheln' },
         bereiche.map((b) =>
           h('button', { class: 'kachel', type: 'button', disabled: !b.bereit, onclick: () => stufeSeite(p, daten[b.id]) },
-            h('span', { class: 'gross' }, b.symbol), b.titel, !b.bereit && h('small', {}, 'folgt bald'))))));
+            h('span', { class: 'gross' }, b.symbol), b.titel, !b.bereit && h('small', {}, 'folgt bald'))), vorlesen)));
+}
+
+// Schülermodus: Text zum lauten Lesen, ohne Bedienelemente für das Kind
+function vorleseAuswahl(p) {
+  zeige(
+    kopf('Vorlesen: Text wählen', () => bereichSeite(p)),
+    h('main', { class: 'mitte' },
+      h('p', { class: 'unter' }, 'Für die Lehrkraft: Wähle denselben Text wie auf deinem iPad im Lehrkraftmodus.'),
+      h('div', { class: 'stufen' },
+        daten.lautlesen.texte.map((t) =>
+          h('button', { class: 'stufe', type: 'button', onclick: () => vorleseText(p, t) },
+            h('strong', {}, t.niveau), h('span', {}, t.titel))))));
+}
+
+function vorleseText(p, t) {
+  zeige(
+    h('div', { class: 'testleiste' }, h('span'), knopf('Fertig', () => bereichSeite(p), 'knopf klein leise lehrkraft')),
+    h('main', { class: 'kindtext' }, h('h2', {}, t.titel), h('p', {}, t.text)));
+}
+
+// Druckfassung des Lesetextes für das Kind (große Schrift)
+function druckeText(t) {
+  document.getElementById('druck')?.remove();
+  document.body.append(h('div', { id: 'druck' }, h('h1', {}, t.titel), h('p', {}, t.text)));
+  window.print();
 }
 
 function stufeSeite(p, def) {
@@ -259,8 +286,11 @@ function testEnde(lauf, abgebrochen) {
     h('main', { class: 'mitte kindansicht' },
       h('div', { class: 'pseudonym klein' }, '🏆'),
       h('h2', {}, 'Geschafft! Das hast du toll gemacht.'),
-      !gespeichert && h('p', { class: 'hinweis' }, 'Speichern im Browser nicht möglich. Bitte das Protokoll jetzt als Datei sichern.'),
-      knopf('Für die Lehrkraft: Protokoll', () => schuelerProtokollSeite(ergebnis, startseite), 'knopf leise lehrkraft')));
+      // Das Protokoll ist gespeichert und erscheint unter „Protokolle und Einstellungen“.
+      h('div', { class: 'ende-lehrkraft' },
+        // Nur falls der Browser nicht speichern konnte: Protokoll direkt sichern
+        !gespeichert && knopf('Speichern fehlgeschlagen: Protokoll sichern', () => schuelerProtokollSeite(ergebnis, startseite), 'knopf klein warnung lehrkraft'),
+        knopf('Fertig', startseite, 'knopf klein leise lehrkraft'))));
   sprich('Geschafft! Das hast du toll gemacht.');
 }
 
@@ -328,7 +358,13 @@ function lautLesenAuswahl(p) {
   zeige(
     kopf('Lautes Lesen: Text wählen', () => lehrkraftMenue(p)),
     h('main', { class: 'mitte' },
-      h('p', { class: 'unter' }, 'Das Kind liest den Text auf dem iPad vor. Du sitzt daneben und tippst falsch gelesene Wörter an.'),
+      h('div', { class: 'karte ablauf' },
+        h('h2', {}, 'So läuft es ab'),
+        h('ol', {},
+          h('li', {}, 'Das Kind bekommt den Text getrennt von dir: auf einem zweiten iPad (Schülermodus → Vorlesen) oder ausgedruckt.'),
+          h('li', {}, 'Du siehst den Text auf deinem iPad und tippst Start, sobald das Kind beginnt.'),
+          h('li', {}, 'Liest das Kind ein Wort falsch, tippst du es auf deinem iPad an. Das Kind sieht davon nichts.'),
+          h('li', {}, 'Am Ende tippst du Stopp. Das Ergebnis wird gespeichert.'))),
       h('div', { class: 'stufen' },
         daten.lautlesen.texte.map((t) =>
           h('button', { class: 'stufe', type: 'button', onclick: () => lautLesenSeite(p, t) },
@@ -389,8 +425,8 @@ function lautLesenSeite(p, t) {
       lautLesenAuswahl(p);
     }),
     h('main', { class: 'lautlesen' },
-      h('div', { class: 'reihe' }, startKnopf, uhr, endeKnopf),
-      h('p', { class: 'unter' }, 'Nach dem Start: Wort 1× antippen = Fehler (rot), 2× = selbst korrigiert (orange), 3× = zurücksetzen. Liest das Kind nicht bis zum Ende, tippe „Hier aufgehört …“ und dann das letzte gelesene Wort.'),
+      h('div', { class: 'reihe' }, startKnopf, uhr, endeKnopf, knopf('🖨 Text für das Kind drucken', () => druckeText(t), 'knopf klein leise')),
+      h('p', { class: 'unter' }, 'Lehrkraft-Ansicht. Nach dem Start: Wort 1× antippen = Fehler (rot), 2× = selbst korrigiert (orange), 3× = zurücksetzen. Liest das Kind nicht bis zum Ende, tippe „Hier aufgehört …“ und dann das letzte gelesene Wort.'),
       textFeld));
 }
 
