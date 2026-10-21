@@ -71,6 +71,8 @@ export function anweisung(a) {
       return { text: 'Wie spät ist es?', sprache: 'Schau auf die Uhr. Wie spät ist es?', vorlage: uhrBild(a.stunde, a.minute) };
     case 'textaufgabe':
       return { text: 'Hör gut zu und rechne.', sprache: a.text, vorlage: h('span', { class: 'lesetext' }, a.text) };
+    case 'hoeren':
+      return { text: 'Hör gut zu. Tippe auf das richtige Bild.', sprache: a.sprache, vorlage: h('span', { class: 'ohr', 'aria-hidden': 'true' }, '👂') };
     default:
       return { text: '', sprache: '' };
   }
@@ -84,6 +86,8 @@ export function optionInhalt(a, o) {
   switch (a.typ) {
     case 'zuordnen':
       return [o, bildElement(o, 'symbol')];
+    case 'hoeren':
+      return [o, h('span', { class: 'bildgruppe' }, o.split('+').map((k) => bildElement(k, 'symbol')))];
     case 'buchstabe':
     case 'anlaut':
     case 'buchstabezuordnen':
@@ -110,6 +114,38 @@ export function optionInhalt(a, o) {
       return [o, menge(o, a.ding)];
     default:
       return [o, String(o)];
+  }
+}
+
+// Was das Kind sagen könnte, um eine Antwort zu wählen (für die Antwort per Sprache)
+export function optionSprechtext(a, o) {
+  switch (a.typ) {
+    case 'zuordnen':
+      return { art: 'wort', text: w(o) };
+    case 'hoeren':
+      return { art: 'wort', text: o.split('+').map(w).join(' ') };
+    case 'buchstabe':
+    case 'anlaut':
+    case 'buchstabezuordnen':
+      return { art: 'buchstabe', text: String(o) };
+    case 'silben':
+    case 'simultan':
+    case 'rechnen':
+    case 'stellenwert':
+    case 'textaufgabe':
+    case 'zahlmenge':
+      return { art: 'zahl', text: String(o) };
+    case 'geld':
+      return { art: 'geld', text: String(o) };
+    case 'wortbild':
+    case 'uhr':
+    case 'textfrage':
+      return { art: 'wort', text: o.text };
+    case 'satz':
+    case 'menge':
+      return { art: 'wahl', text: o };
+    default:
+      return null;
   }
 }
 

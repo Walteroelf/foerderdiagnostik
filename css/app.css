@@ -342,3 +342,22 @@ details summary { cursor: pointer; padding: 8px 0; color: var(--akzent); font-we
 .eingabe.klein { font-size: 20px; padding: 10px 12px; text-align: left; }
 .eigen-wort { display: inline-flex; align-items: center; gap: 8px; }
 .eigen-wort .bild { width: 40px; height: 40px; font-size: 32px; object-fit: contain; }
+
+/* ---------- Förderziele ---------- */
+.ziele ol { padding-left: 24px; margin: 8px 0; }
+.ziele li { margin: 10px 0; }
+.ziele small { color: #555; font-size: 15px; }
+
+/* ---------- Hören ---------- */
+.ohr { font-size: 110px; line-height: 1; }
+.bildgruppe { display: flex; gap: 6px; align-items: center; justify-content: center; width: 100%; height: 100%; }
+.option .bildgruppe .bild.emoji { font-size: 70px; }
+.bildgruppe img.bild { max-width: 48%; }
+
+/* ---------- Antwort per Sprache ---------- */
+.mikro {
+  display: block; margin: 24px auto 0; font: inherit; font-size: 24px; font-weight: 600; padding: 16px 28px;
+  border-radius: 999px; border: 3px solid var(--akzent); background: var(--flaeche); color: var(--akzent); min-height: 64px;
+}
+.mikro.hoert { background: var(--akzent); color: #fff; animation: pulsieren 1.2s infinite; }
+@keyframes pulsieren { 50% { box-shadow: 0 0 0 12px var(--akzent-hell); } }

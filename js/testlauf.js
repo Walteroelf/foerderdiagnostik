@@ -245,6 +245,19 @@ export function bewerte(aufgabe, gewaehlt) {
         fehlerTyp,
       };
     }
+    case 'hoeren': {
+      const ziele = aufgabe.ziel.split('+');
+      const gew = String(gewaehlt).split('+');
+      const teilweise = ziele.length > 1 && gew.some((x) => ziele.includes(x));
+      const namen = (keys) => keys.map(w).join(' und ');
+      return {
+        aufgabe: `„${aufgabe.sprache}“`,
+        richtig: gewaehlt === aufgabe.ziel,
+        fehler: `${namen(gew)} statt ${namen(ziele)} gezeigt`,
+        fehlerTyp: teilweise ? 'Hörverstehen: nur eine von zwei Angaben behalten' : `Hörverstehen: ${aufgabe.kategorie}`,
+        kategorie: aufgabe.kategorie,
+      };
+    }
     case 'beschriften': {
       const soll = wortInfo(aufgabe.wort).wort;
       const ist = String(gewaehlt);
@@ -305,7 +318,7 @@ export class Testlauf {
     return this.index >= this.block.length;
   }
 
-  antworte(gewaehlt, zeitMs) {
+  antworte(gewaehlt, zeitMs, gesprochen = null) {
     const a = this.aufgabe;
     const b = bewerte(a, gewaehlt);
     this.ergebnis.stufen[this.stufe].antworten.push({
@@ -317,6 +330,7 @@ export class Testlauf {
       fehlerTyp: b.richtig ? null : b.fehlerTyp,
       kategorie: b.kategorie || null,
       zeitMs: Math.round(zeitMs),
+      ...(gesprochen ? { gesprochen } : {}),
     });
     this.index++;
   }
@@ -342,6 +356,9 @@ export class Testlauf {
       .map(Number)
       .filter((s) => this.ergebnis.stufen[s].antworten.length && this.quote(s) >= SICHER_AB);
     this.ergebnis.erreichteStufe = sicher.length ? Math.max(...sicher) : null;
+    // Nächste Stufe als Förderziel merken
+    const naechste = this.def.stufen.find((s) => s.stufe > (this.ergebnis.erreichteStufe || 0) && hatAufgaben(s));
+    if (naechste) this.ergebnis.naechsteStufe = { stufe: naechste.stufe, name: naechste.name, kompetenz: naechste.kompetenz };
     return this.ergebnis;
   }
 }

@@ -1,5 +1,5 @@
 import { h, knopf } from './dom.js';
-import { anweisung, optionInhalt, legenSeite, satzLegenSeite, tastaturSeite, vorlageKlasse } from './aufgaben.js';
+import { anweisung, optionInhalt, optionSprechtext, legenSeite, satzLegenSeite, tastaturSeite, vorlageKlasse } from './aufgaben.js';
 import { aktivierbar, neueSeite, scanStopp, einstellungen, speichereEinstellungen, wendeAn } from './bedienung.js';
 import { speicher } from './storage.js';
 import { erzeugePseudonym, siehtAusWiePseudonym, schoenesPseudonym } from './pseudonym.js';
@@ -9,6 +9,8 @@ import {
 } from './symbole.js';
 import { Testlauf } from './testlauf.js';
 import { hatAufgaben } from './generatoren.js';
+import { foerderziele } from './foerderziele.js';
+import { erkennungVerfuegbar, hoereZu, hoerAuf, findeAntwort } from './spracheingabe.js';
 import { schuelerText, bogenText, gesamtText, lautleseText, dateiname } from './protokoll.js';
 import { schuetze, pinGesetzt, setzePin, entfernePin, pinDialog } from './sperre.js';
 import { eigeneWoerter, eigeneTexte, speichereWort, loescheWort, speichereText, loescheText, schluesselFuer } from './eigenes.js';
@@ -89,7 +91,7 @@ function startseite() {
   zeige(
     h('main', { class: 'start' },
       h('h1', { class: 'titel' }, 'Förderdiagnostik'),
-      h('p', { class: 'unter' }, 'Lesen · Rechtschreibung · Mathe'),
+      h('p', { class: 'unter' }, 'Lesen · Schreiben · Mathe · Hören'),
       h('div', { class: 'kacheln' },
         h('button', { class: 'kachel kind', type: 'button', onclick: () => pseudonymSeite('schueler') },
           h('span', { class: 'gross' }, '🧒'), 'Schülermodus', h('small', {}, 'Das Kind bearbeitet Aufgaben')),
@@ -163,6 +165,7 @@ function bereichSeite(p) {
     { id: 'lesen', titel: 'Lesen', symbol: '📖', bereit: true },
     { id: 'rechtschreibung', titel: 'Schreiben', symbol: '✏️', bereit: true },
     { id: 'mathe', titel: 'Mathe', symbol: '🔢', bereit: true },
+    { id: 'hoeren', titel: 'Hören', symbol: '👂', bereit: true },
   ];
   const vorlesen = h('button', { class: 'kachel', type: 'button', onclick: () => vorleseAuswahl(p) },
     h('span', { class: 'gross' }, '🗣️'), 'Vorlesen', h('small', {}, 'Text zum lauten Lesen'));
@@ -233,23 +236,56 @@ function aufgabeSeite(lauf) {
   let start = performance.now();
   let gewaehlt = false;
 
+  let gesprochen = null;
   const waehle = (wert, el) => {
     if (gewaehlt) return;
     gewaehlt = true;
+    hoerAuf();
     el.classList.add('gewaehlt');
-    lauf.antworte(wert, performance.now() - start);
+    lauf.antworte(wert, performance.now() - start, gesprochen);
     const lob = LOB[Math.floor(Math.random() * LOB.length)];
     app.append(h('div', { class: 'lob' }, h('span', {}, '⭐'), lob));
     setTimeout(() => weiter(lauf), 900);
   };
 
   const sonderform = { legen: legenSeite, satzlegen: satzLegenSeite, beschriften: tastaturSeite }[a.typ];
+  const kandidaten = [];
   const optionen = sonderform ? [] : a.optionen.map((o) => {
     const [wert, inhalt] = optionInhalt(a, o);
     const el = h('button', { class: `option typ-${a.typ}`, type: 'button' }, inhalt);
     aktivierbar(el, () => waehle(wert, el));
+    const sprechtext = optionSprechtext(a, o);
+    if (sprechtext) kandidaten.push({ ...sprechtext, el });
     return el;
   });
+
+  // Antwort per Sprache
+  const sprachModus = einstellungen().sprachantwort;
+  const mitSprache = sprachModus !== 'aus' && erkennungVerfuegbar() && kandidaten.length === optionen.length && kandidaten.length > 0;
+  let versuche = 0;
+  const mikro = mitSprache && h('button', { type: 'button', class: 'mikro' }, '🎤 Sag die Antwort');
+  const zuhoeren = async () => {
+    if (gewaehlt || !document.body.contains(mikro)) return;
+    mikro.classList.add('hoert');
+    mikro.textContent = '👂 Ich höre zu …';
+    const varianten = await hoereZu();
+    if (gewaehlt || !document.body.contains(mikro)) return;
+    mikro.classList.remove('hoert');
+    if (varianten === null) {
+      mikro.textContent = '🎤 Mikrofon nicht erlaubt';
+      return;
+    }
+    const treffer = findeAntwort(varianten, kandidaten);
+    if (treffer) {
+      gesprochen = treffer.gesprochen;
+      treffer.kandidat.el._aktiviere();
+      return;
+    }
+    versuche++;
+    mikro.textContent = varianten.length ? '🎤 Nicht verstanden. Nochmal sagen' : '🎤 Sag die Antwort';
+    if (sprachModus === 'auto' && versuche < 3) zuhoeren();
+  };
+  if (mikro) mikro.addEventListener('click', zuhoeren);
 
   zeige(
     h('div', { class: 'testleiste' },
@@ -261,12 +297,14 @@ function aufgabeSeite(lauf) {
       anw.vorlage && h('div', { class: `vorlage ${vorlageKlasse(a)}` }, anw.vorlage),
       sonderform
         ? sonderform(a, (wert) => waehle(wert, document.querySelector('.legezeile')))
-        : h('div', { class: `optionen anzahl-${optionen.length} typ-${a.typ}` }, optionen)));
+        : h('div', { class: `optionen anzahl-${optionen.length} typ-${a.typ}` }, optionen),
+      mikro));
   neueSeite();
   // Zeit erst nach der Anweisung messen
   setTimeout(() => {
-    sprich(anw.sprache);
+    const gesagt = sprich(anw.sprache);
     start = performance.now();
+    if (mikro && sprachModus === 'auto') gesagt.then(zuhoeren);
   }, 250);
 }
 
@@ -287,6 +325,7 @@ function weiter(lauf) {
 }
 
 function testEnde(lauf, abgebrochen) {
+  hoerAuf();
   const ergebnis = lauf.abschliessen(abgebrochen);
   const gespeichert = speicher.speichereTest(ergebnis);
   zeige(
@@ -302,7 +341,7 @@ function testEnde(lauf, abgebrochen) {
 }
 
 // ---------- Protokollanzeige ----------
-function protokollSeite({ titel, text, json, basis, zurueck }) {
+function protokollSeite({ titel, text, json, basis, zurueck, oben }) {
   const kopierKnopf = knopf('📋 In Zwischenablage kopieren', () => kopieren(text, kopierKnopf));
   const teilen = async () => {
     const datei = new File([JSON.stringify(json, null, 2)], basis + '.json', { type: 'application/json' });
@@ -322,8 +361,17 @@ function protokollSeite({ titel, text, json, basis, zurueck }) {
         knopf('💾 Als Datei speichern (.json)', () => laden(basis + '.json', JSON.stringify(json, null, 2), 'application/json'), 'knopf leise'),
         kannTeilen && knopf('📤 Teilen / in Dateien sichern', teilen, 'knopf leise')),
       hinweisSpeicher(),
+      oben,
       h('pre', { class: 'text' }, text),
       knopf('Zur Startseite', startseite, 'knopf leise')));
+}
+
+function zielKarte(ziele) {
+  if (!ziele.length) return null;
+  return h('section', { class: 'karte ziele' },
+    h('h2', {}, '🎯 Vorschläge für Förderziele'),
+    h('ol', {}, ziele.map((z) => h('li', {}, h('strong', {}, z.ziel), h('br'), h('small', {}, `${z.warum}. Idee: ${z.idee}.`)))),
+    h('p', { class: 'unter' }, 'Automatisch aus den Fehlern abgeleitet. Bitte fachlich prüfen.'));
 }
 
 function schuelerProtokollSeite(test, zurueck) {
@@ -331,6 +379,7 @@ function schuelerProtokollSeite(test, zurueck) {
     titel: 'Schülerprotokoll',
     text: schuelerText(test, speicher.tests(test.pseudonym)),
     json: test,
+    oben: zielKarte(foerderziele(test)),
     basis: dateiname('schuelerprotokoll', test.pseudonym, test.bereich, '').replace(/\.$/, ''),
     zurueck,
   });
@@ -756,6 +805,9 @@ function bedienungKarte() {
       auswahl('sperrzeit', [[0, 'aus'], [500, '0,5 Sekunden'], [1000, '1 Sekunde'], [2000, '2 Sekunden']])),
     h('label', { class: 'textzeile' }, 'Tasterbedienung (Scanning)',
       auswahl('taster', [['aus', 'aus'], ['1', '1 Taster: Markierung wandert automatisch, Taster wählt aus'], ['2', '2 Taster: Taster 1 = weiter, Taster 2 = auswählen']])),
+    h('label', { class: 'textzeile' }, 'Antwort per Sprache (das Kind sagt die Antwort)',
+      auswahl('sprachantwort', [['aus', 'aus'], ['knopf', 'mit Mikrofon-Knopf'], ['auto', 'Mikrofon hört nach jeder Frage automatisch zu']])),
+    !erkennungVerfuegbar() && h('p', { class: 'hinweis' }, 'Dieser Browser hat keine Spracherkennung. Auf dem iPad in Safari verwenden; dort muss unter Einstellungen → Allgemein → Tastatur die Diktierfunktion eingeschaltet sein.'),
     h('label', { class: 'textzeile' }, 'Tempo der Markierung (1 Taster)',
       auswahl('scanTempo', [[1500, '1,5 Sekunden'], [2000, '2 Sekunden'], [3000, '3 Sekunden'], [4000, '4 Sekunden']])),
     h('p', { class: 'unter' },
@@ -956,14 +1008,15 @@ function verwaltung() {
 // ---------- Start ----------
 async function init() {
   const lade = (pfad) => fetch(pfad).then((r) => r.json());
-  const [woerter, lesen, rechtschreibung, mathe, bogen, lautlesen] = await Promise.all(
-    ['woerter', 'lesen', 'rechtschreibung', 'mathe', 'kompetenzbogen', 'lautlesen'].map((n) => lade(`data/${n}.json`)));
+  const [woerter, lesen, rechtschreibung, mathe, bogen, lautlesen, hoeren] = await Promise.all(
+    ['woerter', 'lesen', 'rechtschreibung', 'mathe', 'kompetenzbogen', 'lautlesen', 'hoeren'].map((n) => lade(`data/${n}.json`)));
   daten.lautlesen = lautlesen;
   daten.woerter = woerter.woerter;
   Object.assign(daten.woerter, eigeneWoerter());
   daten.lesen = lesen;
   daten.rechtschreibung = rechtschreibung;
   daten.mathe = mathe;
+  daten.hoeren = hoeren;
   daten.bogen = bogen;
   await initSymbole(daten.woerter);
   wendeAn();

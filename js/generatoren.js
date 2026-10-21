@@ -51,7 +51,21 @@ function zahlOptionen(ziel, kandidaten, anzahl = 3) {
 
 const dreher = (n) => (n >= 10 && n < 100 ? (n % 10) * 10 + Math.floor(n / 10) : null);
 
+// Wörter mit eindeutigem Bild für das Hörverstehen
+const bildWoerter = () => wortListe().filter((k) => !wortInfo(k).eigen || wortInfo(k).emoji !== '🖼️');
+
 const GEN = {
+  hoerwort() {
+    const [ziel, ...rest] = ziehe(bildWoerter(), 4);
+    return { typ: 'hoeren', kategorie: 'Wörter', sprache: `Tippe auf das Bild: ${wortInfo(ziel).wort}.`, ziel, optionen: [ziel, ...rest] };
+  },
+  hoerzwei() {
+    const [a, b, c, d] = ziehe(bildWoerter(), 4);
+    return {
+      typ: 'hoeren', kategorie: 'Zwei Angaben', sprache: `Tippe auf das Bild mit ${wortInfo(a).wort} und ${wortInfo(b).wort}.`,
+      ziel: `${a}+${b}`, optionen: [`${a}+${b}`, `${a}+${c}`, `${d}+${b}`, `${c}+${d}`],
+    };
+  },
   eigenlegen() {
     const keys = eigeneLegeWoerter();
     if (!keys.length) return null;

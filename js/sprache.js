@@ -62,8 +62,9 @@ if (spracheVerfuegbar()) {
   window.speechSynthesis.addEventListener?.('voiceschanged', waehleStimme);
 }
 
+// Gibt ein Promise zurück, das nach dem Sprechen erfüllt ist
 export function sprich(text) {
-  if (!spracheVerfuegbar() || !text) return;
+  if (!spracheVerfuegbar() || !text) return Promise.resolve();
   const s = window.speechSynthesis;
   if (!stimme) waehleStimme();
   s.cancel();
@@ -72,7 +73,13 @@ export function sprich(text) {
   if (stimme) u.voice = stimme;
   u.rate = tempo();
   u.pitch = 1;
-  s.speak(u);
+  return new Promise((fertig) => {
+    u.onend = fertig;
+    u.onerror = fertig;
+    // Falls das Ende nicht gemeldet wird: nach geschätzter Sprechdauer weitermachen
+    setTimeout(fertig, Math.max(3000, (text.length * 110) / u.rate));
+    s.speak(u);
+  });
 }
 
 export function stopp() {

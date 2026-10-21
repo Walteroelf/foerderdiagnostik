@@ -1,5 +1,6 @@
 // Protokolle als KI-freundlicher Text (Markdown) und als JSON-Datei.
 import { SICHER_AB } from './testlauf.js';
+import { foerderziele } from './foerderziele.js';
 
 const datumText = (iso) =>
   new Date(iso).toLocaleString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + ' Uhr';
@@ -34,6 +35,7 @@ const TYP_NAMEN = {
   geld: 'Geld zählen',
   uhr: 'Uhr lesen',
   textaufgabe: 'Textaufgaben',
+  hoeren: 'Hörverstehen',
 };
 
 // Hinweise auf zählendes Rechnen und nicht-simultane Mengenerfassung (über die Bearbeitungszeit)
@@ -100,7 +102,7 @@ export function schuelerText(test, fruehere = []) {
     if (falsch.length) {
       z.push('- Fehler:');
       for (const f of falsch) {
-        z.push(`  - ${f.aufgabe}: ${f.fehler} (${sek(f.zeitMs)})`);
+        z.push(`  - ${f.aufgabe}: ${f.fehler}${f.gesprochen ? ` (gesagt: „${f.gesprochen}“)` : ''} (${sek(f.zeitMs)})`);
         alleFehler[f.fehlerTyp] = (alleFehler[f.fehlerTyp] || 0) + 1;
       }
     } else {
@@ -122,6 +124,13 @@ export function schuelerText(test, fruehere = []) {
   const muster = Object.entries(alleFehler).sort((a, b) => b[1] - a[1]);
   if (muster.length) muster.forEach(([t, n]) => z.push(`- ${t}: ${n}×`));
   else z.push('- Keine Fehler aufgetreten.');
+  const ziele = foerderziele(test);
+  if (ziele.length) {
+    z.push('');
+    z.push('## Vorschläge für Förderziele');
+    const punkt = (t) => (/[.!?]$/.test(t) ? t : t + '.');
+    ziele.forEach((f, i) => z.push(`${i + 1}. ${punkt(f.ziel)} Grund: ${f.warum}. Übungsidee: ${f.idee}.`));
+  }
   const vorher = fruehere.filter((t) => t.id !== test.id && t.bereich === test.bereich && t.datum < test.datum);
   if (vorher.length) {
     z.push('');
@@ -134,7 +143,7 @@ export function schuelerText(test, fruehere = []) {
   z.push('## Hinweis für die KI');
   z.push(
     'Dies ist ein informelles Förderdiagnostik-Protokoll aus einer Förderschule mit dem Schwerpunkt körperliche und motorische Entwicklung (NRW), keine standardisierte Diagnostik. ' +
-      'Bitte leite daraus passgenaues Arbeitsmaterial auf der Stufe knapp oberhalb der sicher erreichten Stufe ab, greife die Fehlermuster gezielt auf und ' +
+      'Bitte leite daraus passgenaues Arbeitsmaterial auf der Stufe knapp oberhalb der sicher erreichten Stufe ab, greife die Fehlermuster und die vorgeschlagenen Förderziele gezielt auf und ' +
       'berücksichtige, falls vorhanden, das Kompetenzprotokoll der Lehrkraft (Motorik, Antwortformen, bearbeitbare Formate, Wahrnehmung).'
   );
   return z.join('\n');

@@ -1,7 +1,7 @@
 // Motorische Hilfen für die Kinderansicht: Größe, Haltezeit, Sperrzeit und Tasterbedienung (Scanning).
 // Die Einstellungen gelten für dieses Gerät.
 const SCHLUESSEL = 'fd1:bedienung';
-const STANDARD = { groesse: 'normal', haltezeit: 0, sperrzeit: 0, taster: 'aus', scanTempo: 2000 };
+const STANDARD = { groesse: 'normal', haltezeit: 0, sperrzeit: 0, taster: 'aus', scanTempo: 2000, sprachantwort: 'aus' };
 
 export function einstellungen() {
   try {
@@ -33,6 +33,7 @@ export function beschreibung() {
   teile.push(e.taster === '1' ? `1 Taster mit automatischem Scanning (${sek(e.scanTempo)})` : e.taster === '2' ? '2 Taster (weiter / auswählen)' : 'Antippen');
   if (e.haltezeit) teile.push(`Haltezeit ${sek(e.haltezeit)}`);
   if (e.sperrzeit) teile.push(`Sperrzeit ${sek(e.sperrzeit)} nach jeder Aufgabe`);
+  if (e.sprachantwort !== 'aus') teile.push(e.sprachantwort === 'auto' ? 'Antwort per Sprache (Mikrofon hört automatisch zu)' : 'Antwort per Sprache (Mikrofon-Knopf)');
   if (e.groesse !== 'normal') teile.push(e.groesse === 'gross' ? 'große Darstellung' : 'sehr große Darstellung');
   return teile.join(', ');
 }

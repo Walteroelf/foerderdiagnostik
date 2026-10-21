@@ -1,0 +1,424 @@
+{
+ "bereich": "hoeren",
+ "titel": "Hören",
+ "aufgabenProStufe": 6,
+ "stufen": [
+  {
+   "stufe": 1,
+   "name": "Wörter verstehen",
+   "kompetenz": "Versteht gesprochene Wörter und zeigt das passende Bild.",
+   "aufgaben": [],
+   "generatoren": [
+    {
+     "gen": "hoerwort",
+     "anzahl": 10
+    }
+   ]
+  },
+  {
+   "stufe": 2,
+   "name": "Fragen zu Funktionen und Oberbegriffen",
+   "kompetenz": "Versteht Fragen wie „Womit kann man schreiben?“ und „Was kann man essen?“.",
+   "aufgaben": [
+    {
+     "typ": "hoeren",
+     "kategorie": "Funktionen und Oberbegriffe",
+     "sprache": "Womit kann man schreiben?",
+     "ziel": "stift",
+     "optionen": [
+      "stift",
+      "loeffel",
+      "ball",
+      "schuh"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Funktionen und Oberbegriffe",
+     "sprache": "Was kann man essen?",
+     "ziel": "banane",
+     "optionen": [
+      "banane",
+      "schuh",
+      "lampe",
+      "auto"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Funktionen und Oberbegriffe",
+     "sprache": "Womit kann man fahren?",
+     "ziel": "rad",
+     "optionen": [
+      "rad",
+      "bett",
+      "tasse",
+      "hut"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Funktionen und Oberbegriffe",
+     "sprache": "Was zieht man an die Füße?",
+     "ziel": "schuh",
+     "optionen": [
+      "schuh",
+      "muetze",
+      "ring",
+      "brille"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Funktionen und Oberbegriffe",
+     "sprache": "Womit schneidet man Papier?",
+     "ziel": "schere",
+     "optionen": [
+      "schere",
+      "kamm",
+      "loeffel",
+      "stift"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Funktionen und Oberbegriffe",
+     "sprache": "Welches Tier kann fliegen?",
+     "ziel": "biene",
+     "optionen": [
+      "biene",
+      "schwein",
+      "kuh",
+      "schnecke"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Funktionen und Oberbegriffe",
+     "sprache": "Was kann man trinken?",
+     "ziel": "milch",
+     "optionen": [
+      "milch",
+      "brot",
+      "kaese",
+      "teller"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Funktionen und Oberbegriffe",
+     "sprache": "Worin schläft man?",
+     "ziel": "bett",
+     "optionen": [
+      "bett",
+      "tuer",
+      "teller",
+      "koffer"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Funktionen und Oberbegriffe",
+     "sprache": "Womit isst man Suppe?",
+     "ziel": "loeffel",
+     "optionen": [
+      "loeffel",
+      "schere",
+      "kamm",
+      "stift"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Funktionen und Oberbegriffe",
+     "sprache": "Welches Tier lebt im Wasser?",
+     "ziel": "fisch",
+     "optionen": [
+      "fisch",
+      "hund",
+      "katze",
+      "pferd"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Funktionen und Oberbegriffe",
+     "sprache": "Womit kann man telefonieren?",
+     "ziel": "telefon",
+     "optionen": [
+      "telefon",
+      "buch",
+      "lampe",
+      "uhr"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Funktionen und Oberbegriffe",
+     "sprache": "Was ist ein Obst?",
+     "ziel": "birne",
+     "optionen": [
+      "birne",
+      "gurke",
+      "brot",
+      "kaese"
+     ]
+    }
+   ]
+  },
+  {
+   "stufe": 3,
+   "name": "Zwei Angaben behalten",
+   "kompetenz": "Behält zwei gehörte Wörter im Gedächtnis und zeigt beide.",
+   "aufgaben": [],
+   "generatoren": [
+    {
+     "gen": "hoerzwei",
+     "anzahl": 10
+    }
+   ]
+  },
+  {
+   "stufe": 4,
+   "name": "Verneinung und Eigenschaften",
+   "kompetenz": "Versteht Sätze mit „kein“ und „nicht“ sowie Eigenschaften wie groß, kalt, heiß.",
+   "aufgaben": [
+    {
+     "typ": "hoeren",
+     "kategorie": "Verneinung und Eigenschaften",
+     "sprache": "Was ist kein Tier?",
+     "ziel": "ball",
+     "optionen": [
+      "ball",
+      "hund",
+      "katze",
+      "maus"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Verneinung und Eigenschaften",
+     "sprache": "Was ist kein Obst?",
+     "ziel": "brot",
+     "optionen": [
+      "brot",
+      "apfel",
+      "banane",
+      "birne"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Verneinung und Eigenschaften",
+     "sprache": "Welches Tier kann nicht fliegen?",
+     "ziel": "schwein",
+     "optionen": [
+      "schwein",
+      "biene",
+      "eule",
+      "fliege"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Verneinung und Eigenschaften",
+     "sprache": "Welches Tier ist sehr groß?",
+     "ziel": "elefant",
+     "optionen": [
+      "elefant",
+      "maus",
+      "biene",
+      "schnecke"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Verneinung und Eigenschaften",
+     "sprache": "Was ist kalt?",
+     "ziel": "eis",
+     "optionen": [
+      "eis",
+      "feuer",
+      "kerze",
+      "sonne"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Verneinung und Eigenschaften",
+     "sprache": "Was ist heiß?",
+     "ziel": "feuer",
+     "optionen": [
+      "feuer",
+      "eis",
+      "wolke",
+      "fisch"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Verneinung und Eigenschaften",
+     "sprache": "Was kann man nicht anziehen?",
+     "ziel": "tasse",
+     "optionen": [
+      "tasse",
+      "jacke",
+      "hose",
+      "socke"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Verneinung und Eigenschaften",
+     "sprache": "Welches Tier hat einen langen Hals?",
+     "ziel": "giraffe",
+     "optionen": [
+      "giraffe",
+      "igel",
+      "frosch",
+      "maus"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Verneinung und Eigenschaften",
+     "sprache": "Was braucht man nicht zum Essen?",
+     "ziel": "kamm",
+     "optionen": [
+      "kamm",
+      "teller",
+      "loeffel",
+      "brot"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Verneinung und Eigenschaften",
+     "sprache": "Welches Tier hat keine Beine?",
+     "ziel": "schnecke",
+     "optionen": [
+      "schnecke",
+      "hund",
+      "pferd",
+      "ente"
+     ]
+    }
+   ]
+  },
+  {
+   "stufe": 5,
+   "name": "Kurze Geschichten verstehen",
+   "kompetenz": "Versteht eine kurze gehörte Geschichte und beantwortet eine Frage dazu, auch zur Reihenfolge.",
+   "aufgaben": [
+    {
+     "typ": "hoeren",
+     "kategorie": "Kurze Geschichten",
+     "sprache": "Mia geht in den Garten. Dort sieht sie einen Igel. Was sieht Mia?",
+     "ziel": "igel",
+     "optionen": [
+      "igel",
+      "hase",
+      "katze",
+      "hund"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Kurze Geschichten",
+     "sprache": "Ben hat Durst. Er holt sich ein Glas Milch. Was trinkt Ben?",
+     "ziel": "milch",
+     "optionen": [
+      "milch",
+      "eis",
+      "brot",
+      "apfel"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Kurze Geschichten",
+     "sprache": "Es regnet. Oma zieht ihre Jacke an und geht nach draußen. Was zieht Oma an?",
+     "ziel": "jacke",
+     "optionen": [
+      "jacke",
+      "kleid",
+      "hut",
+      "socke"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Kurze Geschichten",
+     "sprache": "Opa hat Geburtstag. Die Kinder backen einen Kuchen für ihn. Was backen die Kinder?",
+     "ziel": "kuchen",
+     "optionen": [
+      "kuchen",
+      "brot",
+      "pizza",
+      "ei"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Kurze Geschichten",
+     "sprache": "Lea möchte Musik machen. Sie holt ihre Trommel. Womit macht Lea Musik?",
+     "ziel": "trommel",
+     "optionen": [
+      "trommel",
+      "gitarre",
+      "glocke",
+      "telefon"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Kurze Geschichten",
+     "sprache": "Tim fährt mit dem Bus zur Schule. Nach der Schule geht er zu Fuß nach Hause. Womit fährt Tim zur Schule?",
+     "ziel": "bus",
+     "optionen": [
+      "bus",
+      "rad",
+      "auto",
+      "zug"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Kurze Geschichten",
+     "sprache": "Paul isst zuerst eine Banane und danach einen Apfel. Was isst Paul zuerst?",
+     "ziel": "banane",
+     "optionen": [
+      "banane",
+      "apfel",
+      "birne",
+      "kiwi"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Kurze Geschichten",
+     "sprache": "Die Katze liegt im Bett. Der Hund liegt auf dem Sofa. Wo liegt der Hund?",
+     "ziel": "sofa",
+     "optionen": [
+      "sofa",
+      "bett",
+      "tuer",
+      "haus"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Kurze Geschichten",
+     "sprache": "Ali packt seinen Koffer. Er legt eine Hose und eine Mütze hinein. Was legt Ali zuerst hinein?",
+     "ziel": "hose",
+     "optionen": [
+      "hose",
+      "muetze",
+      "jacke",
+      "schuh"
+     ]
+    }
+   ]
+  }
+ ]
+}

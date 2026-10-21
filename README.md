@@ -4,17 +4,19 @@ Informelles Förderdiagnostik-Werkzeug für die Förderschule KME. Läuft im Bro
 
 ## Funktionen
 
-- **Schülermodus:** Pseudonym erzeugen oder eingeben, Bereiche Lesen, Schreiben und Mathe mit je 5 Stufen und adaptiver Stufenanpassung. Das Schülerprotokoll wird still im Hintergrund gespeichert; das Kind sieht am Ende nur „Geschafft!“. Die Lehrkraft findet es unter „Protokolle und Einstellungen“.
+- **Schülermodus:** Pseudonym erzeugen oder eingeben, Bereiche Lesen, Schreiben, Mathe und Hören mit je 5 Stufen und adaptiver Stufenanpassung. Das Schülerprotokoll wird still im Hintergrund gespeichert; das Kind sieht am Ende nur „Geschafft!“. Die Lehrkraft findet es unter „Protokolle und Einstellungen“.
   - Lesen: 1 Bild–Symbol, 2 Buchstaben/Anlaute/Silben, 3 Wort zum Bild, 4 Sätze „stimmt / stimmt nicht“, 5 kurze Texte mit Fragen.
   - Schreiben: 1 Buchstaben zuordnen, 2 Anfangsbuchstaben, 3 Wörter aus Kärtchen legen, 4 Rechtschreibmuster (Doppelkonsonant, ie, ck, Großschreibung), 5 diktierte Sätze legen und Bilder mit einer Buchstabentastatur beschriften. Fehleranalyse: ausgelassen, hinzugefügt, vertauscht, ersetzt, Großschreibung, Wortreihenfolge.
   - Mathe: 1 Mengen vergleichen, 2 Würfelbilder und Zahl–Menge, 3 Plus/Minus bis 20, 4 Zehner/Einer, Plus/Minus bis 100, Einmaleins, 5 Geld, Uhr, Textaufgaben. Hinweise auf zählendes Rechnen, Zahlendreher und Stellenwertfehler.
+  - Hören: 1 Wörter verstehen, 2 Fragen zu Gebrauch und Oberbegriffen, 3 zwei Angaben behalten, 4 Verneinung und Eigenschaften, 5 kurze Geschichten. Der Text wird nur vorgelesen, nicht angezeigt; geeignet auch für Kinder, die noch nicht lesen.
   - Viele Aufgaben werden bei jedem Test neu erzeugt (Mathe, Buchstaben, Anlaute, Silben, Bildzuordnung), damit Wiederholungstests vergleichbar bleiben, ohne dass sich Aufgaben wiederholen.
 - **Lehrkraftmodus:**
   - Kompetenzbogen, unabhängig vom Schülertest und auf einem anderen iPad nutzbar.
   - Lautes Lesen: Das Kind liest den Text auf einem zweiten iPad (Schülermodus → Vorlesen) oder vom Ausdruck vor. Die Lehrkraft tippt auf ihrem iPad Fehler und Selbstkorrekturen mit, das Kind sieht davon nichts. Ergebnis: richtig gelesene Wörter pro Minute, Genauigkeit, Fehlerwörter.
 - **Protokolle:** Text zum Kopieren für Claude, Download als `.md` und `.json`, Import, Gesamtprotokoll aus Kompetenzbogen, Schüler- und Leseprotokollen.
+- **Förderziele:** Jedes Schülerprotokoll enthält bis zu vier Vorschläge für Förderziele mit Übungsidee, abgeleitet aus der nächsten Stufe und den häufigsten Fehlermustern (regelbasiert, `js/foerderziele.js`). Sie stehen oben auf der Protokollseite und im Text für die KI.
 - **Fortschritt:** Unter „Protokolle und Einstellungen“ zeigt jede Pseudonym-Karte die erreichten Stufen je Test und das Lesetempo im Verlauf.
-- **Bedienung für das Kind** (motorische Hilfen, pro iPad): größere Antwortfelder, Haltezeit gegen versehentliches Tippen, Sperrzeit nach jeder Aufgabe, Tasterbedienung mit 1 Taster (automatisches Scanning, auch Tippen irgendwo) oder 2 Tastern (weiter/auswählen). Die gewählte Bedienung steht im Protokoll.
+- **Bedienung für das Kind** (motorische Hilfen, pro iPad): größere Antwortfelder, Haltezeit gegen versehentliches Tippen, Sperrzeit nach jeder Aufgabe, Tasterbedienung mit 1 Taster (automatisches Scanning, auch Tippen irgendwo) oder 2 Tastern (weiter/auswählen). Antwort per Sprache: Das Kind sagt die Antwort, die App wählt das passende Feld (mit Mikrofon-Knopf oder automatisch nach jeder Frage). Nutzt die Spracherkennung von Safari, dafür muss die Diktierfunktion des iPads eingeschaltet sein. Bei Wörterlegen, Satzlegen, Beschriften und Rechtschreibmustern wird weiter getippt. Die gewählte Bedienung und das Gesagte bei falschen Antworten stehen im Protokoll.
 - **Vorlesestimme:** Die App nimmt automatisch die beste deutsche Stimme. In den Einstellungen lassen sich Stimme und Tempo wählen. Bessere Stimmen auf dem iPad: Einstellungen → Bedienungshilfen → Gesprochene Inhalte → Stimmen → Deutsch (z. B. „Anna (Premium)“ laden).
 - **Übertragung zwischen iPads:** Unter „Protokolle und Einstellungen“ → Senden zeigt ein iPad QR-Codes (bei vielen Daten mehrere, die automatisch wechseln), das andere liest sie mit „Empfangen“ über die Kamera. Ohne Internet, ohne Server. Vorhandenes wird ergänzt, nicht gelöscht.
 - **Lehrkraft-Sperre:** Lehrkraft-Bereiche öffnen sich nur durch langes Drücken (1,5 Sekunden) oder, wenn eine 4-stellige PIN festgelegt ist, nur mit PIN. Die PIN wird nur als Prüfsumme gespeichert.
@@ -67,6 +69,9 @@ js/bedienung.js          Motorische Hilfen und Tasterbedienung
 js/sperre.js             Lehrkraft-Sperre (PIN oder langes Drücken)
 js/eigenes.js            Eigene Wörter und Vorlesetexte
 js/uebertragung.js       Übertragung per QR-Code
+js/foerderziele.js       Vorschläge für Förderziele
+js/spracheingabe.js      Antwort per Sprache
+data/hoeren.json         Aufgaben Hören
 vendor/                  QR-Bibliotheken (qrcode-generator, jsQR)
 data/woerter.json        Wortschatz mit Emoji und ARASAAC-Suchwort
 data/kompetenzbogen.json Fragen des Kompetenzbogens
@@ -80,7 +85,8 @@ Neue Aufgaben werden in den JSON-Dateien ergänzt. Neue Wörter brauchen einen E
 - Keine Klarnamen: Die App fragt nie nach Namen oder Geburtsdaten und warnt, wenn etwas eingegeben wird, das nicht wie ein Pseudonym aussieht.
 - Die Zuordnung Pseudonym → Kind steht nur auf dem Papier der Lehrkraft.
 - Daten liegen im Browser. Beim Löschen der Safari-Daten sind sie weg, deshalb Protokolle als Datei sichern.
-- Einzige Internetverbindung: das freiwillige Laden der ARASAAC-Symbole. Dabei werden nur die Suchwörter (z. B. „Maus“) übertragen.
+- Antwort per Sprache: Die Spracherkennung macht Safari bzw. iOS, je nach Gerät auch über Apple-Server. Wenn das nicht gewünscht ist, die Funktion ausgeschaltet lassen.
+- Einzige Internetverbindung der App selbst: das freiwillige Laden der ARASAAC-Symbole. Dabei werden nur die Suchwörter (z. B. „Maus“) übertragen.
 
 ## Lizenzen
 
