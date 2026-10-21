@@ -35,8 +35,9 @@ function waehleAufgaben(stufeDef, anzahl) {
       out.push(...g);
     }
   } else {
+    // Gleichmäßig über Aufgabentypen und Teilbereiche (Rechtschreibmuster, Kategorien) verteilen
     const nachTyp = {};
-    for (const a of mische(eindeutig)) (nachTyp[a.typ] ||= []).push(a);
+    for (const a of mische(eindeutig)) (nachTyp[`${a.typ}:${a.muster || a.kategorie || ''}`] ||= []).push(a);
     const gruppen = Object.values(nachTyp);
     while (out.length < anzahl && gruppen.some((g) => g.length)) {
       for (const g of gruppen) if (g.length && out.length < anzahl) out.push(g.shift());
@@ -47,6 +48,8 @@ function waehleAufgaben(stufeDef, anzahl) {
 }
 
 const w = (key) => wortInfo(key).wort;
+
+const zehnerUebergang = ({ a, op, b }) => (op === '+' ? (a % 10) + (b % 10) >= 10 : op === '-' ? a % 10 < b % 10 : false);
 
 export const rechne = (a, op, b) => (op === '+' ? a + b : op === '-' ? a - b : a * b);
 
@@ -64,6 +67,19 @@ const istTeilfolge = (kurz, lang) => {
   for (const x of lang) if (x === kurz[i]) i++;
   return i === kurz.length;
 };
+
+// Schreibung auf die hörbaren Laute zurückführen: Was danach gleich ist, ist lautgetreu richtig
+// (z. B. „Sone“ für „Sonne“, „Hunt“ für „Hund“, „Tela“ für „Teller“) und nur orthografisch falsch.
+export function lautnah(wort) {
+  return wort.toLowerCase()
+    .replace(/ck/g, 'k').replace(/tz/g, 'z').replace(/ie/g, 'i').replace(/ß/g, 's').replace(/v/g, 'f')
+    .replace(/äu/g, 'eu').replace(/ä/g, 'e')
+    .replace(/([aeiouöü])h(?![aeiouäöü])/g, '$1')
+    .replace(/([aeo])\1/g, '$1')
+    .replace(/([bdfgklmnprstz])\1/g, '$1')
+    .replace(/er$/, 'a')
+    .replace(/d$/, 't').replace(/g$/, 'k').replace(/b$/, 'p');
+}
 
 // Grobe Fehleranalyse beim Schreiben (Lautebene)
 export function schreibFehler(soll, ist) {
@@ -101,6 +117,14 @@ export function bewerte(aufgabe, gewaehlt) {
         richtig: gewaehlt === aufgabe.ziel,
         fehler: `${gewaehlt} statt ${aufgabe.ziel}`,
         fehlerTyp: 'Anlaut',
+      };
+    case 'endlaut':
+    case 'vokal':
+      return {
+        aufgabe: `${aufgabe.typ === 'endlaut' ? 'Endlaut' : 'Vokal in der Mitte'} von „${w(aufgabe.wort)}“`,
+        richtig: gewaehlt === aufgabe.ziel,
+        fehler: `${gewaehlt} statt ${aufgabe.ziel}`,
+        fehlerTyp: aufgabe.typ === 'endlaut' ? 'Endlaut' : 'Vokal im Wort',
       };
     case 'silben':
       return {
@@ -163,6 +187,25 @@ export function bewerte(aufgabe, gewaehlt) {
         fehler: `Menge ${gewaehlt} statt ${aufgabe.ziel}`,
         fehlerTyp: 'Zahl-Menge-Zuordnung',
       };
+    case 'nachbarzahl': {
+      const g = Number(gewaehlt);
+      const andererNachbar = aufgabe.richtung === 'nach' ? aufgabe.n - 1 : aufgabe.n + 1;
+      return {
+        aufgabe: `Zahl ${aufgabe.richtung} ${aufgabe.n}`,
+        richtig: g === aufgabe.ziel,
+        fehler: `${g} statt ${aufgabe.ziel}`,
+        fehlerTyp: g === andererNachbar ? 'Nachbarzahl: vor und nach verwechselt' : 'Nachbarzahl',
+      };
+    }
+    case 'zerlegen': {
+      const g = Number(gewaehlt);
+      return {
+        aufgabe: `${aufgabe.ganz} zerlegen: ${aufgabe.sichtbar} sichtbar, ${aufgabe.ziel} versteckt`,
+        richtig: g === aufgabe.ziel,
+        fehler: `${g} statt ${aufgabe.ziel}`,
+        fehlerTyp: g === aufgabe.ganz ? 'Zerlegung: Gesamtmenge genannt' : g === aufgabe.sichtbar ? 'Zerlegung: sichtbaren Teil genannt' : 'Zerlegung',
+      };
+    }
     case 'rechnen': {
       const ziel = rechne(aufgabe.a, aufgabe.op, aufgabe.b);
       const g = Number(gewaehlt);
@@ -179,7 +222,7 @@ export function bewerte(aufgabe, gewaehlt) {
         richtig: g === ziel,
         fehler: `${g} statt ${ziel}`,
         fehlerTyp,
-        kategorie: aufgabe.op === '·' ? 'Einmaleins' : aufgabe.bilder ? 'Plus/Minus mit Bildern' : `Plus/Minus bis ${Math.max(ziel, aufgabe.a) > 20 ? 100 : 20}`,
+        kategorie: aufgabe.op === '·' ? 'Einmaleins' : aufgabe.bilder ? 'Plus/Minus mit Bildern' : `Plus/Minus bis ${Math.max(ziel, aufgabe.a) > 20 ? 100 : 20} ${zehnerUebergang(aufgabe) ? 'mit' : 'ohne'} Zehnerübergang`,
       };
     }
     case 'stellenwert': {
@@ -203,10 +246,11 @@ export function bewerte(aufgabe, gewaehlt) {
     }
     case 'textaufgabe':
       return {
-        aufgabe: `Textaufgabe: ${aufgabe.text}`,
+        aufgabe: `Textaufgabe${aufgabe.sachtyp ? ` (${aufgabe.sachtyp})` : ''}: ${aufgabe.text}`,
         richtig: Number(gewaehlt) === aufgabe.ziel,
         fehler: `${gewaehlt} statt ${aufgabe.ziel}`,
-        fehlerTyp: 'Textaufgabe',
+        fehlerTyp: aufgabe.fehler?.[gewaehlt] ? `Textaufgabe: ${aufgabe.fehler[gewaehlt]}` : 'Textaufgabe',
+        kategorie: 'Textaufgaben',
       };
     case 'uhr':
     case 'schreibweise':
@@ -214,19 +258,26 @@ export function bewerte(aufgabe, gewaehlt) {
     case 'textfrage': {
       if (aufgabe.typ === 'satz') {
         const richtig = (gewaehlt === 'stimmt') === aufgabe.stimmt;
-        return { aufgabe: `Satz „${aufgabe.satz}“ (${aufgabe.stimmt ? 'stimmt' : 'stimmt nicht'})`, richtig, fehler: `„${gewaehlt}“ gewählt`, fehlerTyp: 'Satzverständnis' };
+        return {
+          aufgabe: `Satz „${aufgabe.satz}“ (${aufgabe.stimmt ? 'stimmt' : 'stimmt nicht'})`,
+          richtig,
+          fehler: `„${gewaehlt}“ gewählt`,
+          fehlerTyp: aufgabe.kategorie ? `Satzverständnis: ${aufgabe.kategorie}` : 'Satzverständnis',
+          kategorie: aufgabe.kategorie,
+        };
       }
       const b = optionsBewertung(aufgabe, gewaehlt);
       const aufgabeText =
         aufgabe.typ === 'uhr' ? `Uhr lesen (${b.richtige})`
-          : aufgabe.typ === 'schreibweise' ? `Schreibweise „${b.richtige}“`
+          : aufgabe.typ === 'schreibweise' ? `Schreibweise „${b.richtige}“ (${aufgabe.muster})`
             : `Text „${aufgabe.text.slice(0, 30)}…“: ${aufgabe.frage}`;
       return {
         aufgabe: aufgabeText,
         richtig: b.richtig,
         fehler: `„${gewaehlt}“ statt „${b.richtige}“`,
-        fehlerTyp: aufgabe.typ === 'textfrage' ? 'Textverständnis' : aufgabe.typ === 'uhr' ? `Uhr: ${b.fehlerArt || 'falsch'}` : `Rechtschreibung: ${b.fehlerArt || 'falsch'}`,
-        kategorie: aufgabe.typ === 'schreibweise' ? aufgabe.muster : undefined,
+        fehlerTyp: aufgabe.typ === 'textfrage' ? `Textverständnis${aufgabe.kategorie ? ': ' + aufgabe.kategorie : ''}`
+          : aufgabe.typ === 'uhr' ? `Uhr: ${b.fehlerArt || 'falsch'}` : `Rechtschreibung: ${aufgabe.muster}: ${b.fehlerArt || 'falsch'}`,
+        kategorie: aufgabe.typ === 'schreibweise' ? aufgabe.muster : aufgabe.typ === 'textfrage' ? aufgabe.kategorie : undefined,
       };
     }
     case 'satzlegen': {
@@ -263,6 +314,7 @@ export function bewerte(aufgabe, gewaehlt) {
       const ist = String(gewaehlt);
       let fehlerTyp = schreibFehler([...soll.toLowerCase()], [...ist.toLowerCase()]);
       if (ist.toLowerCase() === soll.toLowerCase()) fehlerTyp = 'Großschreibung';
+      else if (ist && lautnah(ist) === lautnah(soll)) fehlerTyp = 'Lautgetreu geschrieben, Rechtschreibmuster fehlt';
       return {
         aufgabe: `Bild beschriften „${soll}“`,
         richtig: ist === soll,

@@ -64,8 +64,8 @@
   },
   {
    "stufe": 2,
-   "name": "Zahlbegriff: Mengen erfassen, Zahl und Menge zuordnen",
-   "kompetenz": "Erfasst kleine Mengen auf einen Blick und ordnet Zahlen den passenden Mengen zu.",
+   "name": "Zahlbegriff: Mengen erfassen, Zahl und Menge, Zahlenreihe",
+   "kompetenz": "Erfasst kleine Mengen auf einen Blick, ordnet Zahlen den Mengen zu und kennt Vorgänger und Nachfolger.",
    "aufgaben": [],
    "generatoren": [
     {
@@ -77,13 +77,18 @@
      "gen": "zahlmenge",
      "anzahl": 8,
      "max": 7
+    },
+    {
+     "gen": "nachbarzahl",
+     "anzahl": 8,
+     "max": 20
     }
    ]
   },
   {
    "stufe": 3,
-   "name": "Zahlenraum bis 20: Plus und Minus",
-   "kompetenz": "Rechnet Plus- und Minusaufgaben im Zahlenraum bis 20, zuerst mit Bildern, dann ohne.",
+   "name": "Zahlenraum bis 20: Zerlegen, Plus und Minus",
+   "kompetenz": "Zerlegt Zahlen bis 10 und rechnet Plus- und Minusaufgaben bis 20, zuerst mit Bildern, dann ohne.",
    "aufgaben": [],
    "generatoren": [
     {
@@ -105,6 +110,11 @@
       "-"
      ],
      "bilder": false
+    },
+    {
+     "gen": "zerlegen",
+     "anzahl": 6,
+     "max": 10
     }
    ]
   },
@@ -154,7 +164,12 @@
       8,
       2,
       7
-     ]
+     ],
+     "sachtyp": "Veränderung (Ergebnis gesucht)",
+     "fehler": {
+      "2": "Rechenart verwechselt",
+      "7": "um 1 daneben"
+     }
     },
     {
      "typ": "textaufgabe",
@@ -164,7 +179,12 @@
       8,
       16,
       9
-     ]
+     ],
+     "sachtyp": "Veränderung (Ergebnis gesucht)",
+     "fehler": {
+      "16": "Rechenart verwechselt",
+      "9": "um 1 daneben"
+     }
     },
     {
      "typ": "textaufgabe",
@@ -174,7 +194,11 @@
       6,
       5,
       8
-     ]
+     ],
+     "sachtyp": "Vervielfachen",
+     "fehler": {
+      "5": "Zahlen addiert statt vervielfacht"
+     }
     },
     {
      "typ": "textaufgabe",
@@ -184,7 +208,12 @@
       7,
       13,
       6
-     ]
+     ],
+     "sachtyp": "Veränderung (Ergebnis gesucht)",
+     "fehler": {
+      "13": "Rechenart verwechselt",
+      "6": "um 1 daneben"
+     }
     },
     {
      "typ": "textaufgabe",
@@ -194,7 +223,12 @@
       10,
       2,
       11
-     ]
+     ],
+     "sachtyp": "Zusammenfassen",
+     "fehler": {
+      "2": "Rechenart verwechselt",
+      "11": "um 1 daneben"
+     }
     },
     {
      "typ": "textaufgabe",
@@ -204,7 +238,12 @@
       0,
       8,
       16
-     ]
+     ],
+     "sachtyp": "Veränderung (Ergebnis gesucht)",
+     "fehler": {
+      "8": "eine Zahl aus dem Text übernommen",
+      "16": "Rechenart verwechselt"
+     }
     },
     {
      "typ": "textaufgabe",
@@ -214,7 +253,11 @@
       12,
       8,
       10
-     ]
+     ],
+     "sachtyp": "Vervielfachen",
+     "fehler": {
+      "8": "Zahlen addiert statt vervielfacht"
+     }
     },
     {
      "typ": "textaufgabe",
@@ -224,7 +267,12 @@
       5,
       1,
       6
-     ]
+     ],
+     "sachtyp": "Zeitspanne",
+     "fehler": {
+      "1": "Rechenart verwechselt",
+      "6": "um 1 daneben"
+     }
     },
     {
      "typ": "textaufgabe",
@@ -234,7 +282,12 @@
       13,
       27,
       14
-     ]
+     ],
+     "sachtyp": "Veränderung (Ergebnis gesucht)",
+     "fehler": {
+      "27": "Rechenart verwechselt",
+      "14": "um 1 daneben"
+     }
     },
     {
      "typ": "textaufgabe",
@@ -244,7 +297,87 @@
       16,
       2,
       15
-     ]
+     ],
+     "sachtyp": "Zusammenfassen",
+     "fehler": {
+      "2": "Rechenart verwechselt",
+      "15": "um 1 daneben"
+     }
+    },
+    {
+     "typ": "textaufgabe",
+     "text": "Tom hat 9 Autos. Das sind 4 mehr, als Ben hat. Wie viele Autos hat Ben?",
+     "ziel": 5,
+     "optionen": [
+      5,
+      13,
+      4
+     ],
+     "sachtyp": "Vergleich (umgekehrt formuliert)",
+     "fehler": {
+      "13": "Signalwort-Strategie („mehr“ heißt plus)",
+      "4": "um 1 daneben"
+     }
+    },
+    {
+     "typ": "textaufgabe",
+     "text": "Mia hat 7 Murmeln. Tom hat 3 Murmeln weniger als Mia. Wie viele Murmeln hat Tom?",
+     "ziel": 4,
+     "optionen": [
+      4,
+      10,
+      3
+     ],
+     "sachtyp": "Vergleich",
+     "fehler": {
+      "10": "Rechenart verwechselt",
+      "3": "um 1 daneben"
+     }
+    },
+    {
+     "typ": "textaufgabe",
+     "text": "Lisa hat 5 Bonbons. Sie bekommt noch welche dazu. Jetzt hat sie 9 Bonbons. Wie viele Bonbons hat sie bekommen?",
+     "ziel": 4,
+     "optionen": [
+      4,
+      14,
+      9
+     ],
+     "sachtyp": "Veränderung (Veränderung gesucht)",
+     "fehler": {
+      "14": "Signalwort-Strategie („dazu“ heißt plus)",
+      "9": "eine Zahl aus dem Text übernommen"
+     }
+    },
+    {
+     "typ": "textaufgabe",
+     "text": "Ben hat Kekse. Er isst 3 Kekse. Jetzt hat er noch 5 Kekse. Wie viele Kekse hatte Ben am Anfang?",
+     "ziel": 8,
+     "optionen": [
+      8,
+      2,
+      5
+     ],
+     "sachtyp": "Veränderung (Anfang gesucht)",
+     "fehler": {
+      "2": "Signalwort-Strategie („isst“ heißt minus)",
+      "5": "eine Zahl aus dem Text übernommen"
+     }
+    },
+    {
+     "typ": "textaufgabe",
+     "text": "Lena hat 6 Euro. Ein Ball kostet 8 Euro. Wie viel Geld fehlt ihr noch?",
+     "ziel": 2,
+     "optionen": [
+      2,
+      14,
+      8
+     ],
+     "sachtyp": "Vergleich (Unterschied)",
+     "fehler": {
+      "14": "Rechenart verwechselt",
+      "8": "eine Zahl aus dem Text übernommen"
+     }
     }
    ],
    "generatoren": [

@@ -14,6 +14,8 @@ const ziehe = (liste, n) => [...liste].sort(() => Math.random() - 0.5).slice(0, 
 const AEHNLICH_BILD = [
   ['baum', 'tanne', 'palme'], ['rose', 'blume'], ['auto', 'taxi'], ['schiff', 'boot'], ['oma', 'opa'],
   ['eis', 'kuchen'], ['tasse', 'milch'], ['hase', 'maus'], ['sonne', 'stern'], ['rad', 'roller'], ['wal', 'fisch', 'robbe'],
+  ['lampe', 'birne'], ['wolke', 'regen'], ['katze', 'tiger', 'loewe'], ['apfel', 'tomate', 'kirsche'], ['pferd', 'zebra'],
+  ['muetze', 'hut'], ['biene', 'fliege'], ['teller', 'loeffel'],
 ];
 const zuAehnlich = (a, b) => AEHNLICH_BILD.some((g) => g.includes(a) && g.includes(b));
 // Zieht n Wörter, von denen keine zwei zu ähnlich sind
@@ -48,10 +50,13 @@ const AEHNLICH_LAUT = {
   S: ['Z', 'F'], T: ['D', 'K'], U: ['O', 'Ü'], W: ['F', 'M'], Z: ['S', 'T'],
 };
 
+// Wörter, deren erster Buchstabe nicht dem gesprochenen Anlaut entspricht (Giraffe spricht man mit „sch“)
+const ANLAUT_NICHT_LAUTGETREU = ['giraffe'];
+
 function anlautWoerter() {
   return wortListe().filter((k) => {
     const w = wortInfo(k).wort.toLowerCase();
-    return !/^(sch|ch|ei|au|eu|äu|st|sp|pf|qu|ph|ä|ö|ü)/.test(w) && AEHNLICH_LAUT[w[0].toUpperCase()];
+    return !/^(sch|ch|ei|au|eu|äu|st|sp|pf|qu|ph|ä|ö|ü)/.test(w) && !ANLAUT_NICHT_LAUTGETREU.includes(k) && AEHNLICH_LAUT[w[0].toUpperCase()];
   });
 }
 
@@ -152,7 +157,27 @@ const GEN = {
     }
     const ziel = op === '+' ? a + b : a - b;
     const anders = op === '+' ? a - b : a + b;
-    return { typ: 'rechnen', a, op, b, bilder: bilder && max <= 10, ding: eins(ZAEHLDINGE), optionen: zahlOptionen(ziel, [ziel + 1, anders, dreher(ziel), ziel - 10]) };
+    // Ablenker: Zählfehler um 1, falsche Rechenart, bei größeren Zahlen Zahlendreher und Zehnerfehler
+    const kand = [eins([ziel + 1, ziel - 1]), anders, dreher(ziel) <= max ? dreher(ziel) : null, max > 20 ? eins([ziel + 10, ziel - 10]) : null];
+    return {
+      typ: 'rechnen', a, op, b, bilder: bilder && max <= 10, kategorie: bilder && max <= 10 ? 'mit Bildern' : 'ohne Bilder',
+      ding: eins(ZAEHLDINGE), optionen: zahlOptionen(ziel, kand),
+    };
+  },
+  // Zahlwortreihe: Nachfolger und Vorgänger
+  nachbarzahl({ max = 20 }) {
+    const richtung = eins(['nach', 'vor']);
+    const n = zufall(2, max - 1);
+    const ziel = richtung === 'nach' ? n + 1 : n - 1;
+    const anderer = richtung === 'nach' ? n - 1 : n + 1;
+    return { typ: 'nachbarzahl', n, richtung, ziel, optionen: zahlOptionen(ziel, [anderer, n, richtung === 'nach' ? n + 2 : n - 2]) };
+  },
+  // Teil-Ganzes: Ein Teil der Menge ist verdeckt
+  zerlegen({ max = 10 }) {
+    const ganz = zufall(4, max);
+    const sichtbar = zufall(1, ganz - 1);
+    const ziel = ganz - sichtbar;
+    return { typ: 'zerlegen', ganz, sichtbar, ziel, ding: eins(ZAEHLDINGE), optionen: zahlOptionen(ziel, [ganz, sichtbar, ziel + 1, ziel - 1]) };
   },
   einmaleins({ reihen = [2, 5, 10] }) {
     const b = eins(reihen);
