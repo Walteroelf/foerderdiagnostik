@@ -14,6 +14,8 @@ const ziehe = (liste, n) => [...liste].sort(() => Math.random() - 0.5).slice(0, 
 const AEHNLICH_BILD = [
   ['baum', 'tanne', 'palme'], ['rose', 'blume'], ['auto', 'taxi'], ['schiff', 'boot'], ['oma', 'opa'],
   ['eis', 'kuchen'], ['tasse', 'milch'], ['hase', 'maus'], ['sonne', 'stern'], ['rad', 'roller'], ['wal', 'fisch', 'robbe'],
+  ['lampe', 'birne'], ['wolke', 'regen'], ['katze', 'tiger', 'loewe'], ['apfel', 'tomate', 'kirsche'], ['pferd', 'zebra'],
+  ['muetze', 'hut'], ['biene', 'fliege'], ['teller', 'loeffel'],
 ];
 const zuAehnlich = (a, b) => AEHNLICH_BILD.some((g) => g.includes(a) && g.includes(b));
 // Zieht n Wörter, von denen keine zwei zu ähnlich sind
@@ -48,10 +50,13 @@ const AEHNLICH_LAUT = {
   S: ['Z', 'F'], T: ['D', 'K'], U: ['O', 'Ü'], W: ['F', 'M'], Z: ['S', 'T'],
 };
 
+// Wörter, deren erster Buchstabe nicht dem gesprochenen Anlaut entspricht (Giraffe spricht man mit „sch“)
+const ANLAUT_NICHT_LAUTGETREU = ['giraffe'];
+
 function anlautWoerter() {
   return wortListe().filter((k) => {
     const w = wortInfo(k).wort.toLowerCase();
-    return !/^(sch|ch|ei|au|eu|äu|st|sp|pf|qu|ph|ä|ö|ü)/.test(w) && AEHNLICH_LAUT[w[0].toUpperCase()];
+    return !/^(sch|ch|ei|au|eu|äu|st|sp|pf|qu|ph|ä|ö|ü)/.test(w) && !ANLAUT_NICHT_LAUTGETREU.includes(k) && AEHNLICH_LAUT[w[0].toUpperCase()];
   });
 }
 
