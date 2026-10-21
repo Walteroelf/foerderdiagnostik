@@ -181,11 +181,11 @@
   {
    "stufe": 4,
    "name": "Verneinung und Eigenschaften",
-   "kompetenz": "Versteht Sätze mit „kein“ und „nicht“ sowie Eigenschaften wie groß, kalt, heiß.",
+   "kompetenz": "Versteht Sätze mit „kein“ und „nicht“ sowie Eigenschaften wie groß, klein, kalt, heiß, rund.",
    "aufgaben": [
     {
      "typ": "hoeren",
-     "kategorie": "Verneinung und Eigenschaften",
+     "kategorie": "Verneinung",
      "sprache": "Was ist kein Tier?",
      "ziel": "ball",
      "optionen": [
@@ -197,7 +197,7 @@
     },
     {
      "typ": "hoeren",
-     "kategorie": "Verneinung und Eigenschaften",
+     "kategorie": "Verneinung",
      "sprache": "Was ist kein Obst?",
      "ziel": "brot",
      "optionen": [
@@ -209,7 +209,7 @@
     },
     {
      "typ": "hoeren",
-     "kategorie": "Verneinung und Eigenschaften",
+     "kategorie": "Verneinung",
      "sprache": "Welches Tier kann nicht fliegen?",
      "ziel": "schwein",
      "optionen": [
@@ -221,7 +221,7 @@
     },
     {
      "typ": "hoeren",
-     "kategorie": "Verneinung und Eigenschaften",
+     "kategorie": "Eigenschaften",
      "sprache": "Welches Tier ist sehr groß?",
      "ziel": "elefant",
      "optionen": [
@@ -233,7 +233,7 @@
     },
     {
      "typ": "hoeren",
-     "kategorie": "Verneinung und Eigenschaften",
+     "kategorie": "Eigenschaften",
      "sprache": "Was ist kalt?",
      "ziel": "eis",
      "optionen": [
@@ -245,7 +245,7 @@
     },
     {
      "typ": "hoeren",
-     "kategorie": "Verneinung und Eigenschaften",
+     "kategorie": "Eigenschaften",
      "sprache": "Was ist heiß?",
      "ziel": "feuer",
      "optionen": [
@@ -257,7 +257,7 @@
     },
     {
      "typ": "hoeren",
-     "kategorie": "Verneinung und Eigenschaften",
+     "kategorie": "Verneinung",
      "sprache": "Was kann man nicht anziehen?",
      "ziel": "tasse",
      "optionen": [
@@ -269,7 +269,7 @@
     },
     {
      "typ": "hoeren",
-     "kategorie": "Verneinung und Eigenschaften",
+     "kategorie": "Eigenschaften",
      "sprache": "Welches Tier hat einen langen Hals?",
      "ziel": "giraffe",
      "optionen": [
@@ -281,7 +281,7 @@
     },
     {
      "typ": "hoeren",
-     "kategorie": "Verneinung und Eigenschaften",
+     "kategorie": "Verneinung",
      "sprache": "Was braucht man nicht zum Essen?",
      "ziel": "kamm",
      "optionen": [
@@ -293,7 +293,7 @@
     },
     {
      "typ": "hoeren",
-     "kategorie": "Verneinung und Eigenschaften",
+     "kategorie": "Verneinung",
      "sprache": "Welches Tier hat keine Beine?",
      "ziel": "schnecke",
      "optionen": [
@@ -302,17 +302,41 @@
       "pferd",
       "ente"
      ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Eigenschaften",
+     "sprache": "Was ist ganz klein?",
+     "ziel": "biene",
+     "optionen": [
+      "biene",
+      "elefant",
+      "pferd",
+      "bus"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Eigenschaften",
+     "sprache": "Was ist rund?",
+     "ziel": "ball",
+     "optionen": [
+      "ball",
+      "buch",
+      "tuer",
+      "stift"
+     ]
     }
    ]
   },
   {
    "stufe": 5,
    "name": "Kurze Geschichten verstehen",
-   "kompetenz": "Versteht eine kurze gehörte Geschichte und beantwortet eine Frage dazu, auch zur Reihenfolge.",
+   "kompetenz": "Versteht kurze gehörte Geschichten: Inhalt, Reihenfolge (zuerst, dann, bevor) und einfache Schlussfolgerungen.",
    "aufgaben": [
     {
      "typ": "hoeren",
-     "kategorie": "Kurze Geschichten",
+     "kategorie": "Geschichten: Inhalt",
      "sprache": "Mia geht in den Garten. Dort sieht sie einen Igel. Was sieht Mia?",
      "ziel": "igel",
      "optionen": [
@@ -324,19 +348,7 @@
     },
     {
      "typ": "hoeren",
-     "kategorie": "Kurze Geschichten",
-     "sprache": "Ben hat Durst. Er holt sich ein Glas Milch. Was trinkt Ben?",
-     "ziel": "milch",
-     "optionen": [
-      "milch",
-      "eis",
-      "brot",
-      "apfel"
-     ]
-    },
-    {
-     "typ": "hoeren",
-     "kategorie": "Kurze Geschichten",
+     "kategorie": "Geschichten: Inhalt",
      "sprache": "Es regnet. Oma zieht ihre Jacke an und geht nach draußen. Was zieht Oma an?",
      "ziel": "jacke",
      "optionen": [
@@ -348,7 +360,7 @@
     },
     {
      "typ": "hoeren",
-     "kategorie": "Kurze Geschichten",
+     "kategorie": "Geschichten: Inhalt",
      "sprache": "Opa hat Geburtstag. Die Kinder backen einen Kuchen für ihn. Was backen die Kinder?",
      "ziel": "kuchen",
      "optionen": [
@@ -360,7 +372,7 @@
     },
     {
      "typ": "hoeren",
-     "kategorie": "Kurze Geschichten",
+     "kategorie": "Geschichten: Inhalt",
      "sprache": "Lea möchte Musik machen. Sie holt ihre Trommel. Womit macht Lea Musik?",
      "ziel": "trommel",
      "optionen": [
@@ -372,7 +384,7 @@
     },
     {
      "typ": "hoeren",
-     "kategorie": "Kurze Geschichten",
+     "kategorie": "Geschichten: Inhalt",
      "sprache": "Tim fährt mit dem Bus zur Schule. Nach der Schule geht er zu Fuß nach Hause. Womit fährt Tim zur Schule?",
      "ziel": "bus",
      "optionen": [
@@ -384,7 +396,7 @@
     },
     {
      "typ": "hoeren",
-     "kategorie": "Kurze Geschichten",
+     "kategorie": "Geschichten: Reihenfolge",
      "sprache": "Paul isst zuerst eine Banane und danach einen Apfel. Was isst Paul zuerst?",
      "ziel": "banane",
      "optionen": [
@@ -396,7 +408,7 @@
     },
     {
      "typ": "hoeren",
-     "kategorie": "Kurze Geschichten",
+     "kategorie": "Geschichten: Inhalt",
      "sprache": "Die Katze liegt im Bett. Der Hund liegt auf dem Sofa. Wo liegt der Hund?",
      "ziel": "sofa",
      "optionen": [
@@ -408,7 +420,7 @@
     },
     {
      "typ": "hoeren",
-     "kategorie": "Kurze Geschichten",
+     "kategorie": "Geschichten: Reihenfolge",
      "sprache": "Ali packt seinen Koffer. Er legt eine Hose und eine Mütze hinein. Was legt Ali zuerst hinein?",
      "ziel": "hose",
      "optionen": [
@@ -416,6 +428,102 @@
       "muetze",
       "jacke",
       "schuh"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Geschichten: Inhalt",
+     "sprache": "Ben spielt im Garten mit seinem Ball. Dann kommt eine Katze. Womit spielt Ben?",
+     "ziel": "ball",
+     "optionen": [
+      "ball",
+      "katze",
+      "roller",
+      "auto"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Geschichten: Reihenfolge",
+     "sprache": "Mama kauft zuerst Brot und dann Käse. Was kauft Mama zuerst?",
+     "ziel": "brot",
+     "optionen": [
+      "brot",
+      "kaese",
+      "milch",
+      "apfel"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Geschichten: Reihenfolge",
+     "sprache": "Bevor Tim Fußball spielt, trinkt er Milch. Was macht Tim zuerst?",
+     "ziel": "milch",
+     "optionen": [
+      "milch",
+      "ball",
+      "brot",
+      "auto"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Geschichten: Schlussfolgern",
+     "sprache": "Opa will die Tür aufschließen. Was braucht er dafür?",
+     "ziel": "schluessel",
+     "optionen": [
+      "schluessel",
+      "schere",
+      "loeffel",
+      "kamm"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Geschichten: Schlussfolgern",
+     "sprache": "Mia will ein Bild ausschneiden. Was braucht sie dafür?",
+     "ziel": "schere",
+     "optionen": [
+      "schere",
+      "stift",
+      "kamm",
+      "teller"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Geschichten: Schlussfolgern",
+     "sprache": "Draußen ist es sehr kalt und es schneit. Lea will nach draußen gehen. Was zieht sie an?",
+     "ziel": "jacke",
+     "optionen": [
+      "jacke",
+      "kleid",
+      "ring",
+      "brille"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Geschichten: Schlussfolgern",
+     "sprache": "Es ist Abend. Tim ist sehr müde. Wohin geht er jetzt?",
+     "ziel": "bett",
+     "optionen": [
+      "bett",
+      "bus",
+      "baum",
+      "schiff"
+     ]
+    },
+    {
+     "typ": "hoeren",
+     "kategorie": "Geschichten: Schlussfolgern",
+     "sprache": "Paul hat Hunger. Er holt sich etwas Gelbes und Krummes aus der Küche. Was isst Paul?",
+     "ziel": "banane",
+     "optionen": [
+      "banane",
+      "kaese",
+      "apfel",
+      "brot"
      ]
     }
    ]
