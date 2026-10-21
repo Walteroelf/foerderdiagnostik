@@ -214,7 +214,13 @@ export function bewerte(aufgabe, gewaehlt) {
     case 'textfrage': {
       if (aufgabe.typ === 'satz') {
         const richtig = (gewaehlt === 'stimmt') === aufgabe.stimmt;
-        return { aufgabe: `Satz „${aufgabe.satz}“ (${aufgabe.stimmt ? 'stimmt' : 'stimmt nicht'})`, richtig, fehler: `„${gewaehlt}“ gewählt`, fehlerTyp: 'Satzverständnis' };
+        return {
+          aufgabe: `Satz „${aufgabe.satz}“ (${aufgabe.stimmt ? 'stimmt' : 'stimmt nicht'})`,
+          richtig,
+          fehler: `„${gewaehlt}“ gewählt`,
+          fehlerTyp: aufgabe.kategorie ? `Satzverständnis: ${aufgabe.kategorie}` : 'Satzverständnis',
+          kategorie: aufgabe.kategorie,
+        };
       }
       const b = optionsBewertung(aufgabe, gewaehlt);
       const aufgabeText =
@@ -225,8 +231,9 @@ export function bewerte(aufgabe, gewaehlt) {
         aufgabe: aufgabeText,
         richtig: b.richtig,
         fehler: `„${gewaehlt}“ statt „${b.richtige}“`,
-        fehlerTyp: aufgabe.typ === 'textfrage' ? 'Textverständnis' : aufgabe.typ === 'uhr' ? `Uhr: ${b.fehlerArt || 'falsch'}` : `Rechtschreibung: ${b.fehlerArt || 'falsch'}`,
-        kategorie: aufgabe.typ === 'schreibweise' ? aufgabe.muster : undefined,
+        fehlerTyp: aufgabe.typ === 'textfrage' ? `Textverständnis${aufgabe.kategorie ? ': ' + aufgabe.kategorie : ''}`
+          : aufgabe.typ === 'uhr' ? `Uhr: ${b.fehlerArt || 'falsch'}` : `Rechtschreibung: ${b.fehlerArt || 'falsch'}`,
+        kategorie: aufgabe.typ === 'schreibweise' ? aufgabe.muster : aufgabe.typ === 'textfrage' ? aufgabe.kategorie : undefined,
       };
     }
     case 'satzlegen': {

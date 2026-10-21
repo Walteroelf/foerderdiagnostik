@@ -674,134 +674,207 @@
   {
    "stufe": 4,
    "name": "Satzebene: stimmt oder stimmt nicht",
-   "kompetenz": "Liest kurze Sätze sinnentnehmend und beurteilt sie.",
+   "kompetenz": "Liest kurze Sätze sinnentnehmend und beurteilt sie, auch Sätze mit „nicht“, „kein“ und Vergleichen.",
    "aufgaben": [
     {
      "typ": "satz",
      "satz": "Das ist ein Hund.",
      "stimmt": true,
-     "bild": "hund"
+     "bild": "hund",
+     "kategorie": "Satz zum Bild"
     },
     {
      "typ": "satz",
      "satz": "Das ist eine Katze.",
      "stimmt": false,
-     "bild": "hund"
+     "bild": "hund",
+     "kategorie": "Satz zum Bild"
     },
     {
      "typ": "satz",
      "satz": "Die Sonne ist gelb.",
-     "stimmt": true
+     "stimmt": true,
+     "kategorie": "Satz mit Weltwissen"
     },
     {
      "typ": "satz",
      "satz": "Eis ist heiß.",
-     "stimmt": false
+     "stimmt": false,
+     "kategorie": "Satz mit Weltwissen"
     },
     {
      "typ": "satz",
      "satz": "Ein Fisch kann schwimmen.",
-     "stimmt": true
+     "stimmt": true,
+     "kategorie": "Satz mit Weltwissen"
     },
     {
      "typ": "satz",
      "satz": "Ein Auto kann fliegen.",
-     "stimmt": false
+     "stimmt": false,
+     "kategorie": "Satz mit Weltwissen"
     },
     {
      "typ": "satz",
      "satz": "Hier ist ein Apfel.",
      "stimmt": true,
-     "bild": "apfel"
+     "bild": "apfel",
+     "kategorie": "Satz zum Bild"
     },
     {
      "typ": "satz",
      "satz": "Hier ist eine Banane.",
      "stimmt": false,
-     "bild": "tomate"
+     "bild": "tomate",
+     "kategorie": "Satz zum Bild"
     },
     {
      "typ": "satz",
      "satz": "Im Winter ist es kalt.",
-     "stimmt": true
+     "stimmt": true,
+     "kategorie": "Satz mit Weltwissen"
     },
     {
      "typ": "satz",
      "satz": "Ein Hase hat lange Ohren.",
-     "stimmt": true
+     "stimmt": true,
+     "kategorie": "Satz mit Weltwissen"
     },
     {
      "typ": "satz",
      "satz": "Die Kuh sagt miau.",
-     "stimmt": false
+     "stimmt": false,
+     "kategorie": "Satz mit Weltwissen"
     },
     {
      "typ": "satz",
      "satz": "Mit dem Mund kann man essen.",
-     "stimmt": true
+     "stimmt": true,
+     "kategorie": "Satz mit Weltwissen"
     },
     {
      "typ": "satz",
      "satz": "Ein Ball ist eckig.",
-     "stimmt": false
+     "stimmt": false,
+     "kategorie": "Satz mit Weltwissen"
     },
     {
      "typ": "satz",
      "satz": "Das ist ein Schuh.",
      "stimmt": true,
-     "bild": "schuh"
+     "bild": "schuh",
+     "kategorie": "Satz zum Bild"
     },
     {
      "typ": "satz",
      "satz": "Das ist ein Hut.",
      "stimmt": false,
-     "bild": "socke"
+     "bild": "socke",
+     "kategorie": "Satz zum Bild"
     },
     {
      "typ": "satz",
      "satz": "Nachts scheint der Mond.",
-     "stimmt": true
+     "stimmt": true,
+     "kategorie": "Satz mit Weltwissen"
     },
     {
      "typ": "satz",
      "satz": "Ein Elefant ist kleiner als eine Maus.",
-     "stimmt": false
+     "stimmt": false,
+     "kategorie": "Satz mit Vergleich"
     },
     {
      "typ": "satz",
      "satz": "Die Uhr zeigt die Zeit.",
-     "stimmt": true
+     "stimmt": true,
+     "kategorie": "Satz mit Weltwissen"
     },
     {
      "typ": "satz",
      "satz": "Brot kann man trinken.",
-     "stimmt": false
+     "stimmt": false,
+     "kategorie": "Satz mit Weltwissen"
     },
     {
      "typ": "satz",
      "satz": "Im Bett kann man schlafen.",
-     "stimmt": true
+     "stimmt": true,
+     "kategorie": "Satz mit Weltwissen"
     },
     {
      "typ": "satz",
      "satz": "Der Zug fährt auf Schienen.",
-     "stimmt": true
+     "stimmt": true,
+     "kategorie": "Satz mit Weltwissen"
     },
     {
      "typ": "satz",
      "satz": "Eine Schnecke ist sehr schnell.",
-     "stimmt": false
+     "stimmt": false,
+     "kategorie": "Satz mit Weltwissen"
+    },
+    {
+     "typ": "satz",
+     "satz": "Das ist kein Apfel.",
+     "stimmt": false,
+     "bild": "apfel",
+     "kategorie": "Satz mit Verneinung"
+    },
+    {
+     "typ": "satz",
+     "satz": "Das ist kein Hund.",
+     "stimmt": true,
+     "bild": "katze",
+     "kategorie": "Satz mit Verneinung"
+    },
+    {
+     "typ": "satz",
+     "satz": "Ein Auto hat keine Beine.",
+     "stimmt": true,
+     "kategorie": "Satz mit Verneinung"
+    },
+    {
+     "typ": "satz",
+     "satz": "Ein Fisch kann nicht schwimmen.",
+     "stimmt": false,
+     "kategorie": "Satz mit Verneinung"
+    },
+    {
+     "typ": "satz",
+     "satz": "Eine Katze ist kein Tier.",
+     "stimmt": false,
+     "kategorie": "Satz mit Verneinung"
+    },
+    {
+     "typ": "satz",
+     "satz": "Im Sommer ist es nicht kalt.",
+     "stimmt": true,
+     "kategorie": "Satz mit Verneinung"
+    },
+    {
+     "typ": "satz",
+     "satz": "Ein Hund ist größer als eine Maus.",
+     "stimmt": true,
+     "kategorie": "Satz mit Vergleich"
+    },
+    {
+     "typ": "satz",
+     "satz": "Eine Ameise ist schwerer als ein Pferd.",
+     "stimmt": false,
+     "kategorie": "Satz mit Vergleich"
     }
    ]
   },
   {
    "stufe": 5,
    "name": "Textebene: kurzer Text mit Fragen",
-   "kompetenz": "Versteht kurze Texte und beantwortet Fragen dazu.",
+   "kompetenz": "Versteht kurze Texte: findet Informationen im Text und zieht einfache Schlussfolgerungen.",
    "aufgaben": [
     {
      "typ": "textfrage",
      "gruppe": "t1",
+     "kategorie": "Information im Text finden",
      "text": "Tim hat einen Hund. Der Hund heißt Bello. Bello spielt gern mit dem Ball.",
      "frage": "Wie heißt der Hund?",
      "optionen": [
@@ -820,6 +893,7 @@
     {
      "typ": "textfrage",
      "gruppe": "t1",
+     "kategorie": "Information im Text finden",
      "text": "Tim hat einen Hund. Der Hund heißt Bello. Bello spielt gern mit dem Ball.",
      "frage": "Womit spielt Bello gern?",
      "optionen": [
@@ -828,16 +902,17 @@
        "richtig": true
       },
       {
-       "text": "mit der Katze"
+       "text": "mit Tim"
       },
       {
-       "text": "mit dem Auto"
+       "text": "mit der Katze"
       }
      ]
     },
     {
      "typ": "textfrage",
      "gruppe": "t1",
+     "kategorie": "Schlussfolgern",
      "text": "Tim hat einen Hund. Der Hund heißt Bello. Bello spielt gern mit dem Ball.",
      "frage": "Wem gehört der Hund?",
      "optionen": [
@@ -846,7 +921,7 @@
        "richtig": true
       },
       {
-       "text": "Lea"
+       "text": "Bello"
       },
       {
        "text": "Oma"
@@ -856,24 +931,7 @@
     {
      "typ": "textfrage",
      "gruppe": "t2",
-     "text": "Lea geht in den Supermarkt. Sie kauft Äpfel und Milch. Dann geht sie nach Hause.",
-     "frage": "Wo ist Lea?",
-     "optionen": [
-      {
-       "text": "im Supermarkt",
-       "richtig": true
-      },
-      {
-       "text": "in der Schule"
-      },
-      {
-       "text": "im Zoo"
-      }
-     ]
-    },
-    {
-     "typ": "textfrage",
-     "gruppe": "t2",
+     "kategorie": "Information im Text finden",
      "text": "Lea geht in den Supermarkt. Sie kauft Äpfel und Milch. Dann geht sie nach Hause.",
      "frage": "Was kauft Lea?",
      "optionen": [
@@ -882,34 +940,55 @@
        "richtig": true
       },
       {
-       "text": "Brot und Käse"
+       "text": "nur Äpfel"
       },
       {
-       "text": "Eis und Saft"
+       "text": "Milch und Brot"
       }
      ]
     },
     {
      "typ": "textfrage",
      "gruppe": "t2",
+     "kategorie": "Information im Text finden",
      "text": "Lea geht in den Supermarkt. Sie kauft Äpfel und Milch. Dann geht sie nach Hause.",
-     "frage": "Wohin geht Lea danach?",
+     "frage": "Wohin geht Lea zum Schluss?",
      "optionen": [
       {
        "text": "nach Hause",
        "richtig": true
       },
       {
-       "text": "in den Park"
+       "text": "in den Supermarkt"
       },
       {
-       "text": "zur Oma"
+       "text": "in die Schule"
+      }
+     ]
+    },
+    {
+     "typ": "textfrage",
+     "gruppe": "t2",
+     "kategorie": "Schlussfolgern",
+     "text": "Lea geht in den Supermarkt. Sie kauft Äpfel und Milch. Dann geht sie nach Hause.",
+     "frage": "Warum geht Lea in den Supermarkt?",
+     "optionen": [
+      {
+       "text": "Sie will einkaufen.",
+       "richtig": true
+      },
+      {
+       "text": "Sie will dort spielen."
+      },
+      {
+       "text": "Sie wohnt dort."
       }
      ]
     },
     {
      "typ": "textfrage",
      "gruppe": "t3",
+     "kategorie": "Information im Text finden",
      "text": "Es regnet. Max zieht seine Jacke an. Er nimmt einen Schirm mit. So wird er nicht nass.",
      "frage": "Wie ist das Wetter?",
      "optionen": [
@@ -928,6 +1007,7 @@
     {
      "typ": "textfrage",
      "gruppe": "t3",
+     "kategorie": "Information im Text finden",
      "text": "Es regnet. Max zieht seine Jacke an. Er nimmt einen Schirm mit. So wird er nicht nass.",
      "frage": "Was nimmt Max mit?",
      "optionen": [
@@ -936,52 +1016,36 @@
        "richtig": true
       },
       {
-       "text": "einen Ball"
+       "text": "eine Jacke"
       },
       {
-       "text": "eine Brille"
+       "text": "einen Ball"
       }
      ]
     },
     {
      "typ": "textfrage",
      "gruppe": "t3",
+     "kategorie": "Schlussfolgern",
      "text": "Es regnet. Max zieht seine Jacke an. Er nimmt einen Schirm mit. So wird er nicht nass.",
-     "frage": "Warum nimmt Max den Schirm?",
+     "frage": "Warum zieht Max die Jacke an?",
      "optionen": [
       {
-       "text": "Damit er nicht nass wird.",
+       "text": "Weil es regnet.",
        "richtig": true
       },
       {
-       "text": "Weil er Hunger hat."
+       "text": "Weil er nass ist."
       },
       {
-       "text": "Weil es heiß ist."
+       "text": "Weil die Sonne scheint."
       }
      ]
     },
     {
      "typ": "textfrage",
      "gruppe": "t4",
-     "text": "Die Klasse macht einen Ausflug in den Zoo. Dort sehen die Kinder Affen und Löwen. Am meisten lachen sie über die Affen.",
-     "frage": "Wohin geht die Klasse?",
-     "optionen": [
-      {
-       "text": "in den Zoo",
-       "richtig": true
-      },
-      {
-       "text": "ins Kino"
-      },
-      {
-       "text": "ins Schwimmbad"
-      }
-     ]
-    },
-    {
-     "typ": "textfrage",
-     "gruppe": "t4",
+     "kategorie": "Information im Text finden",
      "text": "Die Klasse macht einen Ausflug in den Zoo. Dort sehen die Kinder Affen und Löwen. Am meisten lachen sie über die Affen.",
      "frage": "Welche Tiere sehen die Kinder?",
      "optionen": [
@@ -990,16 +1054,17 @@
        "richtig": true
       },
       {
-       "text": "Kühe und Schafe"
+       "text": "nur Affen"
       },
       {
-       "text": "Fische und Enten"
+       "text": "Löwen und Kühe"
       }
      ]
     },
     {
      "typ": "textfrage",
      "gruppe": "t4",
+     "kategorie": "Information im Text finden",
      "text": "Die Klasse macht einen Ausflug in den Zoo. Dort sehen die Kinder Affen und Löwen. Am meisten lachen sie über die Affen.",
      "frage": "Worüber lachen die Kinder am meisten?",
      "optionen": [
@@ -1017,7 +1082,27 @@
     },
     {
      "typ": "textfrage",
+     "gruppe": "t4",
+     "kategorie": "Schlussfolgern",
+     "text": "Die Klasse macht einen Ausflug in den Zoo. Dort sehen die Kinder Affen und Löwen. Am meisten lachen sie über die Affen.",
+     "frage": "Wie finden die Kinder die Affen?",
+     "optionen": [
+      {
+       "text": "lustig",
+       "richtig": true
+      },
+      {
+       "text": "gefährlich"
+      },
+      {
+       "text": "langweilig"
+      }
+     ]
+    },
+    {
+     "typ": "textfrage",
      "gruppe": "t5",
+     "kategorie": "Information im Text finden",
      "text": "Ali hat heute Geburtstag. Er wird acht Jahre alt. Seine Freunde bringen Geschenke mit. Es gibt Kuchen mit Kerzen.",
      "frage": "Wie alt wird Ali?",
      "optionen": [
@@ -1036,6 +1121,7 @@
     {
      "typ": "textfrage",
      "gruppe": "t5",
+     "kategorie": "Information im Text finden",
      "text": "Ali hat heute Geburtstag. Er wird acht Jahre alt. Seine Freunde bringen Geschenke mit. Es gibt Kuchen mit Kerzen.",
      "frage": "Was bringen die Freunde mit?",
      "optionen": [
@@ -1044,70 +1130,55 @@
        "richtig": true
       },
       {
-       "text": "Blumen"
+       "text": "Kuchen"
       },
       {
-       "text": "Bücher"
+       "text": "Kerzen"
       }
      ]
     },
     {
      "typ": "textfrage",
      "gruppe": "t5",
+     "kategorie": "Schlussfolgern",
      "text": "Ali hat heute Geburtstag. Er wird acht Jahre alt. Seine Freunde bringen Geschenke mit. Es gibt Kuchen mit Kerzen.",
-     "frage": "Was gibt es zu essen?",
+     "frage": "Wie viele Kerzen sind auf dem Kuchen?",
      "optionen": [
       {
-       "text": "Kuchen",
+       "text": "acht",
        "richtig": true
       },
       {
-       "text": "Pizza"
+       "text": "zwei"
       },
       {
-       "text": "Suppe"
+       "text": "keine"
       }
      ]
     },
     {
      "typ": "textfrage",
      "gruppe": "t6",
+     "kategorie": "Information im Text finden",
      "text": "Im Herbst fallen die Blätter von den Bäumen. Sie sind rot, gelb und braun. Mia sammelt die schönsten Blätter.",
-     "frage": "Wann fallen die Blätter?",
-     "optionen": [
-      {
-       "text": "im Herbst",
-       "richtig": true
-      },
-      {
-       "text": "im Sommer"
-      },
-      {
-       "text": "im Frühling"
-      }
-     ]
-    },
-    {
-     "typ": "textfrage",
-     "gruppe": "t6",
-     "text": "Im Herbst fallen die Blätter von den Bäumen. Sie sind rot, gelb und braun. Mia sammelt die schönsten Blätter.",
-     "frage": "Welche Farbe haben die Blätter?",
+     "frage": "Welche Farben haben die Blätter?",
      "optionen": [
       {
        "text": "rot, gelb und braun",
        "richtig": true
       },
       {
-       "text": "blau und lila"
+       "text": "nur grün"
       },
       {
-       "text": "schwarz und weiß"
+       "text": "blau und lila"
       }
      ]
     },
     {
      "typ": "textfrage",
      "gruppe": "t6",
+     "kategorie": "Information im Text finden",
      "text": "Im Herbst fallen die Blätter von den Bäumen. Sie sind rot, gelb und braun. Mia sammelt die schönsten Blätter.",
      "frage": "Was macht Mia?",
      "optionen": [
@@ -1120,6 +1191,25 @@
       },
       {
        "text": "Sie fährt Rad."
+      }
+     ]
+    },
+    {
+     "typ": "textfrage",
+     "gruppe": "t6",
+     "kategorie": "Schlussfolgern",
+     "text": "Im Herbst fallen die Blätter von den Bäumen. Sie sind rot, gelb und braun. Mia sammelt die schönsten Blätter.",
+     "frage": "Wo findet Mia die Blätter?",
+     "optionen": [
+      {
+       "text": "auf dem Boden",
+       "richtig": true
+      },
+      {
+       "text": "im Schrank"
+      },
+      {
+       "text": "im Wasser"
       }
      ]
     }
