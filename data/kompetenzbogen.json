@@ -7,7 +7,9 @@
       { "id": "kleben", "text": "Kleben" },
       { "id": "nachspuren", "text": "Nachspuren" },
       { "id": "freischreiben", "text": "Frei schreiben" },
-      { "id": "zeigen", "text": "Zeigen / Tippen" }
+      { "id": "zeigen", "text": "Zeigen / Tippen" },
+      { "id": "kopfkontrolle", "text": "Sitzt stabil und hält den Kopf (Arbeitsposition)" },
+      { "id": "beidhaendig", "text": "Arbeitet mit beiden Händen zusammen (z. B. Blatt festhalten)" }
     ]},
     { "id": "antwortformen", "titel": "Antwortformen", "items": [
       { "id": "spricht", "text": "Spricht" },
@@ -29,6 +31,8 @@
     ]},
     { "id": "wahrnehmung", "titel": "Wahrnehmung", "items": [
       { "id": "sehen", "text": "Sehen", "optionen": ["unauffällig", "eingeschränkt", "stark eingeschränkt"] },
+      { "id": "visuell", "text": "Visuelle Verarbeitung (Figur-Grund, Raumlage, Suchen auf dem Blatt)", "optionen": ["unauffällig", "eingeschränkt", "stark eingeschränkt"] },
+      { "id": "gesichtsfeld", "text": "Übersieht eine Seite des Blattes oder Bildschirms", "optionen": ["nein", "manchmal", "oft"] },
       { "id": "hoeren", "text": "Hören", "optionen": ["unauffällig", "eingeschränkt", "stark eingeschränkt"] },
       { "id": "grosseschrift", "text": "Braucht große Schrift", "optionen": ["nein", "teilweise", "ja"] },
       { "id": "reizarm", "text": "Braucht reizarme Gestaltung", "optionen": ["nein", "teilweise", "ja"] }
@@ -38,6 +42,11 @@
       { "id": "fotos", "text": "Fotos" },
       { "id": "symbole", "text": "Symbole" },
       { "id": "schrift", "text": "Schrift" }
+    ]},
+    { "id": "belastbarkeit", "titel": "Belastbarkeit und Hilfsmittel", "items": [
+      { "id": "ermuedung", "text": "Ermüdung bei motorischer Arbeit", "optionen": ["kaum", "nach 15–30 Min.", "nach unter 15 Min."] },
+      { "id": "tagesform", "text": "Leistung schwankt mit der Tagesform (z. B. Schmerzen, Medikamente, Anfälle)", "optionen": ["selten", "manchmal", "oft"] },
+      { "id": "hilfsmittel", "typ": "text", "text": "Hilfsmittel und Nachteilsausgleich", "platzhalter": "z. B. Talker, Taster, Kantenschutz, Lesepult, Griffverdickung, mehr Zeit, größere Felder" }
     ]},
     { "id": "anweisungen", "titel": "Anweisungsverständnis", "items": [
       { "id": "einschrittig", "text": "Einschrittige Anweisungen" },
