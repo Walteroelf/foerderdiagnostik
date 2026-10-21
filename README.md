@@ -16,6 +16,9 @@ Informelles Förderdiagnostik-Werkzeug für die Förderschule KME. Läuft im Bro
 - **Fortschritt:** Unter „Protokolle und Einstellungen“ zeigt jede Pseudonym-Karte die erreichten Stufen je Test und das Lesetempo im Verlauf.
 - **Bedienung für das Kind** (motorische Hilfen, pro iPad): größere Antwortfelder, Haltezeit gegen versehentliches Tippen, Sperrzeit nach jeder Aufgabe, Tasterbedienung mit 1 Taster (automatisches Scanning, auch Tippen irgendwo) oder 2 Tastern (weiter/auswählen). Die gewählte Bedienung steht im Protokoll.
 - **Vorlesestimme:** Die App nimmt automatisch die beste deutsche Stimme. In den Einstellungen lassen sich Stimme und Tempo wählen. Bessere Stimmen auf dem iPad: Einstellungen → Bedienungshilfen → Gesprochene Inhalte → Stimmen → Deutsch (z. B. „Anna (Premium)“ laden).
+- **Übertragung zwischen iPads:** Unter „Protokolle und Einstellungen“ → Senden zeigt ein iPad QR-Codes (bei vielen Daten mehrere, die automatisch wechseln), das andere liest sie mit „Empfangen“ über die Kamera. Ohne Internet, ohne Server. Vorhandenes wird ergänzt, nicht gelöscht.
+- **Lehrkraft-Sperre:** Lehrkraft-Bereiche öffnen sich nur durch langes Drücken (1,5 Sekunden) oder, wenn eine 4-stellige PIN festgelegt ist, nur mit PIN. Die PIN wird nur als Prüfsumme gespeichert.
+- **Eigene Wörter und Vorlesetexte:** Die Lehrkraft kann eigene Wörter (mit Emoji oder eigenem Bild) und eigene Texte für das laute Lesen anlegen. Eigene Wörter erscheinen in Bildzuordnung, Anlauten und Silben, als „lautgetreu“ markierte auch im Wörterlegen und Beschriften.
 - **Symbole:** Emoji als Ersatz; ARASAAC-Piktogramme lassen sich in der App einmalig laden; eigene Symbole (z. B. METACOM) und Fotos werden nur lokal gespeichert.
 
 ## Adaptive Logik
@@ -61,6 +64,10 @@ data/lautlesen.json      Texte für das laute Lesen
 js/aufgaben.js           Darstellung der Aufgaben
 js/generatoren.js        Automatisch erzeugte Aufgaben
 js/bedienung.js          Motorische Hilfen und Tasterbedienung
+js/sperre.js             Lehrkraft-Sperre (PIN oder langes Drücken)
+js/eigenes.js            Eigene Wörter und Vorlesetexte
+js/uebertragung.js       Übertragung per QR-Code
+vendor/                  QR-Bibliotheken (qrcode-generator, jsQR)
 data/woerter.json        Wortschatz mit Emoji und ARASAAC-Suchwort
 data/kompetenzbogen.json Fragen des Kompetenzbogens
 sw.js, manifest.webmanifest  Offline-Nutzung (PWA)
@@ -78,3 +85,5 @@ Neue Aufgaben werden in den JSON-Dateien ergänzt. Neue Wörter brauchen einen E
 ## Lizenzen
 
 Piktogramme: Sergio Palao. Herkunft: ARASAAC (https://arasaac.org). Lizenz: CC BY-NC-SA 4.0. Eigentum: Regierung von Aragonien (Spanien). Die Piktogramme sind nicht in diesem Repository enthalten, sondern werden auf dem Gerät geladen. Eigene Symbolsätze wie METACOM werden nur lokal gespeichert und nie veröffentlicht.
+
+QR-Codes: `vendor/qrcode.js` (qrcode-generator von Kazuhiko Arase, MIT-Lizenz) und `vendor/jsQR.js` (jsQR von Cosmo Wolfe, Apache-2.0, siehe `vendor/jsQR-LICENSE.txt`).

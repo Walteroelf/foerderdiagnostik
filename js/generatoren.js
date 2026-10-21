@@ -1,6 +1,10 @@
 // Erzeugt Aufgaben automatisch, damit sich Aufgaben bei Wiederholungstests kaum wiederholen.
 // In den Datendateien steht z. B. { "gen": "rechnen", "anzahl": 10, "max": 20, "ops": ["+", "-"] }.
 import { wortInfo, wortListe } from './symbole.js';
+import { graphemeVon } from './eigenes.js';
+
+// Eigene lautgetreue Wörter der Lehrkraft
+const eigeneLegeWoerter = () => wortListe().filter((k) => wortInfo(k).eigen && wortInfo(k).legen);
 
 const zufall = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
 const eins = (liste) => liste[Math.floor(Math.random() * liste.length)];
@@ -48,6 +52,16 @@ function zahlOptionen(ziel, kandidaten, anzahl = 3) {
 const dreher = (n) => (n >= 10 && n < 100 ? (n % 10) * 10 + Math.floor(n / 10) : null);
 
 const GEN = {
+  eigenlegen() {
+    const keys = eigeneLegeWoerter();
+    if (!keys.length) return null;
+    const wort = eins(keys);
+    return { typ: 'legen', wort, teile: graphemeVon(wortInfo(wort).wort) };
+  },
+  eigenbeschriften() {
+    const keys = eigeneLegeWoerter();
+    return keys.length ? { typ: 'beschriften', wort: eins(keys) } : null;
+  },
   zuordnen() {
     const [ziel, ...rest] = ziehe(wortListe(), 3);
     return { typ: 'zuordnen', ziel, optionen: [ziel, ...rest] };
@@ -155,7 +169,10 @@ export function erzeugeAufgaben(generatoren = []) {
   for (const g of generatoren) {
     const fn = GEN[g.gen];
     if (!fn) continue;
-    for (let i = 0; i < (g.anzahl || 6); i++) out.push(fn(g));
+    for (let i = 0; i < (g.anzahl || 6); i++) {
+      const a = fn(g);
+      if (a) out.push(a);
+    }
   }
   return out;
 }

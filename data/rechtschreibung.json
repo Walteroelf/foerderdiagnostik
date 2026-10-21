@@ -573,6 +573,12 @@
       "i"
      ]
     }
+   ],
+   "generatoren": [
+    {
+     "gen": "eigenlegen",
+     "anzahl": 3
+    }
    ]
   },
   {
@@ -1114,6 +1120,12 @@
     {
      "typ": "beschriften",
      "wort": "elefant"
+    }
+   ],
+   "generatoren": [
+    {
+     "gen": "eigenbeschriften",
+     "anzahl": 3
     }
    ]
   }

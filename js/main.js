@@ -10,6 +10,9 @@ import {
 import { Testlauf } from './testlauf.js';
 import { hatAufgaben } from './generatoren.js';
 import { schuelerText, bogenText, gesamtText, lautleseText, dateiname } from './protokoll.js';
+import { schuetze, pinGesetzt, setzePin, entfernePin, pinDialog } from './sperre.js';
+import { eigeneWoerter, eigeneTexte, speichereWort, loescheWort, speichereText, loescheText, schluesselFuer } from './eigenes.js';
+import { erstellePaket, importierePaket, zusammenfassung, zeigeQr, starteScanner } from './uebertragung.js';
 
 const daten = {};
 const app = document.getElementById('app');
@@ -28,6 +31,12 @@ const kopf = (titel, zurueck) =>
     zurueck ? knopf('← Zurück', zurueck, 'knopf klein leise') : h('span'),
     h('h1', {}, titel),
     h('span'));
+
+// Knopf für die Lehrkraft: öffnet sich nur per PIN oder durch langes Drücken
+const lehrkraftKnopf = (text, fn, klasse = 'knopf klein leise') => schuetze(h('button', { class: klasse, type: 'button' }, text), fn);
+
+// Alle Vorlesetexte: mitgelieferte und eigene
+const alleTexte = () => [...daten.lautlesen.texte, ...eigeneTexte()];
 
 // Großer Knopf in der Kinderansicht (auch per Taster/Haltezeit bedienbar)
 const kinderKnopf = (text, fn) => aktivierbar(h('button', { class: 'knopf riesig', type: 'button' }, text), fn);
@@ -84,9 +93,9 @@ function startseite() {
       h('div', { class: 'kacheln' },
         h('button', { class: 'kachel kind', type: 'button', onclick: () => pseudonymSeite('schueler') },
           h('span', { class: 'gross' }, '🧒'), 'Schülermodus', h('small', {}, 'Das Kind bearbeitet Aufgaben')),
-        h('button', { class: 'kachel', type: 'button', onclick: () => pseudonymSeite('lehrkraft') },
-          h('span', { class: 'gross' }, '📋'), 'Lehrkraftmodus', h('small', {}, 'Kompetenzbogen ausfüllen'))),
-      knopf('Protokolle und Einstellungen', verwaltung, 'knopf leise'),
+        schuetze(h('button', { class: 'kachel', type: 'button' },
+          h('span', { class: 'gross' }, '📋'), 'Lehrkraftmodus', h('small', {}, pinGesetzt() ? 'mit PIN' : 'lange drücken')), () => pseudonymSeite('lehrkraft'))),
+      lehrkraftKnopf('Protokolle und Einstellungen', verwaltung, 'knopf leise'),
       !spracheVerfuegbar() && h('p', { class: 'hinweis' }, 'Dieser Browser hat keine Sprachausgabe. Bitte Safari verwenden.')));
 }
 
@@ -174,14 +183,14 @@ function vorleseAuswahl(p) {
     h('main', { class: 'mitte' },
       h('p', { class: 'unter' }, 'Für die Lehrkraft: Wähle denselben Text wie auf deinem iPad im Lehrkraftmodus.'),
       h('div', { class: 'stufen' },
-        daten.lautlesen.texte.map((t) =>
+        alleTexte().map((t) =>
           h('button', { class: 'stufe', type: 'button', onclick: () => vorleseText(p, t) },
             h('strong', {}, t.niveau), h('span', {}, t.titel))))));
 }
 
 function vorleseText(p, t) {
   zeige(
-    h('div', { class: 'testleiste' }, h('span'), knopf('Fertig', () => bereichSeite(p), 'knopf klein leise lehrkraft')),
+    h('div', { class: 'testleiste' }, h('span'), lehrkraftKnopf('Fertig', () => bereichSeite(p))),
     h('main', { class: 'kindtext' }, h('h2', {}, t.titel), h('p', {}, t.text)));
 }
 
@@ -246,9 +255,7 @@ function aufgabeSeite(lauf) {
     h('div', { class: 'testleiste' },
       h('div', { class: 'sterne', 'aria-label': `Aufgabe ${lauf.index + 1} von ${gesamt}` },
         Array.from({ length: gesamt }, (_, i) => h('span', { class: i < lauf.index ? 'an' : '' }, '★'))),
-      knopf('Beenden', () => {
-        if (confirm('Test beenden? Das Protokoll enthält dann nur die bisherigen Aufgaben.')) testEnde(lauf, true);
-      }, 'knopf klein leise lehrkraft')),
+      lehrkraftKnopf('Beenden', () => testEnde(lauf, true))),
     h('main', { class: 'aufgabe' },
       h('div', { class: 'anweisung' }, vorlesen(anw.sprache), h('p', {}, anw.text)),
       anw.vorlage && h('div', { class: `vorlage ${vorlageKlasse(a)}` }, anw.vorlage),
@@ -290,7 +297,7 @@ function testEnde(lauf, abgebrochen) {
       h('div', { class: 'ende-lehrkraft' },
         // Nur falls der Browser nicht speichern konnte: Protokoll direkt sichern
         !gespeichert && knopf('Speichern fehlgeschlagen: Protokoll sichern', () => schuelerProtokollSeite(ergebnis, startseite), 'knopf klein warnung lehrkraft'),
-        knopf('Fertig', startseite, 'knopf klein leise lehrkraft'))));
+        lehrkraftKnopf('Fertig', startseite))));
   sprich('Geschafft! Das hast du toll gemacht.');
 }
 
@@ -366,7 +373,7 @@ function lautLesenAuswahl(p) {
           h('li', {}, 'Liest das Kind ein Wort falsch, tippst du es auf deinem iPad an. Das Kind sieht davon nichts.'),
           h('li', {}, 'Am Ende tippst du Stopp. Das Ergebnis wird gespeichert.'))),
       h('div', { class: 'stufen' },
-        daten.lautlesen.texte.map((t) =>
+        alleTexte().map((t) =>
           h('button', { class: 'stufe', type: 'button', onclick: () => lautLesenSeite(p, t) },
             h('strong', {}, t.niveau), h('span', {}, t.titel), h('small', {}, `${woerterVon(t.text).length} Wörter`))))));
 }
@@ -542,6 +549,161 @@ function bogenSeite(p) {
         sichern();
         bogenProtokollSeite(bogen, () => bogenSeite(p));
       })));
+}
+
+// ---------- Übertragung per QR-Code ----------
+function senden() {
+  const pseudonyme = speicher.pseudonyme();
+  const auswahl = h('select', { class: 'auswahl' },
+    h('option', { value: '' }, `Alle Kinder auf diesem iPad (${pseudonyme.length})`),
+    pseudonyme.map((p) => h('option', { value: p }, p)));
+  const mitEigenem = h('input', { type: 'checkbox', checked: true });
+  const flaeche = h('div', { class: 'qr-flaeche' });
+  let stopp = () => {};
+  const zeigen = async () => {
+    stopp();
+    const liste = auswahl.value ? [auswahl.value] : pseudonyme;
+    stopp = await zeigeQr(flaeche, erstellePaket(liste, mitEigenem.checked));
+  };
+  auswahl.addEventListener('change', zeigen);
+  mitEigenem.addEventListener('change', zeigen);
+  zeige(
+    kopf('Senden', () => {
+      stopp();
+      verwaltung();
+    }),
+    h('main', { class: 'mitte' },
+      h('label', { class: 'textzeile' }, 'Was soll übertragen werden?', auswahl),
+      h('label', { class: 'checkzeile' }, mitEigenem, ' Eigene Wörter und Vorlesetexte mitsenden'),
+      flaeche,
+      h('p', { class: 'unter' }, 'Auf dem anderen iPad: Protokolle und Einstellungen → Empfangen.')));
+  zeigen();
+}
+
+function empfangen() {
+  const flaeche = h('div', { class: 'qr-flaeche' });
+  let stopp = () => {};
+  const zurueck = () => {
+    stopp();
+    verwaltung();
+  };
+  zeige(kopf('Empfangen', zurueck), h('main', { class: 'mitte' }, flaeche));
+  starteScanner(flaeche, (paket) => {
+    const z = importierePaket(paket);
+    Object.assign(daten.woerter, eigeneWoerter());
+    flaeche.replaceChildren(
+      h('div', { class: 'pseudonym klein' }, '✅'),
+      h('h2', {}, 'Übertragung fertig'),
+      h('p', {}, `Übernommen: ${zusammenfassung(z)}.`),
+      knopf('Zu den Protokollen', verwaltung));
+  }, (meldung) => flaeche.replaceChildren(h('p', { class: 'hinweis' }, meldung), knopf('Zurück', verwaltung, 'knopf leise')))
+    .then((fn) => (stopp = fn));
+}
+
+// ---------- Eigene Wörter und Texte ----------
+function eigenesSeite() {
+  const woerter = eigeneWoerter();
+  const texte = eigeneTexte();
+  const wort = h('input', { type: 'text', class: 'eingabe klein', placeholder: 'z. B. Feuerwehr', autocapitalize: 'off' });
+  const silben = h('input', { type: 'text', class: 'eingabe klein', placeholder: 'z. B. Feu-er-wehr' });
+  const emoji = h('input', { type: 'text', class: 'eingabe klein', placeholder: 'z. B. 🚒 (Emoji-Tastatur)' });
+  const foto = h('input', { type: 'file', accept: 'image/*' });
+  const legen = h('input', { type: 'checkbox' });
+  const meldung = h('p', { class: 'status' });
+  wort.addEventListener('input', () => {
+    if (!silben.dataset.geaendert) silben.value = wort.value.trim();
+  });
+  silben.addEventListener('input', () => (silben.dataset.geaendert = '1'));
+
+  const wortSpeichern = async () => {
+    const w = wort.value.trim();
+    if (!w) return (meldung.textContent = 'Bitte ein Wort eingeben.');
+    if (!emoji.value.trim() && !foto.files[0]) return (meldung.textContent = 'Bitte ein Emoji oder ein Bild wählen.');
+    const eintrag = { wort: w, silben: silben.value.trim() || w, emoji: emoji.value.trim() || '🖼️', arasaac: w, legen: legen.checked };
+    speichereWort(eintrag);
+    if (foto.files[0]) await speichereBild('eigen', schluesselFuer(w), foto.files[0]);
+    Object.assign(daten.woerter, eigeneWoerter());
+    eigenesSeite();
+  };
+
+  const titel = h('input', { type: 'text', class: 'eingabe klein', placeholder: 'Titel, z. B. Unser Ausflug' });
+  const niveau = h('select', { class: 'auswahl' }, ['sehr leicht', 'leicht', 'mittel', 'schwer'].map((n) => h('option', { value: n }, n)));
+  const text = h('textarea', { rows: 5, placeholder: 'Text zum lauten Lesen. Bitte keine echten Namen von Kindern.' });
+  const textSpeichern = () => {
+    if (!titel.value.trim() || !text.value.trim()) return;
+    speichereText({ id: 'e' + Date.now().toString(36), titel: titel.value.trim(), niveau: niveau.value, text: text.value.trim().replace(/\s+/g, ' ') });
+    eigenesSeite();
+  };
+
+  zeige(
+    kopf('Eigene Wörter und Texte', verwaltung),
+    h('main', { class: 'bogen' },
+      h('section', { class: 'karte' },
+        h('h2', {}, 'Eigene Wörter'),
+        h('p', { class: 'unter' }, 'Eigene Wörter kommen automatisch in die Aufgaben: Bildzuordnung, Anlaute und Silben. Wenn das Häkchen „lautgetreu“ gesetzt ist, auch ins Wörterlegen und Bilderbeschriften.'),
+        Object.keys(woerter).length
+          ? h('ul', { class: 'eintraege' }, Object.entries(woerter).map(([key, e]) =>
+            h('li', {},
+              h('span', { class: 'eigen-wort' }, bildElement(key, 'symbol'), ` ${e.wort} (${e.silben})${e.legen ? ' · lautgetreu' : ''}`),
+              knopf('Löschen', () => {
+                loescheWort(key);
+                delete daten.woerter[key];
+                eigenesSeite();
+              }, 'knopf klein leise'))))
+          : h('p', { class: 'unter' }, 'Noch keine eigenen Wörter.'),
+        h('h3', {}, 'Neues Wort'),
+        h('label', { class: 'textzeile' }, 'Wort (Nomen groß schreiben)', wort),
+        h('label', { class: 'textzeile' }, 'Silben mit Bindestrich', silben),
+        h('label', { class: 'textzeile' }, 'Bild als Emoji', emoji),
+        h('label', { class: 'textzeile' }, 'oder eigenes Foto/Symbol (bleibt nur auf diesem iPad)', foto),
+        h('label', { class: 'checkzeile' }, legen, ' lautgetreu (zum Wörterlegen und Beschriften geeignet)'),
+        meldung,
+        knopf('Wort speichern', wortSpeichern)),
+      h('section', { class: 'karte' },
+        h('h2', {}, 'Eigene Vorlesetexte'),
+        texte.length
+          ? h('ul', { class: 'eintraege' }, texte.map((t) =>
+            h('li', {}, h('span', {}, `${t.titel} (${t.niveau})`), knopf('Löschen', () => {
+              loescheText(t.id);
+              eigenesSeite();
+            }, 'knopf klein leise'))))
+          : h('p', { class: 'unter' }, 'Noch keine eigenen Texte.'),
+        h('h3', {}, 'Neuer Text'),
+        h('label', { class: 'textzeile' }, 'Titel', titel),
+        h('label', { class: 'textzeile' }, 'Schwierigkeit', niveau),
+        h('label', { class: 'textzeile' }, 'Text', text),
+        knopf('Text speichern', textSpeichern)),
+      h('p', { class: 'hinweis' }, 'Damit eigene Wörter und Texte auch auf dem Schüler-iPad erscheinen: Protokolle und Einstellungen → Senden (mit Häkchen „Eigene Wörter und Vorlesetexte“).')));
+}
+
+// ---------- Lehrkraft-Sperre ----------
+function sperrKarte() {
+  const status = h('p', { class: 'unter' }, pinGesetzt()
+    ? 'PIN ist aktiv. Lehrkraft-Bereiche öffnen sich nur mit PIN.'
+    : 'Keine PIN gesetzt. Lehrkraft-Bereiche öffnen sich durch langes Drücken (1,5 Sekunden).');
+  const neuePin = () => {
+    const feld = h('input', { type: 'password', inputmode: 'numeric', pattern: '[0-9]*', maxlength: '4', class: 'eingabe klein', placeholder: '4 Ziffern' });
+    const ok = knopf('PIN speichern', async () => {
+      if (!/^\d{4}$/.test(feld.value)) return alert('Bitte genau 4 Ziffern eingeben.');
+      await setzePin(feld.value);
+      verwaltung();
+    }, 'knopf klein');
+    karte.append(h('div', { class: 'reihe' }, feld, ok));
+    feld.focus();
+  };
+  const karte = h('section', { class: 'karte' },
+    h('h2', {}, 'Lehrkraft-Sperre'),
+    status,
+    h('div', { class: 'reihe' },
+      pinGesetzt()
+        ? [knopf('PIN ändern', () => pinDialog(neuePin, 'Alte PIN eingeben'), 'knopf klein leise'),
+          knopf('PIN entfernen', () => pinDialog(() => {
+            entfernePin();
+            verwaltung();
+          }, 'PIN zum Entfernen eingeben'), 'knopf klein leise')]
+        : knopf('PIN festlegen', neuePin, 'knopf klein leise')),
+    h('p', { class: 'unter' }, 'Gilt für dieses iPad. PIN vergessen? Dann in Safari die Website-Daten löschen; dabei gehen aber auch die Protokolle verloren, also vorher sichern.'));
+  return karte;
 }
 
 // ---------- Fortschritt ----------
@@ -741,6 +903,17 @@ function verwaltung() {
         h('h2', {}, 'Protokolle importieren'),
         h('p', { class: 'unter' }, 'JSON-Dateien von einem anderen iPad oder einem früheren Test einlesen, z. B. den Kompetenzbogen vom Lehrkraft-iPad.'),
         importFeld, knopf('Dateien auswählen', () => importFeld.click(), 'knopf leise'), importMeldung),
+      h('section', { class: 'karte' },
+        h('h2', {}, 'Zwischen iPads übertragen'),
+        h('p', { class: 'unter' }, 'Per QR-Code, ohne Internet: Ein iPad zeigt den Code, das andere scannt ihn mit der Kamera. Vorhandenes wird ergänzt, nicht gelöscht.'),
+        h('div', { class: 'reihe' },
+          knopf('📤 Senden', senden, 'knopf leise'),
+          knopf('📥 Empfangen', empfangen, 'knopf leise'))),
+      h('section', { class: 'karte' },
+        h('h2', {}, 'Eigene Wörter und Texte'),
+        h('p', { class: 'unter' }, `${Object.keys(eigeneWoerter()).length} eigene Wörter, ${eigeneTexte().length} eigene Vorlesetexte.`),
+        knopf('Bearbeiten', eigenesSeite, 'knopf leise')),
+      sperrKarte(),
       bedienungKarte(),
       stimmenKarte(),
       h('section', { class: 'karte' },
@@ -787,6 +960,7 @@ async function init() {
     ['woerter', 'lesen', 'rechtschreibung', 'mathe', 'kompetenzbogen', 'lautlesen'].map((n) => lade(`data/${n}.json`)));
   daten.lautlesen = lautlesen;
   daten.woerter = woerter.woerter;
+  Object.assign(daten.woerter, eigeneWoerter());
   daten.lesen = lesen;
   daten.rechtschreibung = rechtschreibung;
   daten.mathe = mathe;
