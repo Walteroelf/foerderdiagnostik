@@ -17,6 +17,10 @@ export function anweisung(a) {
       return { text: 'Hör gut zu. Tippe auf den Buchstaben.', sprache: `Tippe auf das ${a.ziel}.` };
     case 'anlaut':
       return { text: 'Womit fängt das Wort an?', sprache: `${w(a.wort)}. Womit fängt ${w(a.wort)} an? Tippe auf den Buchstaben.`, vorlage: bildElement(a.wort, 'symbol') };
+    case 'endlaut':
+      return { text: 'Womit hört das Wort auf?', sprache: `${w(a.wort)}. Womit hört ${w(a.wort)} auf? Tippe auf den Buchstaben.`, vorlage: bildElement(a.wort, 'symbol') };
+    case 'vokal':
+      return { text: 'Welchen Laut hörst du in der Mitte?', sprache: `${w(a.wort)}. Welchen Laut hörst du in der Mitte von ${w(a.wort)}? Tippe auf den Buchstaben.`, vorlage: bildElement(a.wort, 'symbol') };
     case 'silben':
       return { text: 'Wie viele Silben? Klatsch mit!', sprache: `${w(a.wort)}. Wie viele Silben hat ${w(a.wort)}? Klatsch mit.`, vorlage: bildElement(a.wort, 'symbol') };
     case 'wortbild':
@@ -41,12 +45,16 @@ export function anweisung(a) {
       return { text: 'Schreib das Wort.', sprache: `Schreib das Wort ${w(a.wort)}. Tippe die Buchstaben nacheinander an.` };
     case 'schreibweise': {
       const wort = a.optionen.find((o) => !o.fehler).text;
+      if (a.muster === 'Großschreibung') {
+        return { text: 'Welcher Satz ist richtig geschrieben?', sprache: `${wort} Welcher Satz ist richtig geschrieben?`, vorlage: hatBild(a.wort) ? bildElement(a.wort, 'symbol') : null };
+      }
       return { text: 'Welches Wort ist richtig geschrieben?', sprache: `${wort}. Wie schreibt man ${wort}? Tippe auf das richtig geschriebene Wort.`, vorlage: hatBild(a.wort) ? bildElement(a.wort, 'symbol') : null };
     }
     case 'satzlegen':
       return { text: 'Hör gut zu und lege den Satz.', sprache: `Lege den Satz: ${a.satz.replace(/[.!?]$/, '')}.` };
     case 'beschriften':
-      return { text: 'Schreib, was du siehst.', sprache: 'Was ist das? Schreib das Wort mit den Buchstaben.' };
+      // Das Wort wird gesagt, damit Benennschwierigkeiten das Schreibergebnis nicht verfälschen
+      return { text: 'Schreib das Wort zum Bild.', sprache: `Schreib das Wort ${w(a.wort)}. Tippe die Buchstaben an.` };
     case 'menge':
       return { text: `Wo sind ${a.frage}?`, sprache: `Wo sind ${a.frage}? Tippe auf die Seite mit ${a.frage} Bildern.` };
     case 'simultan':
@@ -90,6 +98,8 @@ export function optionInhalt(a, o) {
       return [o, h('span', { class: 'bildgruppe' }, o.split('+').map((k) => bildElement(k, 'symbol')))];
     case 'buchstabe':
     case 'anlaut':
+    case 'endlaut':
+    case 'vokal':
     case 'buchstabezuordnen':
     case 'simultan':
     case 'rechnen':
@@ -100,7 +110,7 @@ export function optionInhalt(a, o) {
       return [o, h('span', { class: 'silben' }, h('span', { class: 'zahl' }, o), h('span', {}, '👏'.repeat(o)))];
     case 'wortbild':
     case 'schreibweise':
-      return [o.text, h('span', { class: 'wort' }, o.text)];
+      return [o.text, h('span', { class: o.text.includes(' ') ? 'wort klein' : 'wort' }, o.text)];
     case 'uhr':
     case 'textfrage':
       return [o.text, h('span', { class: 'wort klein' }, o.text)];
@@ -126,6 +136,8 @@ export function optionSprechtext(a, o) {
       return { art: 'wort', text: o.split('+').map(w).join(' ') };
     case 'buchstabe':
     case 'anlaut':
+    case 'endlaut':
+    case 'vokal':
     case 'buchstabezuordnen':
       return { art: 'buchstabe', text: String(o) };
     case 'silben':

@@ -138,8 +138,8 @@
   },
   {
    "stufe": 2,
-   "name": "Lautebene: Anfangsbuchstaben finden",
-   "kompetenz": "Hört den Anlaut eines Wortes und ordnet ihm den passenden Buchstaben zu.",
+   "name": "Lautebene: Anlaut, Endlaut und Vokal heraushören",
+   "kompetenz": "Hört Anfangs- und Endlaute sowie den Vokal in der Wortmitte heraus und ordnet ihnen Buchstaben zu.",
    "aufgaben": [
     {
      "typ": "anlaut",
@@ -239,6 +239,186 @@
       "I",
       "E",
       "A"
+     ]
+    },
+    {
+     "typ": "endlaut",
+     "wort": "ball",
+     "ziel": "l",
+     "optionen": [
+      "l",
+      "n",
+      "r"
+     ]
+    },
+    {
+     "typ": "endlaut",
+     "wort": "hut",
+     "ziel": "t",
+     "optionen": [
+      "t",
+      "k",
+      "p"
+     ]
+    },
+    {
+     "typ": "endlaut",
+     "wort": "haus",
+     "ziel": "s",
+     "optionen": [
+      "s",
+      "f",
+      "z"
+     ]
+    },
+    {
+     "typ": "endlaut",
+     "wort": "sofa",
+     "ziel": "a",
+     "optionen": [
+      "a",
+      "o",
+      "e"
+     ]
+    },
+    {
+     "typ": "endlaut",
+     "wort": "kiwi",
+     "ziel": "i",
+     "optionen": [
+      "i",
+      "e",
+      "u"
+     ]
+    },
+    {
+     "typ": "endlaut",
+     "wort": "auto",
+     "ziel": "o",
+     "optionen": [
+      "o",
+      "u",
+      "a"
+     ]
+    },
+    {
+     "typ": "endlaut",
+     "wort": "kamel",
+     "ziel": "l",
+     "optionen": [
+      "l",
+      "m",
+      "n"
+     ]
+    },
+    {
+     "typ": "endlaut",
+     "wort": "ballon",
+     "ziel": "n",
+     "optionen": [
+      "n",
+      "m",
+      "l"
+     ]
+    },
+    {
+     "typ": "endlaut",
+     "wort": "salat",
+     "ziel": "t",
+     "optionen": [
+      "t",
+      "k",
+      "p"
+     ]
+    },
+    {
+     "typ": "endlaut",
+     "wort": "nase",
+     "ziel": "e",
+     "optionen": [
+      "e",
+      "a",
+      "i"
+     ]
+    },
+    {
+     "typ": "vokal",
+     "wort": "hut",
+     "ziel": "u",
+     "optionen": [
+      "u",
+      "o",
+      "a"
+     ]
+    },
+    {
+     "typ": "vokal",
+     "wort": "ball",
+     "ziel": "a",
+     "optionen": [
+      "a",
+      "o",
+      "e"
+     ]
+    },
+    {
+     "typ": "vokal",
+     "wort": "fisch",
+     "ziel": "i",
+     "optionen": [
+      "i",
+      "e",
+      "ü"
+     ]
+    },
+    {
+     "typ": "vokal",
+     "wort": "bett",
+     "ziel": "e",
+     "optionen": [
+      "e",
+      "i",
+      "a"
+     ]
+    },
+    {
+     "typ": "vokal",
+     "wort": "mond",
+     "ziel": "o",
+     "optionen": [
+      "o",
+      "u",
+      "a"
+     ]
+    },
+    {
+     "typ": "vokal",
+     "wort": "hund",
+     "ziel": "u",
+     "optionen": [
+      "u",
+      "o",
+      "a"
+     ]
+    },
+    {
+     "typ": "vokal",
+     "wort": "kamm",
+     "ziel": "a",
+     "optionen": [
+      "a",
+      "o",
+      "e"
+     ]
+    },
+    {
+     "typ": "vokal",
+     "wort": "pilz",
+     "ziel": "i",
+     "optionen": [
+      "i",
+      "e",
+      "ü"
      ]
     }
    ],
@@ -562,16 +742,6 @@
       "w",
       "i"
      ]
-    },
-    {
-     "typ": "legen",
-     "wort": "taxi",
-     "teile": [
-      "T",
-      "a",
-      "x",
-      "i"
-     ]
     }
    ],
    "generatoren": [
@@ -583,8 +753,8 @@
   },
   {
    "stufe": 4,
-   "name": "Rechtschreibmuster: Doppelkonsonanten, ie, ck, Großschreibung",
-   "kompetenz": "Erkennt die richtige Schreibweise bei häufigen Rechtschreibmustern.",
+   "name": "Rechtschreibmuster: Doppelkonsonant, ie, ck, Verlängern, Großschreibung",
+   "kompetenz": "Erkennt die richtige Schreibweise bei häufigen Rechtschreibmustern und nutzt die Strategie Verlängern.",
    "aufgaben": [
     {
      "typ": "schreibweise",
@@ -596,11 +766,11 @@
       },
       {
        "text": "Sone",
-       "fehler": "Doppelkonsonant"
+       "fehler": "Merkmal fehlt (lautgetreu geschrieben)"
       },
       {
-       "text": "sonne",
-       "fehler": "Großschreibung"
+       "text": "Sohne",
+       "fehler": "Übergeneralisierung (falsch markiert)"
       }
      ]
     },
@@ -614,11 +784,11 @@
       },
       {
        "text": "Tase",
-       "fehler": "Doppelkonsonant"
+       "fehler": "Merkmal fehlt (lautgetreu geschrieben)"
       },
       {
-       "text": "tasse",
-       "fehler": "Großschreibung"
+       "text": "Taße",
+       "fehler": "Übergeneralisierung (falsch markiert)"
       }
      ]
     },
@@ -632,11 +802,11 @@
       },
       {
        "text": "Bal",
-       "fehler": "Doppelkonsonant"
+       "fehler": "Merkmal fehlt (lautgetreu geschrieben)"
       },
       {
-       "text": "ball",
-       "fehler": "Großschreibung"
+       "text": "Bahl",
+       "fehler": "Übergeneralisierung (falsch markiert)"
       }
      ]
     },
@@ -650,11 +820,11 @@
       },
       {
        "text": "Teler",
-       "fehler": "Doppelkonsonant"
+       "fehler": "Merkmal fehlt (lautgetreu geschrieben)"
       },
       {
-       "text": "teller",
-       "fehler": "Großschreibung"
+       "text": "Tehler",
+       "fehler": "Übergeneralisierung (falsch markiert)"
       }
      ]
     },
@@ -668,11 +838,11 @@
       },
       {
        "text": "Kofer",
-       "fehler": "Doppelkonsonant"
+       "fehler": "Merkmal fehlt (lautgetreu geschrieben)"
       },
       {
-       "text": "koffer",
-       "fehler": "Großschreibung"
+       "text": "Koffa",
+       "fehler": "Schreibung nach Aussprache (-er)"
       }
      ]
     },
@@ -686,29 +856,11 @@
       },
       {
        "text": "Afe",
-       "fehler": "Doppelkonsonant"
+       "fehler": "Merkmal fehlt (lautgetreu geschrieben)"
       },
       {
-       "text": "affe",
-       "fehler": "Großschreibung"
-      }
-     ]
-    },
-    {
-     "typ": "schreibweise",
-     "wort": "tanne",
-     "muster": "Doppelkonsonant",
-     "optionen": [
-      {
-       "text": "Tanne"
-      },
-      {
-       "text": "Tane",
-       "fehler": "Doppelkonsonant"
-      },
-      {
-       "text": "tanne",
-       "fehler": "Großschreibung"
+       "text": "Ahfe",
+       "fehler": "Übergeneralisierung (falsch markiert)"
       }
      ]
     },
@@ -722,11 +874,29 @@
       },
       {
        "text": "Bet",
-       "fehler": "Doppelkonsonant"
+       "fehler": "Merkmal fehlt (lautgetreu geschrieben)"
       },
       {
-       "text": "bett",
-       "fehler": "Großschreibung"
+       "text": "Beet",
+       "fehler": "Übergeneralisierung (falsch markiert)"
+      }
+     ]
+    },
+    {
+     "typ": "schreibweise",
+     "wort": "brille",
+     "muster": "Doppelkonsonant",
+     "optionen": [
+      {
+       "text": "Brille"
+      },
+      {
+       "text": "Brile",
+       "fehler": "Merkmal fehlt (lautgetreu geschrieben)"
+      },
+      {
+       "text": "Brielle",
+       "fehler": "Übergeneralisierung (falsch markiert)"
       }
      ]
     },
@@ -740,11 +910,11 @@
       },
       {
        "text": "Bine",
-       "fehler": "ie"
+       "fehler": "Merkmal fehlt (lautgetreu geschrieben)"
       },
       {
-       "text": "biene",
-       "fehler": "Großschreibung"
+       "text": "Bihne",
+       "fehler": "Übergeneralisierung (falsch markiert)"
       }
      ]
     },
@@ -758,11 +928,11 @@
       },
       {
        "text": "Zige",
-       "fehler": "ie"
+       "fehler": "Merkmal fehlt (lautgetreu geschrieben)"
       },
       {
-       "text": "ziege",
-       "fehler": "Großschreibung"
+       "text": "Zihge",
+       "fehler": "Übergeneralisierung (falsch markiert)"
       }
      ]
     },
@@ -776,11 +946,11 @@
       },
       {
        "text": "Flige",
-       "fehler": "ie"
+       "fehler": "Merkmal fehlt (lautgetreu geschrieben)"
       },
       {
-       "text": "fliege",
-       "fehler": "Großschreibung"
+       "text": "Flihge",
+       "fehler": "Übergeneralisierung (falsch markiert)"
       }
      ]
     },
@@ -794,11 +964,11 @@
       },
       {
        "text": "Brif",
-       "fehler": "ie"
+       "fehler": "Merkmal fehlt (lautgetreu geschrieben)"
       },
       {
-       "text": "brief",
-       "fehler": "Großschreibung"
+       "text": "Brieff",
+       "fehler": "Übergeneralisierung (falsch markiert)"
       }
      ]
     },
@@ -812,11 +982,11 @@
       },
       {
        "text": "Tieger",
-       "fehler": "ie"
+       "fehler": "Übergeneralisierung (falsch markiert)"
       },
       {
-       "text": "tiger",
-       "fehler": "Großschreibung"
+       "text": "Tigger",
+       "fehler": "Übergeneralisierung (falsch markiert)"
       }
      ]
     },
@@ -830,11 +1000,11 @@
       },
       {
        "text": "Soke",
-       "fehler": "ck"
+       "fehler": "Merkmal fehlt (lautgetreu geschrieben)"
       },
       {
-       "text": "socke",
-       "fehler": "Großschreibung"
+       "text": "Sokke",
+       "fehler": "kk statt ck"
       }
      ]
     },
@@ -847,12 +1017,12 @@
        "text": "Glocke"
       },
       {
-       "text": "Glokke",
-       "fehler": "ck"
+       "text": "Gloke",
+       "fehler": "Merkmal fehlt (lautgetreu geschrieben)"
       },
       {
-       "text": "glocke",
-       "fehler": "Großschreibung"
+       "text": "Glokke",
+       "fehler": "kk statt ck"
       }
      ]
     },
@@ -866,11 +1036,11 @@
       },
       {
        "text": "Jake",
-       "fehler": "ck"
+       "fehler": "Merkmal fehlt (lautgetreu geschrieben)"
       },
       {
-       "text": "jacke",
-       "fehler": "Großschreibung"
+       "text": "Jakke",
+       "fehler": "kk statt ck"
       }
      ]
     },
@@ -884,29 +1054,101 @@
       },
       {
        "text": "Schneke",
-       "fehler": "ck"
+       "fehler": "Merkmal fehlt (lautgetreu geschrieben)"
       },
       {
-       "text": "schnecke",
-       "fehler": "Großschreibung"
+       "text": "Schnekke",
+       "fehler": "kk statt ck"
       }
      ]
     },
     {
      "typ": "schreibweise",
      "wort": "hund",
-     "muster": "Großschreibung",
+     "muster": "Verlängern",
      "optionen": [
       {
        "text": "Hund"
       },
       {
-       "text": "hund",
-       "fehler": "Großschreibung"
+       "text": "Hunt",
+       "fehler": "Auslaut nicht verlängert"
       },
       {
-       "text": "Hunt",
-       "fehler": "Sonstige Schreibweise"
+       "text": "Hundt",
+       "fehler": "Übergeneralisierung (falsch markiert)"
+      }
+     ]
+    },
+    {
+     "typ": "schreibweise",
+     "wort": "zug",
+     "muster": "Verlängern",
+     "optionen": [
+      {
+       "text": "Zug"
+      },
+      {
+       "text": "Zuk",
+       "fehler": "Auslaut nicht verlängert"
+      },
+      {
+       "text": "Zugk",
+       "fehler": "Übergeneralisierung (falsch markiert)"
+      }
+     ]
+    },
+    {
+     "typ": "schreibweise",
+     "wort": "kleid",
+     "muster": "Verlängern",
+     "optionen": [
+      {
+       "text": "Kleid"
+      },
+      {
+       "text": "Kleit",
+       "fehler": "Auslaut nicht verlängert"
+      },
+      {
+       "text": "Kleidt",
+       "fehler": "Übergeneralisierung (falsch markiert)"
+      }
+     ]
+    },
+    {
+     "typ": "schreibweise",
+     "wort": "pferd",
+     "muster": "Verlängern",
+     "optionen": [
+      {
+       "text": "Pferd"
+      },
+      {
+       "text": "Pfert",
+       "fehler": "Auslaut nicht verlängert"
+      },
+      {
+       "text": "Pferdt",
+       "fehler": "Übergeneralisierung (falsch markiert)"
+      }
+     ]
+    },
+    {
+     "typ": "schreibweise",
+     "wort": "hand",
+     "muster": "Verlängern",
+     "optionen": [
+      {
+       "text": "Hand"
+      },
+      {
+       "text": "Hant",
+       "fehler": "Auslaut nicht verlängert"
+      },
+      {
+       "text": "Handt",
+       "fehler": "Übergeneralisierung (falsch markiert)"
       }
      ]
     },
@@ -916,15 +1158,33 @@
      "muster": "Großschreibung",
      "optionen": [
       {
-       "text": "Maus"
+       "text": "Die Maus ist klein."
       },
       {
-       "text": "maus",
-       "fehler": "Großschreibung"
+       "text": "die Maus ist klein.",
+       "fehler": "Satzanfang klein"
       },
       {
-       "text": "Mauss",
-       "fehler": "Sonstige Schreibweise"
+       "text": "Die maus ist klein.",
+       "fehler": "Nomen klein"
+      }
+     ]
+    },
+    {
+     "typ": "schreibweise",
+     "wort": "hund",
+     "muster": "Großschreibung",
+     "optionen": [
+      {
+       "text": "Der Hund bellt."
+      },
+      {
+       "text": "der Hund bellt.",
+       "fehler": "Satzanfang klein"
+      },
+      {
+       "text": "Der hund bellt.",
+       "fehler": "Nomen klein"
       }
      ]
     },
@@ -934,15 +1194,15 @@
      "muster": "Großschreibung",
      "optionen": [
       {
-       "text": "Baum"
+       "text": "Der Baum ist grün."
       },
       {
-       "text": "baum",
-       "fehler": "Großschreibung"
+       "text": "der Baum ist grün.",
+       "fehler": "Satzanfang klein"
       },
       {
-       "text": "Boum",
-       "fehler": "Sonstige Schreibweise"
+       "text": "Der baum ist grün.",
+       "fehler": "Nomen klein"
       }
      ]
     },
@@ -952,15 +1212,15 @@
      "muster": "Großschreibung",
      "optionen": [
       {
-       "text": "Lampe"
+       "text": "Die Lampe ist hell."
       },
       {
-       "text": "lampe",
-       "fehler": "Großschreibung"
+       "text": "die Lampe ist hell.",
+       "fehler": "Satzanfang klein"
       },
       {
-       "text": "Lambe",
-       "fehler": "Sonstige Schreibweise"
+       "text": "Die lampe ist hell.",
+       "fehler": "Nomen klein"
       }
      ]
     }
@@ -968,8 +1228,8 @@
   },
   {
    "stufe": 5,
-   "name": "Sätze schreiben: diktierte Sätze, Bilder beschriften",
-   "kompetenz": "Schreibt diktierte Sätze und beschriftet Bilder selbstständig.",
+   "name": "Wörter und Sätze schreiben: diktierte Sätze legen, Wörter schreiben",
+   "kompetenz": "Legt diktierte Sätze und schreibt diktierte Wörter zum Bild selbstständig.",
    "aufgaben": [
     {
      "typ": "satzlegen",

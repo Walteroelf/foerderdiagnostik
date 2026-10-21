@@ -18,6 +18,8 @@ const TYP_NAMEN = {
   zuordnen: 'Bild-Symbol-Zuordnung',
   buchstabe: 'Buchstaben erkennen',
   anlaut: 'Anlaute hören',
+  endlaut: 'Endlaute hören',
+  vokal: 'Vokale im Wort hören',
   silben: 'Silben gliedern',
   wortbild: 'Wörter lesen',
   buchstabezuordnen: 'Buchstaben zuordnen',
