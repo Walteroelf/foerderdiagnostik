@@ -1,5 +1,5 @@
 // Offline-Nutzung: App-Dateien zwischenspeichern. Bei Änderungen VERSION erhöhen.
-const VERSION = 'v6';
+const VERSION = 'v7';
 const DATEIEN = [
   './', 'index.html', 'css/app.css', 'manifest.webmanifest',
   'js/main.js', 'js/dom.js', 'js/aufgaben.js', 'js/bedienung.js', 'js/generatoren.js', 'js/storage.js', 'js/pseudonym.js', 'js/sprache.js', 'js/symbole.js', 'js/testlauf.js', 'js/protokoll.js', 'js/sperre.js', 'js/eigenes.js', 'js/uebertragung.js', 'js/foerderziele.js', 'js/spracheingabe.js', 'data/hoeren.json', 'vendor/jsQR.js', 'vendor/qrcode.js',

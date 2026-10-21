@@ -10,6 +10,22 @@ const zufall = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
 const eins = (liste) => liste[Math.floor(Math.random() * liste.length)];
 const ziehe = (liste, n) => [...liste].sort(() => Math.random() - 0.5).slice(0, n);
 
+// Wörter, die sich im Bild zu ähnlich sind oder einander einschließen; nie zusammen als Antworten anbieten
+const AEHNLICH_BILD = [
+  ['baum', 'tanne', 'palme'], ['rose', 'blume'], ['auto', 'taxi'], ['schiff', 'boot'], ['oma', 'opa'],
+  ['eis', 'kuchen'], ['tasse', 'milch'], ['hase', 'maus'], ['sonne', 'stern'], ['rad', 'roller'], ['wal', 'fisch', 'robbe'],
+];
+const zuAehnlich = (a, b) => AEHNLICH_BILD.some((g) => g.includes(a) && g.includes(b));
+// Zieht n Wörter, von denen keine zwei zu ähnlich sind
+function zieheEindeutig(liste, n) {
+  const out = [];
+  for (const k of ziehe(liste, liste.length)) {
+    if (out.length >= n) break;
+    if (!out.some((x) => zuAehnlich(x, k))) out.push(k);
+  }
+  return out;
+}
+
 // Gut zählbare Dinge für Mengenbilder
 const ZAEHLDINGE = ['apfel', 'ball', 'stern', 'fisch', 'ente', 'herz', 'blume', 'auto', 'birne', 'kirsche'];
 
@@ -56,11 +72,11 @@ const bildWoerter = () => wortListe().filter((k) => !wortInfo(k).eigen || wortIn
 
 const GEN = {
   hoerwort() {
-    const [ziel, ...rest] = ziehe(bildWoerter(), 4);
+    const [ziel, ...rest] = zieheEindeutig(bildWoerter(), 4);
     return { typ: 'hoeren', kategorie: 'Wörter', sprache: `Tippe auf das Bild: ${wortInfo(ziel).wort}.`, ziel, optionen: [ziel, ...rest] };
   },
   hoerzwei() {
-    const [a, b, c, d] = ziehe(bildWoerter(), 4);
+    const [a, b, c, d] = zieheEindeutig(bildWoerter(), 4);
     return {
       typ: 'hoeren', kategorie: 'Zwei Angaben', sprache: `Tippe auf das Bild mit ${wortInfo(a).wort} und ${wortInfo(b).wort}.`,
       ziel: `${a}+${b}`, optionen: [`${a}+${b}`, `${a}+${c}`, `${d}+${b}`, `${c}+${d}`],
@@ -77,7 +93,7 @@ const GEN = {
     return keys.length ? { typ: 'beschriften', wort: eins(keys) } : null;
   },
   zuordnen() {
-    const [ziel, ...rest] = ziehe(wortListe(), 3);
+    const [ziel, ...rest] = zieheEindeutig(wortListe(), 3);
     return { typ: 'zuordnen', ziel, optionen: [ziel, ...rest] };
   },
   buchstabe() {

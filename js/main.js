@@ -5,7 +5,7 @@ import { speicher } from './storage.js';
 import { erzeugePseudonym, siehtAusWiePseudonym, schoenesPseudonym } from './pseudonym.js';
 import { sprich, stopp, spracheVerfuegbar, deutscheStimmen, setzeStimme, aktuelleStimme, tempo, setzeTempo } from './sprache.js';
 import {
-  initSymbole, bildElement, wortInfo, anzahlBilder, speichereBild, loescheSatz, wortAusDateiname, ladeArasaac,
+  initSymbole, bildElement, wortInfo, anzahlBilder, speichereBild, loescheSatz, wortAusDateiname, ladeArasaac, veralteteArasaac,
 } from './symbole.js';
 import { Testlauf } from './testlauf.js';
 import { hatAufgaben } from './generatoren.js';
@@ -1019,6 +1019,9 @@ async function init() {
   daten.hoeren = hoeren;
   daten.bogen = bogen;
   await initSymbole(daten.woerter);
+  // Korrigierte Piktogramme still im Hintergrund nachladen
+  const veraltet = veralteteArasaac();
+  if (veraltet.length && navigator.onLine) ladeArasaac(() => {}, veraltet).catch(() => {});
   wendeAn();
   startseite();
   if ('serviceWorker' in navigator && location.protocol === 'https:') {

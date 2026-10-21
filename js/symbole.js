@@ -6,6 +6,7 @@ export const SAETZE = { foto: 'Eigene Fotos', eigen: 'Eigene Symbole', arasaac: 
 
 let woerter = {};
 const urls = new Map(); // "satz:wort" -> objectURL
+const geladeneIds = new Map(); // wort -> ARASAAC-ID des gespeicherten Bildes
 
 function oeffneDB() {
   return new Promise((resolve, reject) => {
@@ -40,7 +41,10 @@ export async function initSymbole(wortDaten) {
       };
       return out;
     });
-    for (const [key, wert] of eintraege) setzeUrl(key, wert);
+    for (const [key, wert] of eintraege) {
+      setzeUrl(key, wert);
+      if (key.startsWith('arasaac:')) geladeneIds.set(key.slice(8), wert?.arasaacId);
+    }
   } catch (e) {
     console.warn('Symbolspeicher nicht verfügbar', e);
   }
@@ -105,9 +109,13 @@ export function wortAusDateiname(name) {
   return null;
 }
 
+// Wörter, deren gespeichertes ARASAAC-Bild nicht mehr zur festgelegten ID passt (z. B. Rad zeigte einen Reifen)
+export const veralteteArasaac = () =>
+  [...geladeneIds.keys()].filter((k) => woerter[k]?.arasaacId && geladeneIds.get(k) !== woerter[k].arasaacId);
+
 // Lädt ARASAAC-Piktogramme einmalig (Internet nötig). Übertragen werden nur die Suchwörter.
-export async function ladeArasaac(fortschritt = () => {}) {
-  const keys = Object.keys(woerter);
+export async function ladeArasaac(fortschritt = () => {}, nur = null) {
+  const keys = nur || Object.keys(woerter);
   let ok = 0;
   const fehler = [];
   for (let i = 0; i < keys.length; i++) {
@@ -127,6 +135,7 @@ export async function ladeArasaac(fortschritt = () => {}) {
       const bild = await fetch(`https://static.arasaac.org/pictograms/${id}/${id}_500.png`);
       if (!bild.ok) throw new Error('Bild fehlt');
       await speichereBild('arasaac', key, await bild.blob(), { arasaacId: id });
+      geladeneIds.set(key, id);
       ok++;
     } catch {
       fehler.push(info.wort);
