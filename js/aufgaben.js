@@ -61,6 +61,20 @@ export function anweisung(a) {
       return { text: 'Wie viele Punkte?', sprache: 'Wie viele Punkte siehst du?', vorlage: wuerfel(a.ziel) };
     case 'zahlmenge':
       return { text: `Wo sind ${a.ziel}?`, sprache: `Wo sind ${a.ziel}? Tippe auf das passende Bild.`, vorlage: h('span', { class: 'zahl-gross' }, a.ziel) };
+    case 'nachbarzahl':
+      return {
+        text: `Welche Zahl kommt ${a.richtung} ${a.n}?`,
+        sprache: `Welche Zahl kommt ${a.richtung} ${a.n}?`,
+        vorlage: h('span', { class: 'rechentext gross' }, a.richtung === 'nach' ? `${a.n}, ?` : `?, ${a.n}`),
+      };
+    case 'zerlegen':
+      return {
+        text: `Es sind ${a.ganz}. Wie viele sind versteckt?`,
+        sprache: `Es sind ${a.ganz} zusammen. ${a.sichtbar} siehst du. Wie viele sind unter dem Tuch versteckt?`,
+        vorlage: h('span', { class: 'rechenbild-mit-text' },
+          h('span', { class: 'rechenbild' }, menge(a.sichtbar, a.ding), h('span', { class: 'tuch', 'aria-label': 'Tuch' }, '?')),
+          h('span', { class: 'rechentext' }, `zusammen ${a.ganz}`)),
+      };
     case 'rechnen': {
       const term = `${a.a} ${opZeichen(a.op)} ${a.b} = ?`;
       return {
@@ -87,7 +101,7 @@ export function anweisung(a) {
 }
 
 export const vorlageKlasse = (a) =>
-  ['rechnen', 'menge', 'stellenwert', 'geld', 'textaufgabe', 'satz', 'textfrage'].includes(a.typ) ? 'breit' : '';
+  ['rechnen', 'zerlegen', 'menge', 'stellenwert', 'geld', 'textaufgabe', 'satz', 'textfrage'].includes(a.typ) ? 'breit' : '';
 
 // Gibt [Wert für die Bewertung, Inhalt des Antwortfelds] zurück
 export function optionInhalt(a, o) {
@@ -102,6 +116,8 @@ export function optionInhalt(a, o) {
     case 'vokal':
     case 'buchstabezuordnen':
     case 'simultan':
+    case 'nachbarzahl':
+    case 'zerlegen':
     case 'rechnen':
     case 'stellenwert':
     case 'textaufgabe':
@@ -142,6 +158,8 @@ export function optionSprechtext(a, o) {
       return { art: 'buchstabe', text: String(o) };
     case 'silben':
     case 'simultan':
+    case 'nachbarzahl':
+    case 'zerlegen':
     case 'rechnen':
     case 'stellenwert':
     case 'textaufgabe':

@@ -361,3 +361,4 @@ details summary { cursor: pointer; padding: 8px 0; color: var(--akzent); font-we
 }
 .mikro.hoert { background: var(--akzent); color: #fff; animation: pulsieren 1.2s infinite; }
 @keyframes pulsieren { 50% { box-shadow: 0 0 0 12px var(--akzent-hell); } }
+.tuch { display: inline-flex; align-items: center; justify-content: center; min-width: 110px; min-height: 90px; border-radius: 16px; background: var(--akzent); color: #fff; font-size: 56px; font-weight: 700; }

@@ -37,6 +37,8 @@ const REGELN = [
   [/^Hörverstehen/, 'Gesprochene Sätze und Anweisungen verstehen', 'Anweisungen ausführen lassen (erst eine, dann zwei Angaben), Bilder zu gehörten Sätzen zeigen'],
   [/^Mengenvergleich/, 'Mengen vergleichen (mehr, weniger)', 'Eins-zu-eins-Zuordnung mit echten Gegenständen'],
   [/^Mengenerfassung/, 'Kleine Mengen auf einen Blick erfassen', 'Würfel- und Fingerbilder, Blitzblick mit Fünferstruktur'],
+  [/^Nachbarzahl/, 'Zahlenreihe vorwärts und rückwärts sicher nutzen (Vorgänger, Nachfolger)', 'Zahlenstrahl und Hunderterkette, Zahlen-Treppe gehen, „eins mehr, eins weniger“ mit Plättchen'],
+  [/^Zerlegung/, 'Zahlen zerlegen (Teil-Ganzes-Verständnis)', 'Schüttelbox, Zahlenhaus, verdeckte Plättchen („Wie viele sind unter dem Becher?“), Zerlegungen bis 10 auswendig'],
   [/^Zahl-Menge-Zuordnung$/, 'Zahl und Menge sicher verbinden', 'Zahlen legen und Mengen dazu zählen, Zahlenhaus'],
   [/^(Rechenfehler|Abweichung um 1)/, 'Vom zählenden Rechnen lösen', 'Zahlzerlegungen, Kraft der Fünf, Verdoppeln und Nachbaraufgaben'],
   [/^(Rechenart verwechselt|Plus statt mal)$/, 'Rechenzeichen beachten', 'Rechenzeichen vor dem Rechnen farbig markieren'],
@@ -46,7 +48,9 @@ const REGELN = [
   [/^Uhr: Halb-Verwechslung$/, 'Halbe Stunden lesen („halb 3“ = 2:30)', 'Lernuhr, halbe Stunde als „halb zur nächsten Stunde“ zeigen'],
   [/^Uhr: Viertel/, 'Viertelstunden lesen', 'Lernuhr mit Viertelteilen, Tagesablauf mit Uhrzeiten'],
   [/^Uhr:/, 'Stunden- und Minutenzeiger unterscheiden', 'Lernuhr mit farbigen Zeigern'],
-  [/^Textaufgabe$/, 'Textaufgaben verstehen', 'Aufgabe nachspielen oder zeichnen, Frage unterstreichen'],
+  [/^Textaufgabe: Signalwort/, 'Sachaufgaben vom Inhalt her verstehen statt nach Signalwörtern zu rechnen', 'Rechengeschichten nachspielen oder zeichnen, Aufgaben mit „mehr“, die Minus verlangen, gezielt besprechen, eigene Rechengeschichten erfinden'],
+  [/^Textaufgabe: eine Zahl aus dem Text/, 'Die Frage einer Sachaufgabe erfassen', 'Frage zuerst vorlesen und unterstreichen, Antwortsatz vorher anfangen („Ben hatte am Anfang …“)'],
+  [/^Textaufgabe/, 'Textaufgaben verstehen', 'Aufgabe nachspielen oder zeichnen, Frage unterstreichen'],
 ];
 
 function regelFuer(fehlerTyp) {

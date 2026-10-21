@@ -157,7 +157,27 @@ const GEN = {
     }
     const ziel = op === '+' ? a + b : a - b;
     const anders = op === '+' ? a - b : a + b;
-    return { typ: 'rechnen', a, op, b, bilder: bilder && max <= 10, ding: eins(ZAEHLDINGE), optionen: zahlOptionen(ziel, [ziel + 1, anders, dreher(ziel), ziel - 10]) };
+    // Ablenker: Zählfehler um 1, falsche Rechenart, bei größeren Zahlen Zahlendreher und Zehnerfehler
+    const kand = [eins([ziel + 1, ziel - 1]), anders, dreher(ziel) <= max ? dreher(ziel) : null, max > 20 ? eins([ziel + 10, ziel - 10]) : null];
+    return {
+      typ: 'rechnen', a, op, b, bilder: bilder && max <= 10, kategorie: bilder && max <= 10 ? 'mit Bildern' : 'ohne Bilder',
+      ding: eins(ZAEHLDINGE), optionen: zahlOptionen(ziel, kand),
+    };
+  },
+  // Zahlwortreihe: Nachfolger und Vorgänger
+  nachbarzahl({ max = 20 }) {
+    const richtung = eins(['nach', 'vor']);
+    const n = zufall(2, max - 1);
+    const ziel = richtung === 'nach' ? n + 1 : n - 1;
+    const anderer = richtung === 'nach' ? n - 1 : n + 1;
+    return { typ: 'nachbarzahl', n, richtung, ziel, optionen: zahlOptionen(ziel, [anderer, n, richtung === 'nach' ? n + 2 : n - 2]) };
+  },
+  // Teil-Ganzes: Ein Teil der Menge ist verdeckt
+  zerlegen({ max = 10 }) {
+    const ganz = zufall(4, max);
+    const sichtbar = zufall(1, ganz - 1);
+    const ziel = ganz - sichtbar;
+    return { typ: 'zerlegen', ganz, sichtbar, ziel, ding: eins(ZAEHLDINGE), optionen: zahlOptionen(ziel, [ganz, sichtbar, ziel + 1, ziel - 1]) };
   },
   einmaleins({ reihen = [2, 5, 10] }) {
     const b = eins(reihen);

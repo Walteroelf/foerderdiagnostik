@@ -27,6 +27,8 @@ const TYP_NAMEN = {
   menge: 'Mengen vergleichen',
   simultan: 'Mengen auf einen Blick erfassen',
   zahlmenge: 'Zahl und Menge zuordnen',
+  nachbarzahl: 'Nachbarzahlen (Zahlenreihe)',
+  zerlegen: 'Zahlen zerlegen (Teil und Ganzes)',
   rechnen: 'Rechnen',
   satz: 'Sätze verstehen',
   textfrage: 'Textverständnis',

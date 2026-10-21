@@ -49,6 +49,8 @@ function waehleAufgaben(stufeDef, anzahl) {
 
 const w = (key) => wortInfo(key).wort;
 
+const zehnerUebergang = ({ a, op, b }) => (op === '+' ? (a % 10) + (b % 10) >= 10 : op === '-' ? a % 10 < b % 10 : false);
+
 export const rechne = (a, op, b) => (op === '+' ? a + b : op === '-' ? a - b : a * b);
 
 export const euro = (cent) => (cent % 100 ? (cent / 100).toFixed(2).replace('.', ',') : String(cent / 100)) + ' €';
@@ -185,6 +187,25 @@ export function bewerte(aufgabe, gewaehlt) {
         fehler: `Menge ${gewaehlt} statt ${aufgabe.ziel}`,
         fehlerTyp: 'Zahl-Menge-Zuordnung',
       };
+    case 'nachbarzahl': {
+      const g = Number(gewaehlt);
+      const andererNachbar = aufgabe.richtung === 'nach' ? aufgabe.n - 1 : aufgabe.n + 1;
+      return {
+        aufgabe: `Zahl ${aufgabe.richtung} ${aufgabe.n}`,
+        richtig: g === aufgabe.ziel,
+        fehler: `${g} statt ${aufgabe.ziel}`,
+        fehlerTyp: g === andererNachbar ? 'Nachbarzahl: vor und nach verwechselt' : 'Nachbarzahl',
+      };
+    }
+    case 'zerlegen': {
+      const g = Number(gewaehlt);
+      return {
+        aufgabe: `${aufgabe.ganz} zerlegen: ${aufgabe.sichtbar} sichtbar, ${aufgabe.ziel} versteckt`,
+        richtig: g === aufgabe.ziel,
+        fehler: `${g} statt ${aufgabe.ziel}`,
+        fehlerTyp: g === aufgabe.ganz ? 'Zerlegung: Gesamtmenge genannt' : g === aufgabe.sichtbar ? 'Zerlegung: sichtbaren Teil genannt' : 'Zerlegung',
+      };
+    }
     case 'rechnen': {
       const ziel = rechne(aufgabe.a, aufgabe.op, aufgabe.b);
       const g = Number(gewaehlt);
@@ -201,7 +222,7 @@ export function bewerte(aufgabe, gewaehlt) {
         richtig: g === ziel,
         fehler: `${g} statt ${ziel}`,
         fehlerTyp,
-        kategorie: aufgabe.op === '·' ? 'Einmaleins' : aufgabe.bilder ? 'Plus/Minus mit Bildern' : `Plus/Minus bis ${Math.max(ziel, aufgabe.a) > 20 ? 100 : 20}`,
+        kategorie: aufgabe.op === '·' ? 'Einmaleins' : aufgabe.bilder ? 'Plus/Minus mit Bildern' : `Plus/Minus bis ${Math.max(ziel, aufgabe.a) > 20 ? 100 : 20} ${zehnerUebergang(aufgabe) ? 'mit' : 'ohne'} Zehnerübergang`,
       };
     }
     case 'stellenwert': {
@@ -225,10 +246,11 @@ export function bewerte(aufgabe, gewaehlt) {
     }
     case 'textaufgabe':
       return {
-        aufgabe: `Textaufgabe: ${aufgabe.text}`,
+        aufgabe: `Textaufgabe${aufgabe.sachtyp ? ` (${aufgabe.sachtyp})` : ''}: ${aufgabe.text}`,
         richtig: Number(gewaehlt) === aufgabe.ziel,
         fehler: `${gewaehlt} statt ${aufgabe.ziel}`,
-        fehlerTyp: 'Textaufgabe',
+        fehlerTyp: aufgabe.fehler?.[gewaehlt] ? `Textaufgabe: ${aufgabe.fehler[gewaehlt]}` : 'Textaufgabe',
+        kategorie: 'Textaufgaben',
       };
     case 'uhr':
     case 'schreibweise':
