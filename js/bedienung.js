@@ -1,7 +1,7 @@
 // Motorische Hilfen für die Kinderansicht: Größe, Haltezeit, Sperrzeit und Tasterbedienung (Scanning).
 // Die Einstellungen gelten für dieses Gerät.
 const SCHLUESSEL = 'fd1:bedienung';
-const STANDARD = { groesse: 'normal', haltezeit: 0, sperrzeit: 0, taster: 'aus', scanTempo: 2000, sprachantwort: 'aus' };
+const STANDARD = { groesse: 'normal', haltezeit: 0, sperrzeit: 0, taster: 'aus', scanTempo: 2000, sprachantwort: 'aus', tastatur: 'ipad', einPersonen: true };
 
 export function einstellungen() {
   try {
@@ -34,8 +34,21 @@ export function beschreibung() {
   if (e.haltezeit) teile.push(`Haltezeit ${sek(e.haltezeit)}`);
   if (e.sperrzeit) teile.push(`Sperrzeit ${sek(e.sperrzeit)} nach jeder Aufgabe`);
   if (e.sprachantwort !== 'aus') teile.push(e.sprachantwort === 'auto' ? 'Antwort per Sprache (Mikrofon hört automatisch zu)' : 'Antwort per Sprache (Mikrofon-Knopf)');
+  teile.push(`Schreiben mit ${tastaturBeschreibung()}`);
   if (e.groesse !== 'normal') teile.push(e.groesse === 'gross' ? 'große Darstellung' : 'sehr große Darstellung');
   return teile.join(', ');
+}
+
+// Welche Tastatur beim Beschriften: iPad-Tastatur (Standard) oder Buchstabentasten in der App.
+// Bei Tasterbedienung geht die iPad-Tastatur nicht, dann QWERTZ-Tasten in der App.
+export function tastaturArt() {
+  const e = einstellungen();
+  if (e.tastatur === 'ipad' && e.taster !== 'aus') return 'qwertz';
+  return e.tastatur;
+}
+
+function tastaturBeschreibung() {
+  return { ipad: 'iPad-Tastatur', qwertz: 'Buchstabentasten in der App (QWERTZ)', abc: 'Buchstabentasten in der App (ABC)' }[tastaturArt()];
 }
 
 let sperreBis = 0;

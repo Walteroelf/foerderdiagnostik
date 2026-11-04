@@ -362,3 +362,36 @@ details summary { cursor: pointer; padding: 8px 0; color: var(--akzent); font-we
 .mikro.hoert { background: var(--akzent); color: #fff; animation: pulsieren 1.2s infinite; }
 @keyframes pulsieren { 50% { box-shadow: 0 0 0 12px var(--akzent-hell); } }
 .tuch { display: inline-flex; align-items: center; justify-content: center; min-width: 110px; min-height: 90px; border-radius: 16px; background: var(--akzent); color: #fff; font-size: 56px; font-weight: 700; }
+
+/* Angemeldetes Kind: oben auf jeder Seite */
+#wer { position: sticky; top: 0; z-index: 20; display: flex; justify-content: flex-end; max-width: 1000px; margin: 0 auto; padding: 8px 16px 0; pointer-events: none; }
+#wer[hidden] { display: none; }
+.wer-schild {
+  pointer-events: auto; display: inline-flex; align-items: center; gap: 8px;
+  background: var(--flaeche); border: 2px solid var(--akzent); border-radius: 999px;
+  padding: 4px 16px 4px 8px; font-size: 18px; font-weight: 700; color: var(--akzent); min-height: 44px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .08);
+}
+.wer-tier { font-size: 28px; line-height: 1; }
+.reihe.mittig { justify-content: center; }
+label.haken { display: flex; gap: 10px; align-items: flex-start; font-weight: 400; margin: 12px 0; }
+label.haken input { width: 24px; height: 24px; flex: none; margin-top: 2px; }
+
+/* Was schon gemacht ist (Kinderansicht) */
+.geschafft-leiste { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 22px; font-weight: 600; margin: 4px 0 8px; }
+.gross-sterne { font-size: 44px; }
+.kachel .stand { font-size: 18px; font-weight: 600; }
+.kachel .stand.geschafft { color: #2e7d32; }
+.kachel .stand.angefangen { color: #8a6d00; }
+.kachel.geschafft { border-color: #8cc58f; background: #f3faf3; }
+
+/* Buchstabentasten in QWERTZ-Anordnung */
+.tastatur.qwertz { display: flex; flex-direction: column; gap: 8px; }
+.tastenreihe { display: flex; gap: 6px; justify-content: center; }
+.tastenreihe .taste { flex: 1 1 0; max-width: 80px; min-width: 0; }
+.tastenreihe .taste.breit { flex: 2 1 0; max-width: 140px; }
+html[data-groesse="sehrgross"] .tastatur.qwertz .taste { min-height: 80px; }
+
+/* iPad-Tastatur: großes Schreibfeld */
+.schreibzeile { justify-content: center; }
+.eingabe.schreibfeld { font-size: 40px; letter-spacing: 2px; max-width: 600px; margin: 0 auto; }

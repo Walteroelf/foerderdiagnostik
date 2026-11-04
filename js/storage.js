@@ -32,6 +32,21 @@ export const speicher = {
       schreibe('pseudonyme', liste);
     }
   },
+  // Angemeldetes Kind auf diesem iPad: bleibt gespeichert, bis die Lehrkraft abmeldet
+  aktiv() {
+    return lies('aktiv', null);
+  },
+  setzeAktiv(p) {
+    this.merkePseudonym(p);
+    return schreibe('aktiv', p);
+  },
+  abmelden() {
+    try {
+      localStorage.removeItem(PREFIX + 'aktiv');
+    } catch {
+      /* ignorieren */
+    }
+  },
   kenntPseudonym(p) {
     return this.pseudonyme().some((x) => normPseudonym(x) === normPseudonym(p));
   },
