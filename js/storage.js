@@ -1,6 +1,9 @@
 // Lokale Speicherung im Browser (localStorage). Es wird nichts übertragen.
 const PREFIX = 'fd1:';
 
+// Letzte Änderung eines Datensatzes (ältere Daten haben nur „datum“)
+export const stand = (x) => x?.aktualisiert || x?.beendet || x?.datum || '';
+
 export const normPseudonym = (p) => String(p || '').trim().replace(/\s+/g, ' ').toLowerCase();
 
 function lies(key, fallback) {
@@ -58,8 +61,11 @@ export const speicher = {
     this.merkePseudonym(test.pseudonym);
     const liste = this.tests(test.pseudonym);
     const i = liste.findIndex((t) => t.id === test.id);
-    if (i >= 0) liste[i] = test;
-    else liste.push(test);
+    if (i >= 0) {
+      // Beim Import: einen neueren Stand (z. B. inzwischen beendete Übung) nicht mit einem älteren Export überschreiben
+      if (stand(liste[i]) > stand(test)) return false;
+      liste[i] = test;
+    } else liste.push(test);
     liste.sort((a, b) => a.datum.localeCompare(b.datum));
     return schreibe('tests:' + normPseudonym(test.pseudonym), liste);
   },
@@ -81,6 +87,19 @@ export const speicher = {
   speichereBogen(bogen) {
     this.merkePseudonym(bogen.pseudonym);
     return schreibe('bogen:' + normPseudonym(bogen.pseudonym), bogen);
+  },
+  // Exporte je Pseudonym: wann wurde was exportiert (für „neu seit dem letzten Export“)
+  exporte(p) {
+    return lies('exporte:' + normPseudonym(p), []);
+  },
+  merkeExport(p, eintrag) {
+    const liste = this.exporte(p);
+    liste.push(eintrag);
+    return schreibe('exporte:' + normPseudonym(p), liste);
+  },
+  letzterExport(p) {
+    const liste = this.exporte(p);
+    return liste.length ? liste[liste.length - 1] : null;
   },
   loescheAlles() {
     try {

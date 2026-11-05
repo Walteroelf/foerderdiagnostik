@@ -16,7 +16,8 @@ Informelles Förderdiagnostik-Werkzeug für die Förderschule KME. Läuft im Bro
 - **Lehrkraftmodus:**
   - Kompetenzbogen, unabhängig vom Schülertest und auf einem anderen iPad nutzbar.
   - Lautes Lesen: Das Kind liest den Text auf einem zweiten iPad (Schülermodus → Vorlesen) oder vom Ausdruck vor. Die Lehrkraft tippt auf ihrem iPad Fehler und Selbstkorrekturen mit, das Kind sieht davon nichts. Ergebnis: richtig gelesene Wörter pro Minute, Genauigkeit, Fehlerwörter.
-- **Protokolle:** Text zum Kopieren für Claude, Download als `.md` und `.json`, Import, Gesamtprotokoll aus Kompetenzbogen, Schüler- und Leseprotokollen.
+- **Protokolle:** Text zum Kopieren für Claude, Download als `.md` und `.json`, Import.
+- **Alle Daten exportieren (je Pseudonym):** Ein Export enthält immer den kompletten Stand eines Pseudonyms (Kompetenzbogen, alle Übungen, lautes Lesen), auch ohne Kompetenzbogen. Erreichbar im Lehrkraftmodus, unter „Protokolle und Einstellungen“, auf jeder Protokollseite, in der Bereichsauswahl des Schülermodus, am Ende einer Übung und über „Pause“ während einer Übung (Lehrkraft-Knopf). Jeder Export hat einen Zeitstempel im Dateinamen (`gesamtexport_<pseudonym>_JJJJ-MM-TT_HH-MM`) und in den Daten, eine laufende Nummer und den Zeitpunkt des vorherigen Exports. Was seitdem neu oder geändert ist, wird markiert. Übungen werden nach jeder Antwort zwischengespeichert; nicht beendete Übungen erscheinen als Zwischenstand. Jede Antwort hat einen Zeitpunkt, jede Übung Beginn, Ende und Status, jede Angabe im Kompetenzbogen den Zeitpunkt der letzten Änderung. Beim Import eines älteren Exports bleiben neuere Daten erhalten.
 - **Förderziele:** Jedes Schülerprotokoll enthält bis zu vier Vorschläge für Förderziele mit Übungsidee, abgeleitet aus der nächsten Stufe und den häufigsten Fehlermustern (regelbasiert, `js/foerderziele.js`). Sie stehen oben auf der Protokollseite und im Text für die KI.
 - **Fortschritt:** Unter „Protokolle und Einstellungen“ zeigt jede Pseudonym-Karte die erreichten Stufen je Test und das Lesetempo im Verlauf.
 - **Bedienung für das Kind** (motorische Hilfen, pro iPad): größere Antwortfelder, Haltezeit gegen versehentliches Tippen, Sperrzeit nach jeder Aufgabe, Tasterbedienung mit 1 Taster (automatisches Scanning, auch Tippen irgendwo) oder 2 Tastern (weiter/auswählen). Antwort per Sprache: Das Kind sagt die Antwort, die App wählt das passende Feld (mit Mikrofon-Knopf oder automatisch nach jeder Frage). Nutzt die Spracherkennung von Safari, dafür muss die Diktierfunktion des iPads eingeschaltet sein. Bei Wörterlegen, Satzlegen, Beschriften und Rechtschreibmustern wird weiter getippt. Die gewählte Bedienung und das Gesagte bei falschen Antworten stehen im Protokoll.
@@ -58,6 +59,7 @@ css/app.css              Gestaltung (reizarm, große Schaltflächen)
 js/main.js               Bildschirme und Ablauf
 js/testlauf.js           Adaptive Stufenlogik und Bewertung
 js/protokoll.js          Protokolltexte für die KI
+js/export.js             Gesamtexport je Pseudonym mit Zeitstempel
 js/pseudonym.js          Pseudonyme „Farbe Tier Zahl“
 js/storage.js            Lokale Speicherung (localStorage)
 js/symbole.js            Bilder: eigene Fotos/Symbole, ARASAAC, Emoji (IndexedDB)

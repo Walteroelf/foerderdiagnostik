@@ -336,7 +336,10 @@ export class Testlauf {
       version: 1,
       id: `t-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`,
       pseudonym,
-      datum: new Date().toISOString(),
+      datum: new Date().toISOString(), // Beginn der Übung
+      aktualisiert: new Date().toISOString(), // letzte gespeicherte Antwort
+      beendet: null,
+      status: 'laufend', // laufend | abgeschlossen | abgebrochen
       bereich: bereichDef.bereich,
       bereichTitel: bereichDef.titel,
       einstiegsstufe,
@@ -382,6 +385,7 @@ export class Testlauf {
       fehlerTyp: b.richtig ? null : b.fehlerTyp,
       kategorie: b.kategorie || null,
       zeitMs: Math.round(zeitMs),
+      zeitpunkt: new Date().toISOString(),
       ...(gesprochen ? { gesprochen } : {}),
     });
     this.index++;
@@ -402,15 +406,33 @@ export class Testlauf {
     return null;
   }
 
+  // Aktueller Stand während der Übung, wird nach jeder Antwort gespeichert.
+  // So bleiben Ergebnisse erhalten, wenn pausiert wird oder das iPad ausgeht.
+  zwischenstand() {
+    this.berechne(!this.blockFertig ? this.stufe : null);
+    this.ergebnis.aktualisiert = new Date().toISOString();
+    return this.ergebnis;
+  }
+
   abschliessen(abgebrochen = false) {
     this.ergebnis.abgebrochen = abgebrochen;
+    this.ergebnis.status = abgebrochen ? 'abgebrochen' : 'abgeschlossen';
+    this.ergebnis.beendet = new Date().toISOString();
+    this.ergebnis.aktualisiert = this.ergebnis.beendet;
+    this.berechne();
+    return this.ergebnis;
+  }
+
+  // offen: Stufe, deren Aufgabenblock noch läuft; sie zählt im Zwischenstand noch nicht als „sicher“
+  berechne(offen = null) {
     const sicher = Object.keys(this.ergebnis.stufen)
       .map(Number)
-      .filter((s) => this.ergebnis.stufen[s].antworten.length && this.quote(s) >= SICHER_AB);
+      .filter((s) => s !== offen && this.ergebnis.stufen[s].antworten.length && this.quote(s) >= SICHER_AB);
     this.ergebnis.erreichteStufe = sicher.length ? Math.max(...sicher) : null;
     // Nächste Stufe als Förderziel merken
     const naechste = this.def.stufen.find((s) => s.stufe > (this.ergebnis.erreichteStufe || 0) && hatAufgaben(s));
     if (naechste) this.ergebnis.naechsteStufe = { stufe: naechste.stufe, name: naechste.name, kompetenz: naechste.kompetenz };
+    else delete this.ergebnis.naechsteStufe;
     return this.ergebnis;
   }
 }

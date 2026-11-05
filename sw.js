@@ -1,8 +1,8 @@
 // Offline-Nutzung: App-Dateien zwischenspeichern. Bei Änderungen VERSION erhöhen.
-const VERSION = 'v9';
+const VERSION = 'v10';
 const DATEIEN = [
   './', 'index.html', 'css/app.css', 'manifest.webmanifest',
-  'js/main.js', 'js/dom.js', 'js/aufgaben.js', 'js/bedienung.js', 'js/generatoren.js', 'js/storage.js', 'js/pseudonym.js', 'js/sprache.js', 'js/symbole.js', 'js/testlauf.js', 'js/protokoll.js', 'js/sperre.js', 'js/eigenes.js', 'js/uebertragung.js', 'js/foerderziele.js', 'js/spracheingabe.js', 'data/hoeren.json', 'vendor/jsQR.js', 'vendor/qrcode.js',
+  'js/main.js', 'js/dom.js', 'js/aufgaben.js', 'js/bedienung.js', 'js/generatoren.js', 'js/storage.js', 'js/pseudonym.js', 'js/sprache.js', 'js/symbole.js', 'js/testlauf.js', 'js/protokoll.js', 'js/export.js', 'js/sperre.js', 'js/eigenes.js', 'js/uebertragung.js', 'js/foerderziele.js', 'js/spracheingabe.js', 'data/hoeren.json', 'vendor/jsQR.js', 'vendor/qrcode.js',
   'data/woerter.json', 'data/lesen.json', 'data/rechtschreibung.json', 'data/mathe.json', 'data/kompetenzbogen.json', 'data/lautlesen.json',
   'icons/icon.svg', 'icons/icon-180.png', 'icons/icon-192.png', 'icons/icon-512.png',
 ];
