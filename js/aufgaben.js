@@ -1,7 +1,7 @@
 // Darstellung der Aufgaben in der Kinderansicht
 import { h } from './dom.js';
 import { bildElement, wortInfo } from './symbole.js';
-import { aktivierbar } from './bedienung.js';
+import { aktivierbar, tastaturArt } from './bedienung.js';
 import { euro } from './testlauf.js';
 
 const w = (k) => wortInfo(k).wort;
@@ -285,8 +285,13 @@ export function satzLegenSeite(a, fertig) {
   return legeflaeche(mische([...a.woerter, ...a.extra]), '|', fertig, 'wortkarte');
 }
 
-// Schreiben: Bild beschriften mit einer Buchstabentastatur (ABC-Reihenfolge)
+// Schreiben: Bild beschriften. Standard ist die iPad-Tastatur; alternativ Buchstabentasten in der App
+// (QWERTZ wie auf dem iPad oder ABC-Reihenfolge), z. B. für Tasterbedienung.
 export function tastaturSeite(a, fertig) {
+  const art = tastaturArt();
+  const bild = h('div', { class: 'vorlage klein' }, bildElement(a.wort, 'symbol'));
+  if (art === 'ipad') return ipadTastaturSeite(bild, fertig);
+
   let text = '';
   let gross = true;
   const anzeige = h('div', { class: 'gelegt' });
@@ -295,7 +300,7 @@ export function tastaturSeite(a, fertig) {
     umschalt.classList.toggle('an', gross);
     tasten.forEach((t) => (t.textContent = gross && t.dataset.b !== 'ß' ? t.dataset.b.toUpperCase() : t.dataset.b));
   };
-  const tasten = [...'abcdefghijklmnopqrstuvwxyzäöüß'].map((b) => {
+  const taste = (b) => {
     const el = h('button', { class: 'taste', type: 'button', 'data-b': b }, b);
     aktivierbar(el, () => {
       text += gross && b !== 'ß' ? b.toUpperCase() : b;
@@ -303,7 +308,10 @@ export function tastaturSeite(a, fertig) {
       male();
     });
     return el;
-  });
+  };
+  const reihen = art === 'abc' ? ['abcdefghijklmnopqrstuvwxyzäöüß'] : ['qwertzuiopü', 'asdfghjklöä', 'yxcvbnmß'];
+  const tastenReihen = reihen.map((r) => [...r].map(taste));
+  const tasten = tastenReihen.flat();
   const umschalt = aktivierbar(h('button', { class: 'taste breit', type: 'button', 'aria-label': 'Großbuchstabe' }, '⇧ Groß'), () => {
     gross = !gross;
     male();
@@ -313,11 +321,37 @@ export function tastaturSeite(a, fertig) {
     male();
   });
   const ok = aktivierbar(h('button', { class: 'knopf gross-knopf', type: 'button' }, '✓ Fertig'), () => fertig(text));
+  const tastatur = art === 'abc'
+    ? h('div', { class: 'tastatur' }, tasten, umschalt)
+    : h('div', { class: 'tastatur qwertz' },
+      tastenReihen.map((reihe, i) => h('div', { class: 'tastenreihe' }, i === 2 ? [umschalt, ...reihe] : reihe)));
   male();
-  return [
-    h('div', { class: 'vorlage klein' }, bildElement(a.wort, 'symbol')),
-    h('div', { class: 'legezeile' }, anzeige, loeschen),
-    h('div', { class: 'tastatur' }, tasten, umschalt),
-    ok,
-  ];
+  return [bild, h('div', { class: 'legezeile' }, anzeige, loeschen), tastatur, ok];
+}
+
+// Eingabefeld für die iPad-Tastatur. Autokorrektur und Rechtschreibprüfung sind aus,
+// damit die Schreibung des Kindes nicht verändert wird.
+function ipadTastaturSeite(bild, fertig) {
+  const feld = h('input', {
+    type: 'text', class: 'eingabe schreibfeld', lang: 'de', inputmode: 'text', enterkeyhint: 'done',
+    autocomplete: 'off', autocorrect: 'off', autocapitalize: 'sentences', spellcheck: 'false',
+    'aria-label': 'Hier schreiben', placeholder: 'Hier tippen und schreiben',
+  });
+  let fertigGemeldet = false;
+  const abschicken = () => {
+    if (fertigGemeldet) return;
+    fertigGemeldet = true;
+    feld.blur();
+    fertig(feld.value.trim());
+  };
+  feld.addEventListener('keydown', (ev) => {
+    if (ev.key === 'Enter') {
+      ev.preventDefault();
+      abschicken();
+    }
+  });
+  const ok = aktivierbar(h('button', { class: 'knopf gross-knopf', type: 'button' }, '✓ Fertig'), abschicken);
+  // Ohne Tippen des Kindes öffnet Safari die Tastatur nicht; der Fokus hilft auf Geräten mit Hardware-Tastatur.
+  setTimeout(() => feld.focus({ preventScroll: true }), 300);
+  return [bild, h('div', { class: 'legezeile schreibzeile' }, feld), ok];
 }

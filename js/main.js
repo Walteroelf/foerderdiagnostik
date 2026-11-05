@@ -2,7 +2,7 @@ import { h, knopf } from './dom.js';
 import { anweisung, optionInhalt, optionSprechtext, legenSeite, satzLegenSeite, tastaturSeite, vorlageKlasse } from './aufgaben.js';
 import { aktivierbar, neueSeite, scanStopp, einstellungen, speichereEinstellungen, wendeAn } from './bedienung.js';
 import { speicher, stand } from './storage.js';
-import { erzeugePseudonym, siehtAusWiePseudonym, schoenesPseudonym } from './pseudonym.js';
+import { erzeugePseudonym, siehtAusWiePseudonym, schoenesPseudonym, tierSymbol } from './pseudonym.js';
 import { sprich, stopp, spracheVerfuegbar, deutscheStimmen, setzeStimme, aktuelleStimme, tempo, setzeTempo } from './sprache.js';
 import {
   initSymbole, bildElement, wortInfo, anzahlBilder, speichereBild, loescheSatz, wortAusDateiname, ladeArasaac, veralteteArasaac,
@@ -27,7 +27,34 @@ function zeige(...knoten) {
   app.replaceChildren(...knoten);
   window.scrollTo(0, 0);
   aktualisiereFuss();
+  aktualisiereWer();
 }
+
+// Angemeldetes Kind: steht auf jeder Seite oben. Abmelden nur für die Lehrkraft.
+const einPersonenModus = () => einstellungen().einPersonen !== false;
+
+function aktualisiereWer() {
+  const leiste = document.getElementById('wer');
+  const p = speicher.aktiv();
+  leiste.hidden = !p;
+  if (!p) return leiste.replaceChildren();
+  const schild = schuetze(h('button', { type: 'button', class: 'wer-schild', 'aria-label': `Angemeldet: ${p}` },
+    h('span', { class: 'wer-tier', 'aria-hidden': 'true' }, tierSymbol(p)), h('span', {}, p)), () => abmeldenDialog(p));
+  leiste.replaceChildren(schild);
+}
+
+function abmeldenDialog(p) {
+  if (!confirm(`${p} auf diesem iPad abmelden? Die Ergebnisse bleiben gespeichert.`)) return;
+  speicher.abmelden();
+  startseite();
+}
+
+// Kopf der Kinderseite: im Ein-Personen-Modus kommt nur die Lehrkraft zur Startseite zurück
+const kindKopf = (titel) =>
+  h('header', { class: 'kopf' },
+    einPersonenModus() ? lehrkraftKnopf('Startseite', startseite) : knopf('← Zurück', startseite, 'knopf klein leise'),
+    h('h1', {}, titel),
+    h('span'));
 
 const kopf = (titel, zurueck) =>
   h('header', { class: 'kopf' },
@@ -89,25 +116,35 @@ async function kopieren(text, knopfEl) {
 
 // ---------- Startseite ----------
 function startseite() {
+  const aktiv = speicher.aktiv();
   zeige(
     h('main', { class: 'start' },
       h('h1', { class: 'titel' }, 'Förderdiagnostik'),
       h('p', { class: 'unter' }, 'Lesen · Schreiben · Mathe · Hören'),
       h('div', { class: 'kacheln' },
-        h('button', { class: 'kachel kind', type: 'button', onclick: () => pseudonymSeite('schueler') },
-          h('span', { class: 'gross' }, '🧒'), 'Schülermodus', h('small', {}, 'Das Kind bearbeitet Aufgaben')),
+        aktiv
+          ? h('button', { class: 'kachel kind', type: 'button', onclick: () => bereichSeite(aktiv) },
+            h('span', { class: 'gross' }, tierSymbol(aktiv)), 'Schülermodus', h('small', {}, `Weiter als ${aktiv}`))
+          : h('button', { class: 'kachel kind', type: 'button', onclick: () => pseudonymSeite('schueler') },
+            h('span', { class: 'gross' }, '🧒'), 'Schülermodus', h('small', {}, 'Das Kind bearbeitet Aufgaben')),
         schuetze(h('button', { class: 'kachel', type: 'button' },
           h('span', { class: 'gross' }, '📋'), 'Lehrkraftmodus', h('small', {}, pinGesetzt() ? 'mit PIN' : 'lange drücken')), () => pseudonymSeite('lehrkraft'))),
-      lehrkraftKnopf('Protokolle und Einstellungen', verwaltung, 'knopf leise'),
+      h('div', { class: 'reihe mittig' },
+        aktiv && lehrkraftKnopf('Anderes Kind anmelden', () => pseudonymSeite('schueler'), 'knopf leise'),
+        lehrkraftKnopf('Protokolle und Einstellungen', verwaltung, 'knopf leise')),
       !spracheVerfuegbar() && h('p', { class: 'hinweis' }, 'Dieser Browser hat keine Sprachausgabe. Bitte Safari verwenden.')));
 }
 
 // ---------- Pseudonym ----------
 function pseudonymSeite(modus) {
   const weiter = (p) => {
-    speicher.merkePseudonym(p);
-    if (modus === 'schueler') bereichSeite(p);
-    else lehrkraftMenue(p);
+    if (modus === 'schueler') {
+      speicher.setzeAktiv(p);
+      bereichSeite(p);
+    } else {
+      speicher.merkePseudonym(p);
+      lehrkraftMenue(p);
+    }
   };
   const neu = () => {
     let p = erzeugePseudonym(speicher.pseudonyme());
@@ -126,7 +163,10 @@ function pseudonymSeite(modus) {
   };
   const vorhanden = () => {
     const bekannt = speicher.pseudonyme();
-    const feld = h('input', { type: 'text', class: 'eingabe', list: 'bekannte', autocomplete: 'off', autocapitalize: 'words', placeholder: 'z. B. Blauer Fuchs 47' });
+    const feld = h('input', { type: 'text', class: 'eingabe', list: 'bekannte', lang: 'de', autocomplete: 'off', autocorrect: 'off', autocapitalize: 'words', spellcheck: 'false', enterkeyhint: 'go', placeholder: 'z. B. Blauer Fuchs 47' });
+    feld.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Enter') pruefe();
+    });
     const meldung = h('p', { class: 'hinweis', hidden: true });
     const pruefe = () => {
       const p = schoenesPseudonym(feld.value);
@@ -161,24 +201,53 @@ function pseudonymSeite(modus) {
 }
 
 // ---------- Schülermodus ----------
+const BEREICHE = [
+  { id: 'lesen', titel: 'Lesen', symbol: '📖' },
+  { id: 'rechtschreibung', titel: 'Schreiben', symbol: '✏️' },
+  { id: 'mathe', titel: 'Mathe', symbol: '🔢' },
+  { id: 'hoeren', titel: 'Hören', symbol: '👂' },
+];
+
+const kurzDatum = (iso) => new Date(iso).toLocaleDateString('de-DE', { day: 'numeric', month: 'numeric' });
+
+// Was das Kind schon gemacht hat, ohne Ergebnisse zu verraten: geschafft, angefangen oder noch offen
+function bereichStand(tests, id) {
+  const eigene = tests.filter((t) => t.bereich === id);
+  const fertig = eigene.filter((t) => testStatus(t) === 'abgeschlossen');
+  if (fertig.length) return { art: 'geschafft', anzahl: fertig.length, datum: fertig[fertig.length - 1].datum };
+  if (eigene.length) return { art: 'angefangen', datum: eigene[eigene.length - 1].datum };
+  return { art: 'offen' };
+}
+
+function standZeile(stand) {
+  if (stand.art === 'geschafft') {
+    return h('small', { class: 'stand geschafft' }, `✅ Geschafft am ${kurzDatum(stand.datum)}`, stand.anzahl > 1 ? ` (${stand.anzahl}-mal)` : '');
+  }
+  if (stand.art === 'angefangen') return h('small', { class: 'stand angefangen' }, `⏳ Angefangen am ${kurzDatum(stand.datum)}`);
+  return h('small', { class: 'stand offen' }, '○ Noch offen');
+}
+
 function bereichSeite(p) {
-  const bereiche = [
-    { id: 'lesen', titel: 'Lesen', symbol: '📖', bereit: true },
-    { id: 'rechtschreibung', titel: 'Schreiben', symbol: '✏️', bereit: true },
-    { id: 'mathe', titel: 'Mathe', symbol: '🔢', bereit: true },
-    { id: 'hoeren', titel: 'Hören', symbol: '👂', bereit: true },
-  ];
+  const tests = speicher.tests(p);
+  const lesen = speicher.lautlesen(p);
+  const staende = BEREICHE.map((b) => bereichStand(tests, b.id));
+  const geschafft = staende.filter((st) => st.art === 'geschafft').length;
   const vorlesen = h('button', { class: 'kachel', type: 'button', onclick: () => vorleseAuswahl(p) },
-    h('span', { class: 'gross' }, '🗣️'), 'Vorlesen', h('small', {}, 'Text zum lauten Lesen'));
+    h('span', { class: 'gross' }, '🗣️'), 'Vorlesen',
+    lesen.length ? h('small', { class: 'stand geschafft' }, `✅ Gelesen am ${kurzDatum(lesen[lesen.length - 1].datum)}`) : h('small', {}, 'Text zum lauten Lesen'));
   zeige(
-    kopf(p, startseite),
+    kindKopf('Meine Aufgaben'),
     h('main', { class: 'mitte' },
+      h('div', { class: 'geschafft-leiste', 'aria-label': `${geschafft} von ${BEREICHE.length} geschafft` },
+        h('span', { class: 'sterne gross-sterne', 'aria-hidden': 'true' }, staende.map((st) => h('span', { class: st.art === 'geschafft' ? 'an' : '' }, '★'))),
+        h('span', {}, geschafft === BEREICHE.length ? 'Alles geschafft!' : `${geschafft} von ${BEREICHE.length} geschafft`)),
       h('h2', {}, 'Was möchtest du machen?'),
       h('div', { class: 'kacheln' },
-        bereiche.map((b) =>
-          h('button', { class: 'kachel', type: 'button', disabled: !b.bereit, onclick: () => stufeSeite(p, daten[b.id]) },
-            h('span', { class: 'gross' }, b.symbol), b.titel, !b.bereit && h('small', {}, 'folgt bald'))), vorlesen),
+        BEREICHE.map((b, i) =>
+          h('button', { class: `kachel ${staende[i].art}`, type: 'button', onclick: () => stufeSeite(p, daten[b.id]) },
+            h('span', { class: 'gross' }, b.symbol), b.titel, standZeile(staende[i]))), vorlesen),
       lehrkraftKnopf('📦 Lehrkraft: alle Daten exportieren', () => exportSeite(p, { zurueck: () => bereichSeite(p) }))));
+  sprich(geschafft ? `Du hast schon ${geschafft} von ${BEREICHE.length} geschafft. Was möchtest du machen?` : 'Was möchtest du machen?');
 }
 
 // Schülermodus: Text zum lauten Lesen, ohne Bedienelemente für das Kind
@@ -361,8 +430,8 @@ function testEnde(lauf, abgebrochen) {
       h('div', { class: 'ende-lehrkraft' },
         // Nur falls der Browser nicht speichern konnte: Protokoll direkt sichern
         !gespeichert && knopf('Speichern fehlgeschlagen: Protokoll sichern', () => schuelerProtokollSeite(ergebnis, startseite), 'knopf klein warnung lehrkraft'),
-        lehrkraftKnopf('📦 Alle Daten exportieren', () => exportSeite(ergebnis.pseudonym, { zurueck: startseite })),
-        lehrkraftKnopf('Fertig', startseite))));
+        lehrkraftKnopf('📦 Alle Daten exportieren', () => exportSeite(ergebnis.pseudonym, { zurueck: () => bereichSeite(ergebnis.pseudonym) })),
+        lehrkraftKnopf('Fertig', () => bereichSeite(ergebnis.pseudonym)))));
   sprich('Geschafft! Das hast du toll gemacht.');
 }
 
@@ -803,6 +872,24 @@ function eigenesSeite() {
       h('p', { class: 'hinweis' }, 'Damit eigene Wörter und Texte auch auf dem Schüler-iPad erscheinen: Protokolle und Einstellungen → Senden (mit Häkchen „Eigene Wörter und Vorlesetexte“).')));
 }
 
+// ---------- Angemeldetes Kind ----------
+function anmeldeKarte() {
+  const aktiv = speicher.aktiv();
+  const ein = h('input', { type: 'checkbox', checked: einPersonenModus() });
+  ein.addEventListener('change', () => speichereEinstellungen({ einPersonen: ein.checked }));
+  return h('section', { class: 'karte' },
+    h('h2', {}, 'Angemeldetes Kind'),
+    h('p', {}, aktiv ? `Auf diesem iPad ist ${aktiv} angemeldet.` : 'Auf diesem iPad ist gerade kein Kind angemeldet.'),
+    h('label', { class: 'haken' }, ein, ' Ein-Personen-Modus: Dieses iPad gehört einem Kind. Die App öffnet direkt dessen Aufgaben, zurück zur Startseite geht es nur für die Lehrkraft.'),
+    h('div', { class: 'reihe' },
+      aktiv && knopf('Abmelden', () => {
+        speicher.abmelden();
+        verwaltung();
+      }, 'knopf klein leise'),
+      knopf(aktiv ? 'Anderes Kind anmelden' : 'Kind anmelden', () => pseudonymSeite('schueler'), 'knopf klein leise')),
+    h('p', { class: 'unter' }, 'Das Pseudonym steht oben auf jeder Seite. Lange drücken (oder PIN) auf das Pseudonym meldet ab. Was ein Kind schon gemacht hat, sieht es selbst auf „Meine Aufgaben“; die Stufen stehen unten bei den Pseudonymen.'));
+}
+
 // ---------- Lehrkraft-Sperre ----------
 function sperrKarte() {
   const status = h('p', { class: 'unter' }, pinGesetzt()
@@ -886,6 +973,9 @@ function bedienungKarte() {
     h('label', { class: 'textzeile' }, 'Antwort per Sprache (das Kind sagt die Antwort)',
       auswahl('sprachantwort', [['aus', 'aus'], ['knopf', 'mit Mikrofon-Knopf'], ['auto', 'Mikrofon hört nach jeder Frage automatisch zu']])),
     !erkennungVerfuegbar() && h('p', { class: 'hinweis' }, 'Dieser Browser hat keine Spracherkennung. Auf dem iPad in Safari verwenden; dort muss unter Einstellungen → Allgemein → Tastatur die Diktierfunktion eingeschaltet sein.'),
+    h('label', { class: 'textzeile' }, 'Tastatur beim Bilder-Beschriften',
+      auswahl('tastatur', [['ipad', 'iPad-Tastatur (Standard)'], ['qwertz', 'Buchstabentasten in der App, QWERTZ'], ['abc', 'Buchstabentasten in der App, ABC']])),
+    einstellungen().tastatur === 'ipad' && einstellungen().taster !== 'aus' && h('p', { class: 'unter' }, 'Bei Tasterbedienung nimmt die App automatisch die QWERTZ-Buchstabentasten, weil die iPad-Tastatur nicht per Scanning bedienbar ist.'),
     h('label', { class: 'textzeile' }, 'Tempo der Markierung (1 Taster)',
       auswahl('scanTempo', [[1500, '1,5 Sekunden'], [2000, '2 Sekunden'], [3000, '3 Sekunden'], [4000, '4 Sekunden']])),
     h('p', { class: 'unter' },
@@ -1039,6 +1129,7 @@ function verwaltung() {
         h('h2', {}, 'Eigene Wörter und Texte'),
         h('p', { class: 'unter' }, `${Object.keys(eigeneWoerter()).length} eigene Wörter, ${eigeneTexte().length} eigene Vorlesetexte.`),
         knopf('Bearbeiten', eigenesSeite, 'knopf leise')),
+      anmeldeKarte(),
       sperrKarte(),
       bedienungKarte(),
       stimmenKarte(),
@@ -1097,7 +1188,9 @@ async function init() {
   const veraltet = veralteteArasaac();
   if (veraltet.length && navigator.onLine) ladeArasaac(() => {}, veraltet).catch(() => {});
   wendeAn();
-  startseite();
+  const aktiv = speicher.aktiv();
+  if (aktiv && einPersonenModus()) bereichSeite(aktiv);
+  else startseite();
   if ('serviceWorker' in navigator && location.protocol === 'https:') {
     navigator.serviceWorker.register('sw.js').catch(() => {});
   }
