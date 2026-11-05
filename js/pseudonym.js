@@ -4,6 +4,17 @@ const FARBEN = ['Blauer', 'Roter', 'Grüner', 'Gelber', 'Bunter', 'Goldener', 'S
 const TIERE = ['Fuchs', 'Bär', 'Igel', 'Hase', 'Löwe', 'Tiger', 'Pinguin', 'Delfin', 'Biber', 'Dachs',
   'Elch', 'Falke', 'Frosch', 'Wal', 'Uhu', 'Luchs', 'Otter', 'Panda', 'Koala', 'Papagei'];
 
+// Tier als Bild, damit auch Kinder, die noch nicht lesen, ihr Pseudonym erkennen
+const TIER_SYMBOL = {
+  fuchs: '🦊', 'bär': '🐻', igel: '🦔', hase: '🐰', 'löwe': '🦁', tiger: '🐯', pinguin: '🐧', delfin: '🐬', biber: '🦫', dachs: '🦡',
+  elch: '🫎', falke: '🦅', frosch: '🐸', wal: '🐳', uhu: '🦉', luchs: '🐱', otter: '🦦', panda: '🐼', koala: '🐨', papagei: '🦜',
+};
+
+export function tierSymbol(p) {
+  const tier = String(p || '').trim().split(/\s+/)[1]?.toLowerCase();
+  return TIER_SYMBOL[tier] || '🙂';
+}
+
 const zufall = (liste) => liste[Math.floor(Math.random() * liste.length)];
 
 export function erzeugePseudonym(vorhanden = []) {
