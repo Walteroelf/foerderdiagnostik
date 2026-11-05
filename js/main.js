@@ -1,7 +1,7 @@
 import { h, knopf } from './dom.js';
 import { anweisung, optionInhalt, optionSprechtext, legenSeite, satzLegenSeite, tastaturSeite, vorlageKlasse } from './aufgaben.js';
 import { aktivierbar, neueSeite, scanStopp, einstellungen, speichereEinstellungen, wendeAn } from './bedienung.js';
-import { speicher } from './storage.js';
+import { speicher, stand } from './storage.js';
 import { erzeugePseudonym, siehtAusWiePseudonym, schoenesPseudonym } from './pseudonym.js';
 import { sprich, stopp, spracheVerfuegbar, deutscheStimmen, setzeStimme, aktuelleStimme, tempo, setzeTempo } from './sprache.js';
 import {
@@ -11,7 +11,8 @@ import { Testlauf } from './testlauf.js';
 import { hatAufgaben } from './generatoren.js';
 import { foerderziele } from './foerderziele.js';
 import { erkennungVerfuegbar, hoereZu, hoerAuf, findeAntwort } from './spracheingabe.js';
-import { schuelerText, bogenText, gesamtText, lautleseText, dateiname } from './protokoll.js';
+import { schuelerText, bogenText, lautleseText, dateibasis, testStatus, STATUS_TEXT } from './protokoll.js';
+import { erstelleGesamtexport } from './export.js';
 import { schuetze, pinGesetzt, setzePin, entfernePin, pinDialog } from './sperre.js';
 import { eigeneWoerter, eigeneTexte, speichereWort, loescheWort, speichereText, loescheText, schluesselFuer } from './eigenes.js';
 import { erstellePaket, importierePaket, zusammenfassung, zeigeQr, starteScanner } from './uebertragung.js';
@@ -176,7 +177,8 @@ function bereichSeite(p) {
       h('div', { class: 'kacheln' },
         bereiche.map((b) =>
           h('button', { class: 'kachel', type: 'button', disabled: !b.bereit, onclick: () => stufeSeite(p, daten[b.id]) },
-            h('span', { class: 'gross' }, b.symbol), b.titel, !b.bereit && h('small', {}, 'folgt bald'))), vorlesen)));
+            h('span', { class: 'gross' }, b.symbol), b.titel, !b.bereit && h('small', {}, 'folgt bald'))), vorlesen),
+      lehrkraftKnopf('📦 Lehrkraft: alle Daten exportieren', () => exportSeite(p, { zurueck: () => bereichSeite(p) }))));
 }
 
 // Schülermodus: Text zum lauten Lesen, ohne Bedienelemente für das Kind
@@ -243,6 +245,8 @@ function aufgabeSeite(lauf) {
     hoerAuf();
     el.classList.add('gewaehlt');
     lauf.antworte(wert, performance.now() - start, gesprochen);
+    // Zwischenstand sofort sichern: Pausieren, Export oder ein leerer Akku verlieren dann nichts
+    speicher.speichereTest(lauf.zwischenstand());
     const lob = LOB[Math.floor(Math.random() * LOB.length)];
     app.append(h('div', { class: 'lob' }, h('span', {}, '⭐'), lob));
     setTimeout(() => weiter(lauf), 900);
@@ -291,7 +295,9 @@ function aufgabeSeite(lauf) {
     h('div', { class: 'testleiste' },
       h('div', { class: 'sterne', 'aria-label': `Aufgabe ${lauf.index + 1} von ${gesamt}` },
         Array.from({ length: gesamt }, (_, i) => h('span', { class: i < lauf.index ? 'an' : '' }, '★'))),
-      lehrkraftKnopf('Beenden', () => testEnde(lauf, true))),
+      h('div', { class: 'reihe' },
+        lehrkraftKnopf('Pause', () => pauseSeite(lauf)),
+        lehrkraftKnopf('Beenden', () => testEnde(lauf, true)))),
     h('main', { class: 'aufgabe' },
       h('div', { class: 'anweisung' }, vorlesen(anw.sprache), h('p', {}, anw.text)),
       anw.vorlage && h('div', { class: `vorlage ${vorlageKlasse(a)}` }, anw.vorlage),
@@ -324,6 +330,25 @@ function weiter(lauf) {
   sprich('Super! Jetzt kommen neue Aufgaben. Tippe auf Weiter.');
 }
 
+// Pause während einer Übung (nur Lehrkraft): Zwischenstand exportieren, danach weitermachen
+function pauseSeite(lauf) {
+  hoerAuf();
+  const t = lauf.ergebnis;
+  const beantwortet = Object.values(t.stufen).reduce((n, st) => n + st.antworten.length, 0);
+  const zurUebung = () => aufgabeSeite(lauf);
+  zeige(
+    kopf(`Pause: ${t.pseudonym}`, zurUebung),
+    h('main', { class: 'mitte' },
+      h('section', { class: 'karte' },
+        h('h2', {}, `${t.bereichTitel}, Stufe ${lauf.stufe}`),
+        h('p', {}, `${beantwortet} Aufgabe(n) beantwortet. Alles bis hierher ist gespeichert.`),
+        h('p', { class: 'unter' }, 'Du kannst jetzt einen Zwischenstand exportieren. Später, wenn das Kind weitergemacht hat, enthält ein neuer Export den kompletten Stand.')),
+      h('div', { class: 'reihe' },
+        knopf('▶ Weiter mit der Übung', zurUebung),
+        knopf('📦 Zwischenstand exportieren', () => exportSeite(t.pseudonym, { zurueck: () => pauseSeite(lauf), fuss: knopf('▶ Zurück zur Übung', zurUebung) }), 'knopf leise'),
+        knopf('Übung beenden', () => testEnde(lauf, true), 'knopf leise'))));
+}
+
 function testEnde(lauf, abgebrochen) {
   hoerAuf();
   const ergebnis = lauf.abschliessen(abgebrochen);
@@ -336,34 +361,47 @@ function testEnde(lauf, abgebrochen) {
       h('div', { class: 'ende-lehrkraft' },
         // Nur falls der Browser nicht speichern konnte: Protokoll direkt sichern
         !gespeichert && knopf('Speichern fehlgeschlagen: Protokoll sichern', () => schuelerProtokollSeite(ergebnis, startseite), 'knopf klein warnung lehrkraft'),
+        lehrkraftKnopf('📦 Alle Daten exportieren', () => exportSeite(ergebnis.pseudonym, { zurueck: startseite })),
         lehrkraftKnopf('Fertig', startseite))));
   sprich('Geschafft! Das hast du toll gemacht.');
 }
 
 // ---------- Protokollanzeige ----------
-function protokollSeite({ titel, text, json, basis, zurueck, oben }) {
-  const kopierKnopf = knopf('📋 In Zwischenablage kopieren', () => kopieren(text, kopierKnopf));
-  const teilen = async () => {
+// beiExport: wird beim ersten Kopieren, Speichern oder Teilen aufgerufen (Gesamtexport merkt sich den Zeitpunkt)
+// pseudonym: zeigt zusätzlich den Knopf „Alle Daten exportieren“
+function protokollSeite({ titel, text, json, basis, zurueck, oben, beiExport, pseudonym, fuss }) {
+  let gemerkt = false;
+  const exportiert = (fn) => (...args) => {
+    if (beiExport && !gemerkt) {
+      gemerkt = true;
+      beiExport();
+    }
+    return fn(...args);
+  };
+  const kopierKnopf = knopf('📋 In Zwischenablage kopieren', exportiert(() => kopieren(text, kopierKnopf)));
+  const teilen = exportiert(async () => {
     const datei = new File([JSON.stringify(json, null, 2)], basis + '.json', { type: 'application/json' });
     try {
       await navigator.share({ files: [datei], title: titel });
     } catch {
       /* abgebrochen */
     }
-  };
+  });
   const kannTeilen = navigator.canShare?.({ files: [new File(['x'], 'x.json', { type: 'application/json' })] });
   zeige(
     kopf(titel, zurueck),
     h('main', { class: 'protokoll' },
       h('div', { class: 'reihe' },
         kopierKnopf,
-        knopf('💾 Als Text speichern (.md)', () => laden(basis + '.md', text, 'text/markdown'), 'knopf leise'),
-        knopf('💾 Als Datei speichern (.json)', () => laden(basis + '.json', JSON.stringify(json, null, 2), 'application/json'), 'knopf leise'),
+        knopf('💾 Als Text speichern (.md)', exportiert(() => laden(basis + '.md', text, 'text/markdown')), 'knopf leise'),
+        knopf('💾 Als Datei speichern (.json)', exportiert(() => laden(basis + '.json', JSON.stringify(json, null, 2), 'application/json')), 'knopf leise'),
         kannTeilen && knopf('📤 Teilen / in Dateien sichern', teilen, 'knopf leise')),
+      pseudonym && h('div', { class: 'reihe' },
+        knopf(`📦 Alle Daten von ${pseudonym} exportieren`, () => exportSeite(pseudonym, { zurueck }), 'knopf klein leise')),
       hinweisSpeicher(),
       oben,
       h('pre', { class: 'text' }, text),
-      knopf('Zur Startseite', startseite, 'knopf leise')));
+      fuss || knopf('Zur Startseite', startseite, 'knopf leise')));
 }
 
 function zielKarte(ziele) {
@@ -380,7 +418,8 @@ function schuelerProtokollSeite(test, zurueck) {
     text: schuelerText(test, speicher.tests(test.pseudonym)),
     json: test,
     oben: zielKarte(foerderziele(test)),
-    basis: dateiname('schuelerprotokoll', test.pseudonym, test.bereich, '').replace(/\.$/, ''),
+    basis: dateibasis('schuelerprotokoll', test.pseudonym, test.bereich),
+    pseudonym: test.pseudonym,
     zurueck,
   });
 }
@@ -390,7 +429,40 @@ function bogenProtokollSeite(bogen, zurueck) {
     titel: 'Kompetenzprotokoll',
     text: bogenText(bogen, daten.bogen),
     json: bogen,
-    basis: dateiname('kompetenzprotokoll', bogen.pseudonym, '', '').replace(/\.$/, ''),
+    basis: dateibasis('kompetenzprotokoll', bogen.pseudonym),
+    pseudonym: bogen.pseudonym,
+    zurueck,
+  });
+}
+
+// ---------- Gesamtexport je Pseudonym ----------
+const zeitText = (iso) =>
+  new Date(iso).toLocaleString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + ' Uhr';
+
+function exportSeite(p, { zurueck, fuss } = {}) {
+  const ex = erstelleGesamtexport(p, daten.bogen);
+  if (ex.leer) {
+    zeige(
+      kopf('Alle Daten exportieren', zurueck),
+      h('main', { class: 'mitte' },
+        h('p', {}, `Für ${p} sind auf diesem iPad noch keine Daten gespeichert.`),
+        fuss || knopf('Zurück', zurueck, 'knopf leise')));
+    return;
+  }
+  protokollSeite({
+    titel: `Alle Daten: ${p}`,
+    text: ex.text,
+    json: ex.json,
+    basis: ex.basis,
+    beiExport: ex.merken,
+    fuss,
+    oben: h('section', { class: 'karte' },
+      h('h2', {}, `📦 Export Nr. ${ex.exportNr} vom ${zeitText(ex.exportiertAm)}`),
+      h('p', {}, ex.letzterExport
+        ? `Vorheriger Export: ${zeitText(ex.letzterExport.zeitpunkt)}. Seitdem neu oder geändert: ${ex.anzahlNeu}.`
+        : 'Erster Export für dieses Pseudonym auf diesem iPad.'),
+      ex.laufend > 0 && h('p', { class: 'hinweis' }, `${ex.laufend} Übung(en) noch nicht beendet. Das ist ein Zwischenstand; ein späterer Export enthält den kompletten Stand.`),
+      h('p', { class: 'unter' }, 'Der Export enthält immer alle Daten dieses Pseudonyms. Der Zeitpunkt wird gemerkt, sobald du kopierst, speicherst oder teilst. Der Dateiname enthält Datum und Uhrzeit.')),
     zurueck,
   });
 }
@@ -404,7 +476,9 @@ function lehrkraftMenue(p) {
         h('button', { class: 'kachel', type: 'button', onclick: () => bogenSeite(p) },
           h('span', { class: 'gross' }, '📋'), 'Kompetenzbogen', h('small', {}, 'Einschätzung ausfüllen oder aktualisieren')),
         h('button', { class: 'kachel', type: 'button', onclick: () => lautLesenAuswahl(p) },
-          h('span', { class: 'gross' }, '🗣️'), 'Lautes Lesen', h('small', {}, 'Kind liest vor, du tippst Fehler mit')))));
+          h('span', { class: 'gross' }, '🗣️'), 'Lautes Lesen', h('small', {}, 'Kind liest vor, du tippst Fehler mit')),
+        h('button', { class: 'kachel', type: 'button', onclick: () => exportSeite(p, { zurueck: () => lehrkraftMenue(p) }) },
+          h('span', { class: 'gross' }, '📦'), 'Alle Daten exportieren', h('small', {}, 'Zwischenstand oder kompletter Stand mit Zeitstempel')))));
 }
 
 // ---------- Lehrkraftmodus: Lautes Lesen ----------
@@ -534,7 +608,8 @@ function lautleseProtokollSeite(r, zurueck) {
     titel: 'Protokoll lautes Lesen',
     text: lautleseText(r, speicher.lautlesen(r.pseudonym)),
     json: r,
-    basis: dateiname('lautlesen', r.pseudonym, '', '').replace(/\.$/, ''),
+    basis: dateibasis('lautlesen', r.pseudonym),
+    pseudonym: r.pseudonym,
     zurueck,
   });
 }
@@ -543,11 +618,14 @@ function lautleseProtokollSeite(r, zurueck) {
 function bogenSeite(p) {
   const def = daten.bogen;
   const bogen = speicher.bogen(p) || {
-    typ: 'kompetenzprotokoll', version: 1, pseudonym: p, erstellt: new Date().toISOString(), aktualisiert: new Date().toISOString(), antworten: {}, notizen: {},
+    typ: 'kompetenzprotokoll', version: 1, pseudonym: p, erstellt: new Date().toISOString(), aktualisiert: new Date().toISOString(), antworten: {}, notizen: {}, zeitpunkte: {},
   };
+  bogen.zeitpunkte ||= {};
   const status = h('span', { class: 'status' }, speicher.bogen(p) ? 'Vorhandener Bogen geladen.' : 'Neuer Bogen.');
-  const sichern = () => {
+  // key: welche Angabe geändert wurde (Zeitpunkt je Angabe, damit Änderungen nachvollziehbar sind)
+  const sichern = (key) => {
     bogen.aktualisiert = new Date().toISOString();
+    if (key) bogen.zeitpunkte[key] = bogen.aktualisiert;
     status.textContent = speicher.speichereBogen(bogen) ? '✓ Gespeichert' : 'Speichern nicht möglich, bitte als Datei sichern.';
   };
 
@@ -558,7 +636,7 @@ function bogenSeite(p) {
         const ta = h('textarea', { rows: 3, placeholder: item.platzhalter || '' }, bogen.antworten[key] || '');
         ta.addEventListener('input', () => {
           bogen.antworten[key] = ta.value.trim();
-          sichern();
+          sichern(key);
         });
         return h('label', { class: 'textzeile' }, item.text, ta);
       }
@@ -570,7 +648,7 @@ function bogenSeite(p) {
           if (neu) bogen.antworten[key] = neu;
           else delete bogen.antworten[key];
           knoepfe.forEach((k) => k.classList.toggle('an', k.textContent === neu));
-          sichern();
+          sichern(key);
         });
         return el;
       });
@@ -582,7 +660,7 @@ function bogenSeite(p) {
       const ta = h('textarea', { rows: 2, placeholder: 'Notiz (optional, ohne identifizierende Angaben)' }, bogen.notizen[b.id] || '');
       ta.addEventListener('input', () => {
         bogen.notizen[b.id] = ta.value.trim();
-        sichern();
+        sichern(`notiz.${b.id}`);
       });
       notiz = ta;
     }
@@ -854,38 +932,32 @@ function verwaltung() {
     const tests = speicher.tests(p);
     const bogen = speicher.bogen(p);
     const lesen = speicher.lautlesen(p);
+    const letzter = speicher.letzterExport(p);
+    const neuSeit = letzter ? [...tests, ...lesen, ...(bogen ? [bogen] : [])].filter((x) => stand(x) > letzter.zeitpunkt).length : 0;
     return h('section', { class: 'karte' },
       h('h2', {}, p),
+      h('p', { class: 'unter' }, letzter
+        ? `Letzter Export: ${zeitText(letzter.zeitpunkt)}` + (neuSeit ? ` · seitdem ${neuSeit} neu oder geändert` : ' · seitdem nichts Neues')
+        : 'Noch nicht exportiert.'),
       fortschritt(tests, lesen),
       h('details', {},
         h('summary', {}, `Einzelne Protokolle (${tests.length + lesen.length})`),
         h('ul', { class: 'eintraege' },
           tests.map((t) =>
             h('li', {},
-              h('span', {}, `${tag(t.datum)} · ${t.bereichTitel} · sicher: ${t.erreichteStufe ? 'Stufe ' + t.erreichteStufe : 'keine Stufe'}`),
+              h('span', {}, `${zeitText(t.datum)} · ${t.bereichTitel} · sicher: ${t.erreichteStufe ? 'Stufe ' + t.erreichteStufe : 'keine Stufe'}` +
+                (testStatus(t) === 'abgeschlossen' ? '' : ` · ${STATUS_TEXT[testStatus(t)]}`)),
               knopf('Anzeigen', () => schuelerProtokollSeite(t, verwaltung), 'knopf klein leise'))),
           lesen.map((r) =>
             h('li', {},
-              h('span', {}, `${tag(r.datum)} · Lautes Lesen „${r.titel}“ · ${r.wcpm} Wörter/Min.`),
+              h('span', {}, `${zeitText(r.datum)} · Lautes Lesen „${r.titel}“ · ${r.wcpm} Wörter/Min.`),
               knopf('Anzeigen', () => lautleseProtokollSeite(r, verwaltung), 'knopf klein leise'))))),
       h('div', { class: 'reihe' },
         bogen
           ? knopf(`Kompetenzbogen (Stand ${tag(bogen.aktualisiert)})`, () => bogenProtokollSeite(bogen, verwaltung), 'knopf klein leise')
           : h('span', { class: 'unter' }, 'Noch kein Kompetenzbogen.'),
         knopf('Kompetenzbogen bearbeiten', () => bogenSeite(p), 'knopf klein leise'),
-        knopf('Gesamtprotokoll', () => {
-          if (!(tests.length || lesen.length) || !bogen) {
-            alert('Für das Gesamtprotokoll braucht es ein Schüler- oder Leseprotokoll und einen Kompetenzbogen. Importiere die fehlende Datei vom anderen iPad.');
-            return;
-          }
-          protokollSeite({
-            titel: 'Gesamtprotokoll',
-            text: gesamtText(tests, bogen, daten.bogen, lesen),
-            json: { typ: 'gesamtprotokoll', pseudonym: p, kompetenz: bogen, tests, lautlesen: lesen },
-            basis: dateiname('gesamtprotokoll', p, '', '').replace(/\.$/, ''),
-            zurueck: verwaltung,
-          });
-        }, 'knopf klein')));
+        knopf('📦 Alle Daten exportieren', () => exportSeite(p, { zurueck: verwaltung }), 'knopf klein')));
   });
 
   const importFeld = h('input', { type: 'file', accept: '.json,application/json', multiple: true, hidden: true });
@@ -908,10 +980,12 @@ function verwaltung() {
         } else if (d.typ === 'lautleseprotokoll' && d.pseudonym) {
           speicher.speichereLautlesen(d);
           n++;
-        } else if (d.typ === 'gesamtprotokoll') {
+        } else if (d.typ === 'gesamtexport' || d.typ === 'gesamtprotokoll') {
+          // Späterer Export enthält den kompletten Stand; neuere Daten auf diesem iPad bleiben erhalten
           d.tests?.forEach((t) => speicher.speichereTest(t));
           d.lautlesen?.forEach((r) => speicher.speichereLautlesen(r));
-          if (d.kompetenz) speicher.speichereBogen(d.kompetenz);
+          const alt = d.kompetenz && speicher.bogen(d.kompetenz.pseudonym);
+          if (d.kompetenz && (!alt || alt.aktualisiert <= d.kompetenz.aktualisiert)) speicher.speichereBogen(d.kompetenz);
           n++;
         } else fehler.push(datei.name);
       } catch {

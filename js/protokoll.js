@@ -1,9 +1,11 @@
 // Protokolle als KI-freundlicher Text (Markdown) und als JSON-Datei.
 import { SICHER_AB } from './testlauf.js';
 import { foerderziele } from './foerderziele.js';
+import { stand } from './storage.js';
 
 const datumText = (iso) =>
   new Date(iso).toLocaleString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + ' Uhr';
+const uhrText = (iso) => new Date(iso).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) + ' Uhr';
 const tagText = (iso) => new Date(iso).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
 const sek = (ms) => (ms / 1000).toLocaleString('de-DE', { maximumFractionDigits: 1 }) + ' s';
 const prozent = (x) => Math.round(x * 100) + ' %';
@@ -61,6 +63,16 @@ function matheHinweise(test) {
   return out;
 }
 
+// Status einer Übung (ältere Protokolle haben noch kein Feld „status“)
+export const testStatus = (t) => t.status || (t.abgebrochen ? 'abgebrochen' : 'abgeschlossen');
+export const STATUS_TEXT = { laufend: 'noch nicht beendet', abgeschlossen: 'abgeschlossen', abgebrochen: 'vorzeitig beendet' };
+
+// Bearbeitungszeitraum, z. B. „05.11.2026, 08:10 Uhr bis 08:22 Uhr“
+function zeitraum(von, bis) {
+  if (!bis) return datumText(von);
+  return tagText(von) === tagText(bis) ? `${datumText(von)} bis ${uhrText(bis)}` : `${datumText(von)} bis ${datumText(bis)}`;
+}
+
 export function stufenBewertung(antworten) {
   const r = antworten.filter((a) => a.richtig).length;
   const q = antworten.length ? r / antworten.length : 0;
@@ -73,7 +85,9 @@ export function schuelerText(test, fruehere = []) {
   z.push(`# Schülerprotokoll Förderdiagnostik: ${test.bereichTitel}`);
   z.push('');
   z.push(`- Pseudonym: ${test.pseudonym}`);
-  z.push(`- Datum: ${datumText(test.datum)}`);
+  const status = testStatus(test);
+  z.push(`- Bearbeitet: ${zeitraum(test.datum, test.beendet)}`);
+  z.push(`- Status: ${STATUS_TEXT[status]}${status === 'laufend' ? ` (Zwischenstand vom ${datumText(stand(test))})` : ''}`);
   z.push(`- Bereich: ${test.bereichTitel}`);
   z.push(`- Einstiegsstufe: ${test.einstiegsstufe}`);
   z.push(`- Durchlaufene Stufen: ${test.verlauf.join(' → ')}`);
@@ -82,7 +96,8 @@ export function schuelerText(test, fruehere = []) {
     : `keine Stufe sicher (unterhalb von Stufe ${Math.min(...test.verlauf)})`;
   z.push(`- Sicher erreichte Stufe: ${erreicht}`);
   if (test.bedienung) z.push(`- Bedienung: ${test.bedienung}`);
-  if (test.abgebrochen) z.push('- Hinweis: Der Test wurde vorzeitig beendet.');
+  if (status === 'abgebrochen') z.push('- Hinweis: Der Test wurde vorzeitig beendet.');
+  if (status === 'laufend') z.push('- Hinweis: Die Übung ist pausiert oder wurde unterbrochen. Die Stufe, die gerade bearbeitet wird, zählt noch nicht als sicher erreicht.');
   z.push('');
   z.push('## Ergebnisse je Stufe');
   const alleFehler = {};
@@ -207,16 +222,42 @@ export function lautleseText(r, fruehere = []) {
   return z.join('\n');
 }
 
-export function gesamtText(tests, bogen, bogenDef, lesen = []) {
+// Ist ein Datensatz neu oder geändert seit dem letzten Export?
+export const istNeu = (x, letzterExport) => !letzterExport || stand(x) > letzterExport.zeitpunkt;
+
+export function gesamtText({ pseudonym, tests, bogen, bogenDef, lesen = [], exportiertAm, letzterExport, exportNr }) {
   const ebene = (text) => text.replace(/^# /m, '## ').replace(/\n### /g, '\n#### ').replace(/\n## /g, '\n### ');
-  const teile = ['# Gesamtprotokoll Förderdiagnostik', '', `Pseudonym: ${(bogen || tests[0] || lesen[0]).pseudonym}`, ''];
-  if (bogen) teile.push(ebene(bogenText(bogen, bogenDef)));
+  const neuMarke = (x) => (letzterExport && istNeu(x, letzterExport) ? ' (neu seit dem letzten Export)' : '');
+  const laufend = tests.filter((t) => testStatus(t) === 'laufend');
+  const anzahlNeu = [...tests, ...lesen, ...(bogen ? [bogen] : [])].filter((x) => istNeu(x, letzterExport)).length;
+  const teile = ['# Gesamtexport Förderdiagnostik', ''];
+  teile.push(`- Pseudonym: ${pseudonym}`);
+  teile.push(`- Exportiert am: ${datumText(exportiertAm)}`);
+  teile.push(`- Export Nr. ${exportNr} für dieses Pseudonym auf diesem iPad`);
+  teile.push(letzterExport ? `- Vorheriger Export: ${datumText(letzterExport.zeitpunkt)}` : '- Vorheriger Export: keiner (erster Export)');
+  teile.push(`- Enthalten: alle bis jetzt gespeicherten Daten, ${tests.length} Übung(en), ${lesen.length} Messung(en) lautes Lesen, ${bogen ? 'Kompetenzbogen' : 'kein Kompetenzbogen'}`);
+  if (letzterExport) teile.push(`- Neu oder geändert seit dem letzten Export: ${anzahlNeu}`);
+  if (laufend.length) {
+    teile.push('- Hinweis: Mindestens eine Übung ist noch nicht beendet. Dieser Export ist ein Zwischenstand; ein späterer Export enthält den vollständigen Stand.');
+  }
+  const verlauf = [
+    ...tests.map((t) => ({ zeit: t.datum, text: `${t.bereichTitel}, Einstieg Stufe ${t.einstiegsstufe}, ${STATUS_TEXT[testStatus(t)]}${t.beendet ? ` (bis ${uhrText(t.beendet)})` : testStatus(t) === 'laufend' ? ` (zuletzt ${datumText(stand(t))})` : ''}${neuMarke(t)}` })),
+    ...lesen.map((r) => ({ zeit: r.datum, text: `Lautes Lesen „${r.titel}“${neuMarke(r)}` })),
+    ...(bogen ? [{ zeit: bogen.aktualisiert, text: `Kompetenzbogen zuletzt geändert${neuMarke(bogen)}` }] : []),
+  ].sort((x, y) => x.zeit.localeCompare(y.zeit));
+  if (verlauf.length) {
+    teile.push('', '## Bearbeitungsverlauf');
+    verlauf.forEach((v) => teile.push(`- ${datumText(v.zeit)}: ${v.text}`));
+  }
+  if (bogen) teile.push('', ebene(bogenText(bogen, bogenDef)));
   for (const t of tests) teile.push('', ebene(schuelerText(t, tests)));
   for (const r of lesen) teile.push('', ebene(lautleseText(r, lesen)));
   teile.push('', '## Auftrag an die KI');
   teile.push(
-    'Bitte erstelle auf Grundlage des Kompetenzprotokolls und der Schüler- und Leseprotokolle konkretes, sofort einsetzbares Arbeitsmaterial ' +
-      '(z. B. 2–3 Arbeitsblätter) sowie kurze Förderhinweise für die Lehrkraft.'
+    'Bitte erstelle auf Grundlage der vorhandenen Protokolle (Kompetenzprotokoll, Schüler- und Leseprotokolle) konkretes, sofort einsetzbares Arbeitsmaterial ' +
+      '(z. B. 2–3 Arbeitsblätter) sowie kurze Förderhinweise für die Lehrkraft.' +
+      (letzterExport ? ' Falls dir ein früherer Export vorliegt, berücksichtige vor allem, was seitdem neu hinzugekommen ist.' : '') +
+      (laufend.length ? ' Noch nicht beendete Übungen sind vorläufig.' : '')
   );
   return teile.join('\n');
 }
@@ -224,7 +265,14 @@ export function gesamtText(tests, bogen, bogenDef, lesen = []) {
 const slug = (s) =>
   s.toLowerCase().replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
-export function dateiname(art, pseudonym, zusatz, endung) {
-  const tag = new Date().toISOString().slice(0, 10);
-  return [art, slug(pseudonym), zusatz, tag].filter(Boolean).join('_') + '.' + endung;
+// Zeitstempel für Dateinamen in Ortszeit, z. B. „2026-11-05_08-30“
+export function zeitstempel(zeit = new Date()) {
+  const d = new Date(zeit);
+  const z = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${z(d.getMonth() + 1)}-${z(d.getDate())}_${z(d.getHours())}-${z(d.getMinutes())}`;
+}
+
+// Dateiname ohne Endung, z. B. „gesamtexport_blauer-fuchs-47_2026-11-05_08-30“
+export function dateibasis(art, pseudonym, zusatz, zeit = new Date()) {
+  return [art, slug(pseudonym), zusatz, zeitstempel(zeit)].filter(Boolean).join('_');
 }
