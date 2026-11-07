@@ -86,6 +86,7 @@ function aktualisiereFuss() {
   if (anzahlBilder('arasaac')) {
     teile.push('Piktogramme: Sergio Palao. Herkunft: ARASAAC (https://arasaac.org). Lizenz: CC BY-NC-SA 4.0. Eigentum: Regierung von Aragonien (Spanien).');
   }
+  teile.push('© 2026 Walteroelf · Work in Progress · CC BY-NC-SA 4.0 (Lizenz: github.com/Walteroelf/foerderdiagnostik)');
   fuss.replaceChildren(...teile.map((t) => h('p', {}, t)));
 }
 
