@@ -1,4 +1,4 @@
-import { h, knopf } from './dom.js';
+import { h, knopf, setzeText } from './dom.js';
 import { anweisung, optionInhalt, optionSprechtext, legenSeite, satzLegenSeite, tastaturSeite, vorlageKlasse } from './aufgaben.js';
 import { aktivierbar, neueSeite, scanStopp, einstellungen, speichereEinstellungen, wendeAn } from './bedienung.js';
 import { speicher, stand } from './storage.js';
@@ -110,9 +110,9 @@ async function kopieren(text, knopfEl) {
     document.execCommand('copy');
     ta.remove();
   }
-  const alt = knopfEl.textContent;
-  knopfEl.textContent = '✓ Kopiert';
-  setTimeout(() => (knopfEl.textContent = alt), 2000);
+  const alt = Array.from(knopfEl.childNodes);
+  setzeText(knopfEl, '✓ Kopiert');
+  setTimeout(() => knopfEl.replaceChildren(...alt), 2000);
 }
 
 // ---------- Startseite ----------
@@ -341,12 +341,12 @@ function aufgabeSeite(lauf) {
   const zuhoeren = async () => {
     if (gewaehlt || !document.body.contains(mikro)) return;
     mikro.classList.add('hoert');
-    mikro.textContent = '👂 Ich höre zu …';
+    setzeText(mikro, '👂 Ich höre zu …');
     const varianten = await hoereZu();
     if (gewaehlt || !document.body.contains(mikro)) return;
     mikro.classList.remove('hoert');
     if (varianten === null) {
-      mikro.textContent = '🎤 Mikrofon nicht erlaubt';
+      setzeText(mikro, '🎤 Mikrofon nicht erlaubt');
       return;
     }
     const treffer = findeAntwort(varianten, kandidaten);
@@ -356,7 +356,7 @@ function aufgabeSeite(lauf) {
       return;
     }
     versuche++;
-    mikro.textContent = varianten.length ? '🎤 Nicht verstanden. Nochmal sagen' : '🎤 Sag die Antwort';
+    setzeText(mikro, varianten.length ? '🎤 Nicht verstanden. Nochmal sagen' : '🎤 Sag die Antwort');
     if (sprachModus === 'auto' && versuche < 3) zuhoeren();
   };
   if (mikro) mikro.addEventListener('click', zuhoeren);
@@ -605,7 +605,7 @@ function lautLesenSeite(p, t) {
     if (!start) {
       start = performance.now();
       uhrTimer = setInterval(zeigeZeit, 250);
-      startKnopf.textContent = '■ Stopp';
+      setzeText(startKnopf, '■ Stopp');
       textFeld.classList.add('laeuft');
     } else if (!ende) {
       ende = performance.now();
@@ -696,7 +696,7 @@ function bogenSeite(p) {
   const sichern = (key) => {
     bogen.aktualisiert = new Date().toISOString();
     if (key) bogen.zeitpunkte[key] = bogen.aktualisiert;
-    status.textContent = speicher.speichereBogen(bogen) ? '✓ Gespeichert' : 'Speichern nicht möglich, bitte als Datei sichern.';
+    setzeText(status, speicher.speichereBogen(bogen) ? '✓ Gespeichert' : 'Speichern nicht möglich, bitte als Datei sichern.');
   };
 
   const bereiche = def.bereiche.map((b) => {
